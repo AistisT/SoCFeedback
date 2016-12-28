@@ -13,7 +13,6 @@ using SoCFeedback.Services;
 namespace SoCFeedback.Controllers
 {
     [Authorize]
-
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

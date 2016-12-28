@@ -14,11 +14,11 @@ namespace SoCFeedback.Models
 
         public string Code { get; set; }
         public string Title { get; set; }
-        public string Coordinator { get; set; }
         public string Url { get; set; }
-        public Guid LevelId { get; set; }
-        public Guid SupervisorId { get; set; }
-        public string Desciption { get; set; }
+        public String LevelId { get; set; }
+        public String SupervisorSurname { get; set; }
+        public String SupervisorForename { get; set; }
+        public string Description { get; set; }
         public Status Status { get; set; }
 
         public virtual ICollection<ModuleQuestions> ModuleQuestions { get; set; }

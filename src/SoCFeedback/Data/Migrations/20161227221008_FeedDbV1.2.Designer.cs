@@ -9,8 +9,8 @@ using SoCFeedback.Enums;
 namespace SoCFeedback.Data.Migrations
 {
     [DbContext(typeof(FeedbackDbContext))]
-    [Migration("20161224183702_FeedDbV2")]
-    partial class FeedDbV2
+    [Migration("20161227221008_FeedDbV1.2")]
+    partial class FeedDbV12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,14 @@ namespace SoCFeedback.Data.Migrations
                         .HasColumnName("Answer")
                         .HasMaxLength(500);
 
+                    b.Property<Guid>("QuestionId");
+
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("Answer");
                 });
@@ -75,9 +79,6 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nchar(20)");
-
-                    b.Property<string>("Coordinator")
-                        .HasMaxLength(250);
 
                     b.Property<string>("Description")
                         .HasMaxLength(500);
@@ -145,8 +146,6 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("AnswerId");
-
                     b.Property<Guid>("CategoryId");
 
                     b.Property<bool>("Optional")
@@ -158,14 +157,14 @@ namespace SoCFeedback.Data.Migrations
                         .HasColumnName("Question")
                         .HasMaxLength(250);
 
+                    b.Property<int>("Section");
+
                     b.Property<int>("Status")
                         .HasColumnName("Status");
 
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
 
                     b.HasIndex("CategoryId");
 
@@ -230,6 +229,14 @@ namespace SoCFeedback.Data.Migrations
                     b.ToTable("YearModules");
                 });
 
+            modelBuilder.Entity("SoCFeedback.Models.Answer", b =>
+                {
+                    b.HasOne("SoCFeedback.Models.Question", "Question")
+                        .WithMany("Answer")
+                        .HasForeignKey("QuestionId")
+                        .HasConstraintName("FK_Answer_Question");
+                });
+
             modelBuilder.Entity("SoCFeedback.Models.Module", b =>
                 {
                     b.HasOne("SoCFeedback.Models.Level", "Level")
@@ -266,11 +273,6 @@ namespace SoCFeedback.Data.Migrations
 
             modelBuilder.Entity("SoCFeedback.Models.Question", b =>
                 {
-                    b.HasOne("SoCFeedback.Models.Answer", "Answer")
-                        .WithMany("Question")
-                        .HasForeignKey("AnswerId")
-                        .HasConstraintName("FK_Question_Answer");
-
                     b.HasOne("SoCFeedback.Models.Category", "Category")
                         .WithMany("Question")
                         .HasForeignKey("CategoryId")

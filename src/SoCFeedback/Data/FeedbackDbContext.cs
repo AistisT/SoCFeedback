@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SoCFeedback.Models;
-
+using SoCFeedback.Enums;
 
 namespace SoCFeedback.Services
 {
@@ -31,18 +31,28 @@ namespace SoCFeedback.Services
                 entity.Property(e => e.Answer1)
                     .IsRequired()
                     .HasColumnName("Answer")
-                    .HasMaxLength(500);
+                    .HasMaxLength(Constants.AnswerLength);
 
                 entity.Property(e => e.Timestamp).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Question)
+                    .WithMany(p => p.Answer)
+                    .HasForeignKey(d => d.QuestionId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Answer_Question");
             });
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.Property(e => e.Id);
+                entity.HasKey(e => e.Title).HasName("PK_Title");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(Constants.CategoryTitleLength);
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(Constants.CategoryDescriptionLength);
 
                 entity.Property(e => e.Status)
                     .IsRequired()
@@ -51,17 +61,18 @@ namespace SoCFeedback.Services
 
             modelBuilder.Entity<Supervisor>(entity =>
             {
-                entity.Property(e => e.Id);
+                entity.HasKey(e => new { e.Forename, e.Surname })
+                    .HasName("PK_Supervisor");
 
                 entity.Property(e => e.Title).IsRequired();
 
-                entity.Property(e => e.Forename).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Forename).IsRequired().HasMaxLength(Constants.NameLength);
 
-                entity.Property(e => e.Surname).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Surname).IsRequired().HasMaxLength(Constants.NameLength);
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Email).HasMaxLength(Constants.EmailLength);
 
-                entity.Property(e => e.PhoneNr).HasMaxLength(20);
+                entity.Property(e => e.PhoneNr).HasMaxLength(Constants.PhoneNrLength);
 
                 entity.Property(e => e.Status)
                     .IsRequired()
@@ -70,11 +81,11 @@ namespace SoCFeedback.Services
 
             modelBuilder.Entity<Level>(entity =>
             {
-                entity.Property(e => e.Id);
+                entity.HasKey(e => e.Title).HasName("PK_Title");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasColumnType("nchar(50)");
+                    .HasMaxLength(Constants.LevelTitleLength);
 
                 entity.Property(e => e.Status)
                     .IsRequired()
@@ -86,23 +97,29 @@ namespace SoCFeedback.Services
                 entity.HasKey(e => e.Code)
                     .HasName("PK_Module");
 
-                entity.Property(e => e.Code).HasColumnType("nchar(20)");
+                entity.Property(e => e.Code).HasMaxLength(Constants.ModuleCodeLength);
 
-                entity.Property(e => e.Coordinator).HasMaxLength(250);
-
-                entity.Property(e => e.Desciption).HasMaxLength(500);
+                entity.Property(e => e.Description).HasMaxLength(Constants.ModuleDescLength);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(Constants.ModuleTitleLength);
 
                 entity.Property(e => e.Url)
                     .HasColumnName("URL")
-                    .HasMaxLength(250);
+                    .HasMaxLength(Constants.UrlLength);
 
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasColumnName("Status");
+
+            entity.Property(e => e.LevelId)
+                    .IsRequired()
+                    .HasMaxLength(Constants.LevelTitleLength);
+
+                entity.Property(e => e.SupervisorForename).IsRequired().HasMaxLength(Constants.NameLength);
+
+                entity.Property(e => e.SupervisorSurname).IsRequired().HasMaxLength(Constants.NameLength);
 
                 entity.HasOne(d => d.Level)
                     .WithMany(p => p.Module)
@@ -112,7 +129,7 @@ namespace SoCFeedback.Services
 
                 entity.HasOne(d => d.Supervisor)
                     .WithMany(p => p.Module)
-                    .HasForeignKey(d => d.SupervisorId)
+                    .HasForeignKey(d => new { d.SupervisorForename, d.SupervisorSurname })
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Module_Supervisor");
             });
@@ -122,7 +139,7 @@ namespace SoCFeedback.Services
                 entity.HasKey(e => new { e.ModuleCode, e.QuestionId })
                     .HasName("PK_ModuleQuestions");
 
-                entity.Property(e => e.ModuleCode).HasColumnType("nchar(20)");
+                entity.Property(e => e.ModuleCode).HasMaxLength(Constants.ModuleCodeLength);
 
                 entity.HasOne(d => d.ModuleCodeNavigation)
                     .WithMany(p => p.ModuleQuestions)
@@ -143,7 +160,7 @@ namespace SoCFeedback.Services
 
                 entity.Property(e => e.Answer)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(Constants.PossibleAnswerLength);
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.PossibleAnswer)
@@ -161,17 +178,15 @@ namespace SoCFeedback.Services
                 entity.Property(e => e.Question1)
                     .IsRequired()
                     .HasColumnName("Question")
-                    .HasMaxLength(250);
+                    .HasMaxLength(Constants.QuestionLength);
 
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasColumnName("Status");
 
-                entity.HasOne(d => d.Answer)
-                    .WithMany(p => p.Question)
-                    .HasForeignKey(d => d.AnswerId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Question_Answer");
+                entity.Property(e => e.CategoryId)
+                    .IsRequired()
+                    .HasMaxLength(Constants.CategoryTitleLength);
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Question)
@@ -199,7 +214,7 @@ namespace SoCFeedback.Services
                 entity.HasKey(e => new { e.Year, e.ModuleCode })
                     .HasName("PK_YearModules");
 
-                entity.Property(e => e.ModuleCode).HasColumnType("nchar(20)");
+                entity.Property(e => e.ModuleCode).HasMaxLength(Constants.ModuleCodeLength);
 
                 entity.HasOne(d => d.ModuleCodeNavigation)
                     .WithMany(p => p.YearModules)

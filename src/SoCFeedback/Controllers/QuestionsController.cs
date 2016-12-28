@@ -10,22 +10,23 @@ using SoCFeedback.Services;
 
 namespace SoCFeedback.Controllers
 {
-    public class LevelsController : Controller
+    public class QuestionsController : Controller
     {
         private readonly FeedbackDbContext _context;
 
-        public LevelsController(FeedbackDbContext context)
+        public QuestionsController(FeedbackDbContext context)
         {
             _context = context;    
         }
 
-        // GET: Levels
+        // GET: Questions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Level.ToListAsync());
+            var feedbackDbContext = _context.Question.Include(q => q.Category);
+            return View(await feedbackDbContext.ToListAsync());
         }
 
-        // GET: Levels/Details/5
+        // GET: Questions/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -33,40 +34,43 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var level = await _context.Level
+            var question = await _context.Question
+                .Include(q => q.Category)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (level == null)
+            if (question == null)
             {
                 return NotFound();
             }
 
-            return View(level);
+            return View(question);
         }
 
-        // GET: Levels/Create
+        // GET: Questions/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title");
             return View();
         }
 
-        // POST: Levels/Create
+        // POST: Questions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] Level level)
+        public async Task<IActionResult> Create([Bind("Question1,Type,CategoryId,Optional")] Question question)
         {
             if (ModelState.IsValid)
             {
-                level.Id = Guid.NewGuid();
-                _context.Add(level);
+                question.Id = Guid.NewGuid();
+                _context.Add(question);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(level);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            return View(question);
         }
 
-        // GET: Levels/Edit/5
+        // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -74,22 +78,23 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
-            if (level == null)
+            var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
+            if (question == null)
             {
                 return NotFound();
             }
-            return View(level);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            return View(question);
         }
 
-        // POST: Levels/Edit/5
+        // POST: Questions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title")] Level level)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Question1,Type,CategoryId,Optional,Status")] Question question)
         {
-            if (id != level.Id)
+            if (id != question.Id)
             {
                 return NotFound();
             }
@@ -98,12 +103,12 @@ namespace SoCFeedback.Controllers
             {
                 try
                 {
-                    _context.Update(level);
+                    _context.Update(question);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LevelExists(level.Id))
+                    if (!QuestionExists(question.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +119,11 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return View(level);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            return View(question);
         }
 
-        // GET: Levels/Delete/5
+        // GET: Questions/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -125,30 +131,31 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var level = await _context.Level
+            var question = await _context.Question
+                .Include(q => q.Category)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (level == null)
+            if (question == null)
             {
                 return NotFound();
             }
 
-            return View(level);
+            return View(question);
         }
 
-        // POST: Levels/Delete/5
+        // POST: Questions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Level.Remove(level);
+            var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Question.Remove(question);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        private bool LevelExists(Guid id)
+        private bool QuestionExists(Guid id)
         {
-            return _context.Level.Any(e => e.Id == id);
+            return _context.Question.Any(e => e.Id == id);
         }
     }
 }

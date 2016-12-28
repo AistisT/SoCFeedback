@@ -70,7 +70,7 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Coordinator")
                         .HasMaxLength(250);
 
-                    b.Property<string>("Desciption")
+                    b.Property<string>("Description")
                         .HasMaxLength(500);
 
                     b.Property<Guid>("LevelId");

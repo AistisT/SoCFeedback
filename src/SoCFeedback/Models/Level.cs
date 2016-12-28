@@ -1,6 +1,7 @@
 ﻿using SoCFeedback.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoCFeedback.Models
 {
@@ -10,8 +11,7 @@ namespace SoCFeedback.Models
         {
             Module = new HashSet<Module>();
         }
-
-        public Guid Id { get; set; }
+        [Key]
         public string Title { get; set; }
         public Status Status { get; set; }
 

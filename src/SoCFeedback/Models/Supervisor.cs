@@ -11,7 +11,6 @@ namespace SoCFeedback.Models
             Module = new HashSet<Module>();
         }
 
-        public Guid Id { get; set; }
         public Title Title { get; set; }
         public string Forename { get; set; }
         public string Surname { get; set; }

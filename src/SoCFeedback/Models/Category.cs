@@ -1,6 +1,7 @@
 ﻿using SoCFeedback.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoCFeedback.Models
 {
@@ -10,9 +11,13 @@ namespace SoCFeedback.Models
         {
             Question = new HashSet<Question>();
         }
-
-        public Guid Id { get; set; }
+        [MaxLength(50)] 
+        [Required]
+        [Key]
         public string Title { get; set; }
+        [MaxLength(200)]
+        [Required]
+        public string Description { get; set; }
         public Status Status { get; set; }
         public virtual ICollection<Question> Question { get; set; }
     }

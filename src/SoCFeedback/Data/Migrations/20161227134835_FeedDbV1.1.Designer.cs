@@ -9,8 +9,8 @@ using SoCFeedback.Enums;
 namespace SoCFeedback.Data.Migrations
 {
     [DbContext(typeof(FeedbackDbContext))]
-    [Migration("20161224183702_FeedDbV2")]
-    partial class FeedDbV2
+    [Migration("20161227134835_FeedDbV1.1")]
+    partial class FeedDbV11
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

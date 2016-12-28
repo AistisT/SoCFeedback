@@ -91,7 +91,7 @@ namespace SoCFeedback.Data.Migrations
                 {
                     Code = table.Column<string>(type: "nchar(20)", nullable: false),
                     Coordinator = table.Column<string>(maxLength: 250, nullable: true),
-                    Desciption = table.Column<string>(maxLength: 500, nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
                     LevelId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 200, nullable: false),
                     URL = table.Column<string>(maxLength: 250, nullable: true)
