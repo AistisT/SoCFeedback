@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoCFeedback.Models
 {
@@ -10,6 +11,7 @@ namespace SoCFeedback.Models
         public Supervisor()
         {
             Module = new HashSet<Module>();
+
         }
         public Guid Id { get; set; }
         [Required]
@@ -26,5 +28,7 @@ namespace SoCFeedback.Models
         public string Email { get; set; }
         public Status Status { get; set; }
         public virtual ICollection<Module> Module { get; set; }
+        [NotMapped]
+        public string FullName { get => $"{Title} {Forename} {Surname}"; }
     }
 }

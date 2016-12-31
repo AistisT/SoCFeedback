@@ -1,29 +1,29 @@
 @model IEnumerable<SoCFeedback.Models.Question>
 @using SoCFeedback.Enums
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Questions Index";
 }
 
-<h2>Index</h2>
+<h2>Questions Index</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Question</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Question1)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Type)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Optional)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Question1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Optional)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
@@ -33,37 +33,38 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Optional)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Title)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @if (item.Status == Status.Archived)
-                {
-                    <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
-                }
-                else if (item.Status == Status.Active)
-                {
-                    <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
-                }
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Optional)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Title)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (item.Status == Status.Archived)
+                    {
+                        <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
+                    }
+                    else if (item.Status == Status.Active)
+                    {
+                        <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
+                    }
+                </td>
 
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>

@@ -33,13 +33,19 @@
                 @if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index" title="Categories"> Categories</a>
+                        <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index" title="Categories">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Questions" asp-action="Index" title="Questions"> Questions</a>
+                        <a class="nav-link" asp-area="" asp-controller="Questions" asp-action="Index" title="Questions">Questions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels"> Levels</a>
+                        <a class="nav-link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels">Levels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Supervisors" asp-action="Index" title="Supervisors">Supervisors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Modules" asp-action="Index" title="Modules">Modules</a>
                     </li>
                 }
             </ul>

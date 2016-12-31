@@ -1,12 +1,15 @@
 @model SoCFeedback.Models.Supervisor
 
 @{
-    ViewData["Title"] = "Supervisor Details";
+    ViewData["Title"] = "Restore Supervisor";
 }
 
-<h2>Details</h2>
-
+<h2>Restore</h2>
+<hr />
+<h3>Are you sure you want to restore this supervisor?</h3>
+<h5>This will mark supervisor as active again and available for selection when creating modules.</h5>
 <div>
+    <hr />
     <h4>Supervisor</h4>
     <hr />
     <dl class="dl-horizontal">
@@ -41,8 +44,11 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    <form asp-action="Restore">
+        <div class="form-actions no-color">
+            <input type="submit" value="Restore" class="btn btn-primary" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
 </div>

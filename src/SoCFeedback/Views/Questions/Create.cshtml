@@ -2,7 +2,7 @@
 @model SoCFeedback.Models.Question
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Question";
 }
 
 <h2>Create</h2>
@@ -30,6 +30,7 @@
             <label asp-for="Category" class="col-xs-2 control-label"></label>
             <div class="col-xs-10">
                 <select asp-for="CategoryId" class="form-control-select" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
         </div>
         <div class="form-check">
@@ -38,7 +39,7 @@
                 <label asp-for="Optional"></label>
             </div>
             <div class="col-xs-10">
-                <label>Optional questions can be manually added to modules, but will not be included by default.</label> 
+                <label>Optional questions can be manually added to modules, but will not be included by default.</label>
             </div>
         </div>
         <div class="form-group col-sm-12">
@@ -50,6 +51,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-
 }

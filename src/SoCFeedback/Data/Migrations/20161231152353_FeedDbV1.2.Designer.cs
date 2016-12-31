@@ -9,9 +9,10 @@ using SoCFeedback.Enums;
 namespace SoCFeedback.Data.Migrations
 {
     [DbContext(typeof(FeedbackDbContext))]
-    partial class FeedbackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161231152353_FeedDbV1.2")]
+    partial class FeedDbV12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -25,7 +26,7 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Answer1")
                         .IsRequired()
                         .HasColumnName("Answer")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<string>("ModuleCode")
                         .IsRequired()
@@ -91,11 +92,10 @@ namespace SoCFeedback.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(20);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<Guid>("LevelId")
                         .HasMaxLength(50);
@@ -169,7 +169,7 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Question1")
                         .IsRequired()
                         .HasColumnName("Question")
-                        .HasMaxLength(500);
+                        .HasMaxLength(250);
 
                     b.Property<int>("Status")
                         .HasColumnName("Status");

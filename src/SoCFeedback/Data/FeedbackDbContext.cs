@@ -102,9 +102,12 @@ namespace SoCFeedback.Services
             {
                 entity.Property(e => e.Id);
 
-                entity.Property(e => e.Code).HasMaxLength(Constants.ModuleCodeLength);
+                entity.Property(e => e.Code)
+                    .HasMaxLength(Constants.ModuleCodeLength)
+                    .IsRequired();
 
-                entity.Property(e => e.Description).HasMaxLength(Constants.ModuleDescLength);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(Constants.ModuleDescLength);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -121,7 +124,6 @@ namespace SoCFeedback.Services
             entity.Property(e => e.LevelId)
                     .IsRequired()
                     .HasMaxLength(Constants.LevelTitleLength);
-
 
                 entity.HasOne(d => d.Level)
                     .WithMany(p => p.Module)

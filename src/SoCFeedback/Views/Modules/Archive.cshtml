@@ -1,0 +1,66 @@
+@model SoCFeedback.Models.Module
+
+@{
+    ViewData["Title"] = "Archive Module";
+}
+
+<h2>Archive</h2>
+<hr />
+<h3>Are you sure you want to archive this module?</h3>
+<h5>Archived modules will not show up when creating year questionaires nor will be automatically added to new questionaires. Existing year questionaires will not be affected.</h5>
+<div>
+    <hr />
+    <h4>Module</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Level)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Level.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Supervisor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Supervisor.FullName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Url)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Url)
+        </dd>
+    </dl>
+    
+    <form asp-action="Archive">
+        <div class="form-actions no-color">
+            <input type="submit" value="Archive" class="btn btn-primary" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

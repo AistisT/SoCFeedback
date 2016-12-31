@@ -1,31 +1,34 @@
-@model IEnumerable<SoCFeedback.Models.Supervisor>
+@model IEnumerable<SoCFeedback.Models.Module>
 @using SoCFeedback.Enums
 @{
-    ViewData["Title"] = "Supervisors Index";
+    ViewData["Title"] = "Modules Index";
 }
 
-<h2>Supervisors Index</h2>
+<h2>Modules</h2>
 
 <p>
-    <a asp-action="Create">Create New Supervisor</a>
+    <a asp-action="Create">Create New Module</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Forename)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.Url)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supervisor)
             </th>
             <th></th>
         </tr>
@@ -35,19 +38,22 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Forename)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Url)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supervisor.FullName)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

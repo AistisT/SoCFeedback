@@ -64,6 +64,12 @@ namespace SoCFeedback.Controllers
                 ModelState.AddModelError("Surname", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
             }
 
+            var emailCheck = _context.Supervisor.Any(e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase));
+            if (emailCheck)
+            {
+                ModelState.AddModelError("Email", String.Format("Email {0} is already in use.", supervisor.Email));
+            }
+
             if (ModelState.IsValid)
             {
                 supervisor.Id = Guid.NewGuid();
@@ -109,6 +115,12 @@ namespace SoCFeedback.Controllers
             {
                 ModelState.AddModelError("Forename", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
                 ModelState.AddModelError("Surname", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
+            }
+
+            var emailCheck = _context.Supervisor.Any(e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase)&& e.Id != supervisor.Id);
+            if (emailCheck)
+            {
+                ModelState.AddModelError("Email", String.Format("Email {0} is already in use.", supervisor.Email));
             }
 
             if (ModelState.IsValid)

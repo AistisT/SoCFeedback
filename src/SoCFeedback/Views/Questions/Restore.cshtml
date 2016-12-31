@@ -1,12 +1,12 @@
 @model SoCFeedback.Models.Question
 
 @{
-    ViewData["Title"] = "Restore";
+    ViewData["Title"] = "Restore Question";
 }
 
 <h2>Restore</h2>
 <hr />
-<h3>Are you sure you want to Restore this question?</h3>
+<h3>Are you sure you want to restore this question?</h3>
 <h5>Restored questions will be marked active and once again show up when creating or editing modules.</h5>
 <div>
     <hr />
@@ -44,7 +44,7 @@
             @Html.DisplayFor(model => model.Category.Title)
         </dd>
     </dl>
-    
+
     <form asp-action="Restore">
         <div class="form-actions no-color">
             <input type="submit" value="Restore" class="btn btn-primary" /> |

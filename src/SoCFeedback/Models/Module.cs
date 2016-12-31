@@ -1,6 +1,7 @@
 ﻿using SoCFeedback.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SoCFeedback.Models
 {
@@ -12,11 +13,20 @@ namespace SoCFeedback.Models
             YearModules = new HashSet<YearModules>();
         }
         public Guid Id { get; set; }
+        [Required]
+        [StringLength(Constants.ModuleCodeLength)]
         public string Code { get; set; }
+        [Required]
+        [StringLength(Constants.ModuleTitleLength)]
         public string Title { get; set; }
+        [StringLength(Constants.UrlLength)]
+        [Url]
         public string Url { get; set; }
+        [Required]
         public Guid LevelId { get; set; }
+        [Required]
         public Guid SupervisorId { get; set; }
+        [StringLength(Constants.ModuleDescLength)]
         public string Description { get; set; }
         public Status Status { get; set; }
 

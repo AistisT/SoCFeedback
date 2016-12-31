@@ -1,7 +1,7 @@
 @model SoCFeedback.Models.Supervisor
-
+@using SoCFeedback.Enums
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Supervisor";
 }
 
 <h2>Create</h2>
@@ -14,7 +14,7 @@
         <div class="form-group">
             <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="Title" class="form-control"></select>
+                <select asp-for="Title" asp-items="Html.GetEnumSelectList<Title>()" class="form-control-select"></select>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
@@ -39,15 +39,13 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
-
+        <hr />
         <div class="form-group col-sm-12">
             <input type="submit" value="Create" class="btn btn-primary" />
             <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </div>
 </form>
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
