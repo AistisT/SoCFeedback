@@ -11,6 +11,7 @@
     <UserSecretsId>aspnet-SoCFeedback-db3a8d35-20e7-4a80-98f6-6db326452ecf</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="jquery.datatables" Version="1.10.12" />
     <PackageReference Include="jQWidgets.AspNetCore.Mvc.TagHelpers" Version="1.0.0" />
     <PackageReference Include="Microsoft.NETCore.App" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />

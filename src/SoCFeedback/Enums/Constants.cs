@@ -18,7 +18,6 @@ namespace SoCFeedback.Enums
 
         public const int NameLength = 50;
         public const int EmailLength = 50;
-        public const int PhoneNrLength = 30;
         public const int PersonalTitleLength = 10;
 
         public const int LevelTitleLength = 50;

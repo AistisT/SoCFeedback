@@ -10,7 +10,7 @@ namespace SoCFeedback.Models
         {
             YearModules = new HashSet<YearModules>();
         }
-
+        public Guid Id { get; set; }
         public int Year1 { get; set; }
 
         public Status Status { get; set; }

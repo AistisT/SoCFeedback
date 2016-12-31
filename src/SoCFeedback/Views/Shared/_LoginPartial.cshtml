@@ -7,16 +7,6 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    @if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
-    {       
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels"> Levels</a>
-                    <a class="nav-link" asp-area="" asp-controller="Levels" asp-action="Create" title="Create Level"> Create Level</a>
-                </li>
-   
-            </ul>    
-    }
     <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right float-xs-right">
             <li class="nav-item">

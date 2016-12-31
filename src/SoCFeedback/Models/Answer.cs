@@ -9,7 +9,7 @@ namespace SoCFeedback.Models
         public Guid QuestionId { get; set; }
         public string Answer1 { get; set; }
         public DateTime Timestamp { get; set; }
-
+        public String ModuleCode { get; set; }
         public virtual Question Question { get; set; }
     }
 }

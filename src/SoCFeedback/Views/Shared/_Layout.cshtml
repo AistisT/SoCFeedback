@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -8,23 +11,39 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/tether/dist/css/tether.css" />
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.css" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/tether/dist/css/tether.min.css" />
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.min.css" />
     </environment>
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+        <nav class="navbar navbar-fixed-top navbar-light bg-faded nav-pills">
             <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">SoC Feedback</a>
             <ul class="nav navbar-nav">
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-
+                <li class="navbar-divider"></li>
+                @if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index" title="Categories"> Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Questions" asp-action="Index" title="Questions"> Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels"> Levels</a>
+                    </li>
+                }
             </ul>
-                @await Html.PartialAsync("_LoginPartial")
+            @await Html.PartialAsync("_LoginPartial")
         </nav>
     </div>
     <div class="container body-content">
@@ -37,12 +56,18 @@
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/tether/dist/js/tether.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/datatables/media/js/jquery.dataTables.js"></script>
+        <script src="~/lib/datatables/media/js/datatables.bootstrap4.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/tether/dist/js/tether.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/datatables/media/js/jquery.dataTables.min.js"></script>
+        <script src="~/lib/datatables/media/js/dataTables.bootstrap4.min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 

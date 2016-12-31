@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SoCFeedback.Models;
 using SoCFeedback.Services;
+using SoCFeedback.Enums;
 
 namespace SoCFeedback.Controllers
 {
@@ -59,6 +60,12 @@ namespace SoCFeedback.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Question1,Type,CategoryId,Optional")] Question question)
         {
+            var obj =  await _context.Question.AnyAsync(e => e.Question1.Equals(question.Question1, StringComparison.OrdinalIgnoreCase));
+            if (obj)
+            {
+                ModelState.AddModelError("Question1", String.Format("Question {0} already exists.", question.Question1));
+            }
+
             if (ModelState.IsValid)
             {
                 question.Id = Guid.NewGuid();
@@ -99,6 +106,12 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
+            var obj = await _context.Question.SingleOrDefaultAsync(e => e.Question1.Equals(question.Question1, StringComparison.OrdinalIgnoreCase) && e.Id != question.Id);
+            if (obj != null)
+            {
+                ModelState.AddModelError("Question1", String.Format("Question {0} already exists.", question.Question1));
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -123,8 +136,8 @@ namespace SoCFeedback.Controllers
             return View(question);
         }
 
-        // GET: Questions/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        // GET: Questions/Archive/5
+        public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
             {
@@ -142,13 +155,43 @@ namespace SoCFeedback.Controllers
             return View(question);
         }
 
-        // POST: Questions/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Questions/Archive/5
+        [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
             var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Question.Remove(question);
+            question.Status =Status.Archived;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Questions/Restore/5
+        public async Task<IActionResult> Restore(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var question = await _context.Question
+                .Include(q => q.Category)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            return View(question);
+        }
+
+        // POST: Questions/Restore/5
+        [HttpPost, ActionName("Restore")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreConfirmed(Guid id)
+        {
+            var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
+            question.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

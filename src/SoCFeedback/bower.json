@@ -5,7 +5,8 @@
     "bootstrap": "v4.0.0-alpha.5",
     "jquery": "3.1.1",
     "jquery-validation": "1.16.0",
-    "jquery-validation-unobtrusive": "3.2.6"
+    "jquery-validation-unobtrusive": "3.2.6",
+    "datatables": "DataTables#1.10.13"
   },
   "resolutions": {
     "bootstrap": "v4.0.0-alpha.5",

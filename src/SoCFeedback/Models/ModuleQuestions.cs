@@ -5,7 +5,7 @@ namespace SoCFeedback.Models
 {
     public partial class ModuleQuestions
     {
-        public string ModuleCode { get; set; }
+        public Guid ModuleId { get; set; }
         public Guid QuestionId { get; set; }
 
         public virtual Module ModuleCodeNavigation { get; set; }

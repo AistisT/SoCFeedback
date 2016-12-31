@@ -11,11 +11,11 @@ namespace SoCFeedback.Models
         {
             Question = new HashSet<Question>();
         }
-        [MaxLength(50)] 
-        [Required]
-        [Key]
+        public Guid Id { get; set; }
+        [MaxLength(Constants.CategoryTitleLength)] 
+        [Required]      
         public string Title { get; set; }
-        [MaxLength(200)]
+        [MaxLength(Constants.CategoryDescriptionLength)]
         [Required]
         public string Description { get; set; }
         public Status Status { get; set; }

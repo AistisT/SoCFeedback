@@ -1,66 +1,70 @@
-﻿$(function () {
+﻿$(document).ready(function () {
+    $('.table').DataTable();
+});
 
-    $('#genreDialog').dialog({
+//$(function () {
 
-        autoOpen: false,
+//    $('#genreDialog').dialog({
 
-        width: 400,
+//        autoOpen: false,
 
-        height: 300,
+//        width: 400,
 
-        modal: true,
+//        height: 300,
 
-        title: 'Add Category',
+//        modal: true,
 
-        buttons: {
+//        title: 'Add Category',
 
-            'Save': function () {
+//        buttons: {
 
-                var createGenreForm = $('#createGenreForm');
+//            'Save': function () {
 
-                if (createGenreForm.valid()) {
+//                var createGenreForm = $('#createGenreForm');
 
-                    $.post(createGenreForm.attr('action'), createGenreForm.serialize(), function (data) {
+//                if (createGenreForm.valid()) {
 
-                        if (data.Error != '') {
+//                    $.post(createGenreForm.attr('action'), createGenreForm.serialize(), function (data) {
 
-                            alert(data.Error);
+//                        if (data.Error != '') {
 
-                        }
+//                            alert(data.Error);
 
-                        else {
+//                        }
 
-                            // Add the new genre to the dropdown list and select it
+//                        else {
 
-                            $('#GenreId').append(
+//                            // Add the new genre to the dropdown list and select it
 
-                                $('<option></option>')
+//                            $('#GenreId').append(
 
-                                    .val(data.Genre.GenreId)
+//                                $('<option></option>')
 
-                                    .html(data.Genre.Name)
+//                                    .val(data.Genre.GenreId)
 
-                                    .prop('selected', true)  // Selects the new Genre in the DropDown LB
+//                                    .html(data.Genre.Name)
 
-                            );
+//                                    .prop('selected', true)  // Selects the new Genre in the DropDown LB
 
-                            $('#genreDialog').dialog('close');
+//                            );
 
-                        }
+//                            $('#genreDialog').dialog('close');
 
-                    });
+//                        }
 
-                }
+//                    });
 
-            },
+//                }
 
-            'Cancel': function () {
+//            },
 
-                $(this).dialog('close');
+//            'Cancel': function () {
 
-            }
+//                $(this).dialog('close');
 
-        }
+//            }
 
-    });
-})
+//        }
+
+//    });
+//})

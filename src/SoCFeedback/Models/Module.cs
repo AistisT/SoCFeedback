@@ -11,13 +11,12 @@ namespace SoCFeedback.Models
             ModuleQuestions = new HashSet<ModuleQuestions>();
             YearModules = new HashSet<YearModules>();
         }
-
+        public Guid Id { get; set; }
         public string Code { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
-        public String LevelId { get; set; }
-        public String SupervisorSurname { get; set; }
-        public String SupervisorForename { get; set; }
+        public Guid LevelId { get; set; }
+        public Guid SupervisorId { get; set; }
         public string Description { get; set; }
         public Status Status { get; set; }
 

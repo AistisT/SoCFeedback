@@ -17,10 +17,13 @@ namespace SoCFeedback.Models
         public Guid Id { get; set; }
         [Display(Name = "Question")]
         [Required]
-        [StringLength(500)]
+        [StringLength(Constants.QuestionLength)]
         public string Question1 { get; set; }
+        [Required]
         public QuestionType Type { get; set; }
-        public String CategoryId { get; set; }
+        [Required]
+        public Guid CategoryId { get; set; }
+        [Display(Name = "Optional")]
         public bool Optional { get; set; }
         public Status Status { get; set; }
 
