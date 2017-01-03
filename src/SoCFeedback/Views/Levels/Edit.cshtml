@@ -26,6 +26,13 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
+        <div class="form-group">
+            <label asp-for="OrderingNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="OrderingNumber" class="form-control-select">
+                <span asp-validation-for="OrderingNumber" class="text-danger"></span>
+            </div>
+        </div>
         <input type="hidden" asp-for="Status" />
         <div class="form-group col-sm-12">
             <input type="submit" value="Save" class="btn btn-primary" />

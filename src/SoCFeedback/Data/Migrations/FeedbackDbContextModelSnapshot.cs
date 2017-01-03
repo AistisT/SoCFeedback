@@ -25,7 +25,7 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Answer1")
                         .IsRequired()
                         .HasColumnName("Answer")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(2000);
 
                     b.Property<string>("ModuleCode")
                         .IsRequired()
@@ -73,6 +73,8 @@ namespace SoCFeedback.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
+                    b.Property<int>("OrderingNumber");
+
                     b.Property<int>("Status")
                         .HasColumnName("Status");
 
@@ -80,7 +82,11 @@ namespace SoCFeedback.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<Guid?>("YearId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("YearId");
 
                     b.ToTable("Level");
                 });
@@ -95,7 +101,7 @@ namespace SoCFeedback.Data.Migrations
                         .HasMaxLength(20);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(2000);
 
                     b.Property<Guid>("LevelId")
                         .HasMaxLength(50);
@@ -128,6 +134,8 @@ namespace SoCFeedback.Data.Migrations
                         .HasMaxLength(20);
 
                     b.Property<Guid>("QuestionId");
+
+                    b.Property<int>("QuestionOrder");
 
                     b.HasKey("ModuleId", "QuestionId")
                         .HasName("PK_ModuleQuestions");
@@ -246,6 +254,13 @@ namespace SoCFeedback.Data.Migrations
                         .WithMany("Answer")
                         .HasForeignKey("QuestionId")
                         .HasConstraintName("FK_Answer_Question");
+                });
+
+            modelBuilder.Entity("SoCFeedback.Models.Level", b =>
+                {
+                    b.HasOne("SoCFeedback.Models.Year")
+                        .WithMany("Levels")
+                        .HasForeignKey("YearId");
                 });
 
             modelBuilder.Entity("SoCFeedback.Models.Module", b =>

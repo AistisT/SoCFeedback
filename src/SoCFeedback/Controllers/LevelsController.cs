@@ -55,7 +55,7 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Status,Description")] Level level)
+        public async Task<IActionResult> Create([Bind("Id,Title,Status,Description,OrderingNumber")] Level level)
         {
             var obj = _context.Level.Any(e => e.Title.Equals(level.Title, StringComparison.OrdinalIgnoreCase));
             if (obj)
@@ -94,7 +94,7 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Status,Description")] Level level)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Status,Description,OrderingNumber")] Level level)
         {
             if (id != level.Id)
             {

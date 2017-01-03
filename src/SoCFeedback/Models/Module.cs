@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoCFeedback.Models
 {
@@ -29,6 +30,8 @@ namespace SoCFeedback.Models
         [StringLength(Constants.ModuleDescLength)]
         public string Description { get; set; }
         public Status Status { get; set; }
+        [NotMapped]
+        public ModuleStatus RunningStatus { get; set; }
 
         public virtual ICollection<ModuleQuestions> ModuleQuestions { get; set; }
         public virtual ICollection<YearModules> YearModules { get; set; }

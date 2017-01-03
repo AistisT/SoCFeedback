@@ -6,7 +6,8 @@
     "jquery": "3.1.1",
     "jquery-validation": "1.16.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "datatables": "DataTables#1.10.13"
+    "datatables": "DataTables#1.10.13",
+    "Sortable": "sortablejs#1.5.0-rc1"
   },
   "resolutions": {
     "bootstrap": "v4.0.0-alpha.5",

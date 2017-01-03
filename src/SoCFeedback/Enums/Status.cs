@@ -8,13 +8,8 @@
         Active = 0,
 
         /// <summary>
-        /// For w/e reason item is no approved (if feature required to be implemented)
+        /// Item is no longer in circulation, everything is archived , no deletion.
         /// </summary>
-        Inactive = 1,
-
-        /// <summary>
-        /// item is no longer in circulation, everything is archived , no deletion.
-        /// </summary>
-        Archived = 2,
+        Archived = 1,
     }
 }

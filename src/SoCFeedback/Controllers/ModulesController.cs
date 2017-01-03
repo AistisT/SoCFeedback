@@ -48,8 +48,8 @@ namespace SoCFeedback.Controllers
         // GET: Modules/Create
         public IActionResult Create()
         {
-            ViewData["LevelId"] = new SelectList(_context.Level, "Id", "Title");
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor, "Id", "FullName");
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title");
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName");
             return View();
         }
 
@@ -73,8 +73,8 @@ namespace SoCFeedback.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["LevelId"] = new SelectList(_context.Level, "Id", "Title", @module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor, "Id", "FullName", @module.SupervisorId);
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title", @module.LevelId);
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName", @module.SupervisorId);
             return View(@module);
         }
 
@@ -91,8 +91,8 @@ namespace SoCFeedback.Controllers
             {
                 return NotFound();
             }
-            ViewData["LevelId"] = new SelectList(_context.Level, "Id", "Title", @module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor, "Id", "FullName", @module.SupervisorId);
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title", @module.LevelId);
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName", @module.SupervisorId);
             return View(@module);
         }
 
@@ -134,8 +134,8 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["LevelId"] = new SelectList(_context.Level, "Id", "Title", @module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor, "Id", "FullName", @module.SupervisorId);
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title", @module.LevelId);
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName", @module.SupervisorId);
             return View(@module);
         }
 

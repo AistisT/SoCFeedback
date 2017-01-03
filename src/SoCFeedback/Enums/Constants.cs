@@ -9,8 +9,8 @@ namespace SoCFeedback.Enums
     {
         public const int ModuleTitleLength = 200;
         public const int UrlLength = 250;       
-        public const int AnswerLength = 1000;
-        public const int ModuleDescLength = 1000;
+        public const int AnswerLength = 2000;
+        public const int ModuleDescLength = 2000;
         public const int ModuleCodeLength = 20;
 
         public const int CategoryTitleLength = 50;

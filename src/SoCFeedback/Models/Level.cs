@@ -18,8 +18,11 @@ namespace SoCFeedback.Models
        // [Remote(action: "CheckLevelExists", controller: "Levels")]
         public string Title { get; set; }
         public Status Status { get; set; }
-        [MaxLength(Constants.CategoryDescriptionLength)]
         [Required]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
+        public int OrderingNumber { get; set; }
+        [MaxLength(Constants.CategoryDescriptionLength)]
+
         public string Description { get; set; }
         public virtual ICollection<Module> Module { get; set; }
     }
