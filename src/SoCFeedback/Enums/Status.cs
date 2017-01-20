@@ -3,7 +3,7 @@
     public enum Status
     {
         /// <summary>
-        /// Item is available for selection (year published to  students)
+        /// Item is available for selection 
         /// </summary>
         Active = 0,
 

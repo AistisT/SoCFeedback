@@ -32,7 +32,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            <textarea readonly="readonly"  class="form-control autosize" asp-for="Description"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)
@@ -55,6 +55,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="float-right" asp-action="Index">Back to List</a>
 </div>

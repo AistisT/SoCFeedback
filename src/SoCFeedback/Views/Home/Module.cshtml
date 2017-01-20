@@ -1,0 +1,88 @@
+﻿@model SoCFeedback.Models.Module
+@using SoCFeedback.Enums
+@{
+    ViewData["Title"] = "Module Year Form";
+}
+
+<form asp-action="Module">
+    <div class="col-md-12">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModuleName)
+                @Html.HiddenFor(m => m.Code)@Html.HiddenFor(m => m.Title)
+                @Html.HiddenFor(m => m.Url)
+            </dt>
+            <dd>
+                <a href="@Model.Url">@Html.DisplayFor(model => model.ModuleName)</a>
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Supervisor)
+                @Html.HiddenFor(m => m.Supervisor.Surname) @Html.HiddenFor(m => m.Supervisor.Forename)
+                @Html.HiddenFor(m => m.Supervisor.Email)
+            </dt>
+            <dd>
+                <a href="mailto:@Model.Supervisor.Email?Subject=@Model.Code"> @Html.DisplayFor(model => model.Supervisor.FullName)</a>
+            </dd>
+            <dt>
+                <a href="#descCollapse" data-toggle="collapse" aria-expanded="True"> Toggle Module @Html.DisplayNameFor(model => model.Description) </a>
+            </dt>
+            <dd>
+                <div id="descCollapse" class="collapsing">
+                    <textarea readonly="readonly" class="form-control autosize" asp-for="@Model.Description"></textarea>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-12">
+        <hr />
+        <h5 class="text-muted">
+            Please complete the below form, making sure to answer all questions.
+            Once you have completed the form and are happy with your responses, please submit the form to us using the <span class="text-primary">"Submit"</span> button at the foot of the page.
+        </h5>
+        <h5>This procedure is completely anonymous.</h5>
+        <hr />
+        @for (int j = 0; j < Model.Categories.Count; j++)
+            {
+            <input asp-for="@Model.Categories[j].Id" type="hidden" /><input type="hidden" asp-for="@Model.Categories[j].Title" />
+            <span class=" text-primary h4 form-text">
+                @Html.DisplayFor(m => m.Categories[j].Title)
+            </span>
+            <ul class="list-group">
+                @for (int i = 0; i < Model.Questions.Count; i++)
+                {
+                    if (Model.Questions[i].CategoryId == Model.Categories[j].Id)
+                    {
+                        <li class=" list-group-item row">
+                            @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type) @Html.HiddenFor(m => m.Questions[i].CategoryId)
+
+                            @if (Model.Questions[i].Type == QuestionType.Standard)
+                            {
+                                @Html.DisplayFor(m => m.Questions[i].Question1)
+                                <textarea asp-for="@Model.Questions[i].AnswerToSave.Answer1" class="form-control autosize"></textarea>
+                                <span asp-validation-for="@Model.Questions[i].AnswerToSave.Answer1" class="text-danger"></span>
+                            }
+                            @if (Model.Questions[i].Type == QuestionType.Rate)
+                            {
+                                <div class=" col-md-7">
+                                    @Html.DisplayFor(m => m.Questions[i].Question1)
+                                </div>
+                                <div class="col-md-5">
+                                    <input data-min="0" data-max="5" data-step="0.5" data-size="xs" asp-for="@Model.Questions[i].RateAnswerToSave.Rating" class="rating rating-loading" />
+                                </div>
+                                <span asp-validation-for="@Model.Questions[i].RateAnswerToSave.Rating" class="text-danger"></span>
+                            }
+
+                        </li>
+                    }
+                }
+            </ul>
+        }
+    </div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="YearId" />
+    <div class="form-group col-sm-12">
+        <hr />
+        <input type="submit" value="Submit" class="btn btn-primary" />
+        <a asp-action="Index" asp-controller="Home" class="float-sm-right">Back to Module List</a>
+    </div>
+</form>

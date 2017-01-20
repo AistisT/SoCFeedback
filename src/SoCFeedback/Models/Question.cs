@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoCFeedback.Models
 {
@@ -10,8 +11,8 @@ namespace SoCFeedback.Models
         public Question()
         {
             ModuleQuestions = new HashSet<ModuleQuestions>();
-            PossibleAnswer = new HashSet<PossibleAnswer>();
             Answer = new HashSet<Answer>();
+            RateAnswer = new HashSet<RateAnswer>();
         }
 
         public Guid Id { get; set; }
@@ -22,14 +23,26 @@ namespace SoCFeedback.Models
         [Required]
         public QuestionType Type { get; set; }
         [Required]
+        [Display(Name = "Category")]
         public Guid CategoryId { get; set; }
         [Display(Name = "Optional")]
         public bool Optional { get; set; }
         public Status Status { get; set; }
 
+        [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
+        [Display(Name = "Question Order In Category")]
+        public int QuestionNumber { get; set; } = 99;
+
+        [NotMapped]
+        public RunningStatus RunningStatus { get; set; }
+        [NotMapped]
+        public Answer AnswerToSave { get; set; }
+        [NotMapped]
+        public RateAnswer RateAnswerToSave { get; set; }
+
         public virtual ICollection<ModuleQuestions> ModuleQuestions { get; set; }
-        public virtual ICollection<PossibleAnswer> PossibleAnswer { get; set; }
         public virtual ICollection<Answer> Answer { get; set; }
+        public virtual ICollection<RateAnswer> RateAnswer { get; set; }
         public virtual Category Category { get; set; }
     }
 }

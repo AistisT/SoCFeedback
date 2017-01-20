@@ -47,7 +47,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            <textarea readonly="readonly" class="form-control autosize" asp-for="Description"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Url)
@@ -58,9 +58,9 @@
     </dl>
 
     <form asp-action="Restore">
-        <div class="form-actions no-color">
-            <input type="submit" value="Restore" class="btn btn-primary" /> |
-            <a asp-action="Index">Back to List</a>
+        <div class="form-group col-sm-12">
+            <input type="submit" value="Restore" class="btn btn-primary" />
+            <a asp-action="Index" class="float-right">Back to List</a>
         </div>
     </form>
 </div>

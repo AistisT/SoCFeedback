@@ -1,19 +1,18 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using SoCFeedback.Models;
 using SoCFeedback.Enums;
+using SoCFeedback.Models;
 
-namespace SoCFeedback.Services
+namespace SoCFeedback.Data
 {
     public partial class FeedbackDbContext : DbContext
     {
         public virtual DbSet<Answer> Answer { get; set; }
+        public virtual DbSet<RateAnswer> RateAnswer { get; set; }
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Level> Level { get; set; }
         public virtual DbSet<Module> Module { get; set; }
         public virtual DbSet<ModuleQuestions> ModuleQuestions { get; set; }
-        public virtual DbSet<PossibleAnswer> PossibleAnswer { get; set; }
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<Year> Year { get; set; }
         public virtual DbSet<YearModules> YearModules { get; set; }
@@ -34,11 +33,9 @@ namespace SoCFeedback.Services
                     .HasColumnName("Answer")
                     .HasMaxLength(Constants.AnswerLength);
 
-                entity.Property(e => e.ModuleCode)
-                    .IsRequired() 
-                    .HasMaxLength(Constants.ModuleCodeLength);
+                entity.Property(e => e.ModuleId).IsRequired();
 
-                entity.Property(e => e.Timestamp).HasColumnType("datetime");
+                entity.Property(e => e.Year).IsRequired();
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answer)
@@ -47,9 +44,29 @@ namespace SoCFeedback.Services
                     .HasConstraintName("FK_Answer_Question");
             });
 
+            modelBuilder.Entity<RateAnswer>(entity =>
+            {
+                entity.Property(e => e.Id);
+
+                entity.Property(e => e.Rating)
+                    .IsRequired();
+
+                entity.Property(e => e.ModuleId).IsRequired();
+
+                entity.Property(e => e.Year).IsRequired();
+
+                entity.HasOne(d => d.Question)
+                    .WithMany(p => p.RateAnswer)
+                    .HasForeignKey(d => d.QuestionId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_RateAnswer_Question");
+            });
+
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.Property(e => e.Id);
+
+                entity.Property(e => e.CategoryOrder).HasDefaultValueSql("99");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -84,7 +101,7 @@ namespace SoCFeedback.Services
             modelBuilder.Entity<Level>(entity =>
             {
                 entity.Property(e => e.Id);
-               
+
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(Constants.LevelTitleLength);
@@ -121,9 +138,9 @@ namespace SoCFeedback.Services
                     .IsRequired()
                     .HasColumnName("Status");
 
-            entity.Property(e => e.LevelId)
-                    .IsRequired()
-                    .HasMaxLength(Constants.LevelTitleLength);
+                entity.Property(e => e.LevelId)
+                        .IsRequired()
+                        .HasMaxLength(Constants.LevelTitleLength);
 
                 entity.HasOne(d => d.Level)
                     .WithMany(p => p.Module)
@@ -133,7 +150,7 @@ namespace SoCFeedback.Services
 
                 entity.HasOne(d => d.Supervisor)
                     .WithMany(p => p.Module)
-                    .HasForeignKey(d =>  d.SupervisorId)
+                    .HasForeignKey(d => d.SupervisorId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Module_Supervisor");
             });
@@ -142,8 +159,6 @@ namespace SoCFeedback.Services
             {
                 entity.HasKey(e => new { e.ModuleId, e.QuestionId })
                     .HasName("PK_ModuleQuestions");
-
-                entity.Property(e => e.ModuleId).HasMaxLength(Constants.ModuleCodeLength);
 
                 entity.HasOne(d => d.ModuleCodeNavigation)
                     .WithMany(p => p.ModuleQuestions)
@@ -158,26 +173,13 @@ namespace SoCFeedback.Services
                     .HasConstraintName("FK_ModuleQuestions_Question");
             });
 
-            modelBuilder.Entity<PossibleAnswer>(entity =>
-            {
-                entity.Property(e => e.Id);
-
-                entity.Property(e => e.Answer)
-                    .IsRequired()
-                    .HasMaxLength(Constants.PossibleAnswerLength);
-
-                entity.HasOne(d => d.Question)
-                    .WithMany(p => p.PossibleAnswer)
-                    .HasForeignKey(d => d.QuestionId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PossibleAnswer_Question");
-            });
 
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.Property(e => e.Id);
 
                 entity.Property(e => e.Optional).HasDefaultValueSql("0");
+                entity.Property(e => e.QuestionNumber).HasDefaultValueSql("99");
 
                 entity.Property(e => e.Question1)
                     .IsRequired()
@@ -226,6 +228,6 @@ namespace SoCFeedback.Services
                     .HasConstraintName("FK_YearModules_Year");
             });
         }
-        
+
     }
 }

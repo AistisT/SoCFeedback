@@ -28,6 +28,9 @@
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.QuestionNumber)
+            </th>
+            <th>
                 Action
             </th>
         </tr>
@@ -35,6 +38,7 @@
     <tbody>
         @foreach (var item in Model)
         {
+            string temp = item.Optional.ToString();
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Question1)
@@ -43,13 +47,16 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Optional)
+                    @Html.DisplayFor(modelItem => temp)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionNumber)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

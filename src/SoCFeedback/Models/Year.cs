@@ -23,7 +23,8 @@ namespace SoCFeedback.Models
 
         public virtual ICollection<YearModules> YearModules { get; set; }
         [NotMapped]
-        public List<Module> Modules { get; set; } 
+        public List<Module> Modules { get; set; }
+        [NotMapped]
         public List<Level> Levels { get; set; }
     }
 }

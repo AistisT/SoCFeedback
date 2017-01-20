@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using SoCFeedback.Services;
+using SoCFeedback.Data;
 using SoCFeedback.Enums;
 
 namespace SoCFeedback.Data.Migrations
@@ -25,16 +25,13 @@ namespace SoCFeedback.Data.Migrations
                     b.Property<string>("Answer1")
                         .IsRequired()
                         .HasColumnName("Answer")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(3000);
 
-                    b.Property<string>("ModuleCode")
-                        .IsRequired()
-                        .HasMaxLength(20);
+                    b.Property<Guid>("ModuleId");
 
                     b.Property<Guid>("QuestionId");
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime");
+                    b.Property<int>("Year");
 
                     b.HasKey("Id");
 
@@ -47,6 +44,10 @@ namespace SoCFeedback.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CategoryOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("99");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -82,11 +83,7 @@ namespace SoCFeedback.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<Guid?>("YearId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("YearId");
 
                     b.ToTable("Level");
                 });
@@ -101,7 +98,7 @@ namespace SoCFeedback.Data.Migrations
                         .HasMaxLength(20);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(3000);
 
                     b.Property<Guid>("LevelId")
                         .HasMaxLength(50);
@@ -117,7 +114,7 @@ namespace SoCFeedback.Data.Migrations
 
                     b.Property<string>("Url")
                         .HasColumnName("URL")
-                        .HasMaxLength(250);
+                        .HasMaxLength(254);
 
                     b.HasKey("Id");
 
@@ -130,12 +127,9 @@ namespace SoCFeedback.Data.Migrations
 
             modelBuilder.Entity("SoCFeedback.Models.ModuleQuestions", b =>
                 {
-                    b.Property<Guid>("ModuleId")
-                        .HasMaxLength(20);
+                    b.Property<Guid>("ModuleId");
 
                     b.Property<Guid>("QuestionId");
-
-                    b.Property<int>("QuestionOrder");
 
                     b.HasKey("ModuleId", "QuestionId")
                         .HasName("PK_ModuleQuestions");
@@ -143,24 +137,6 @@ namespace SoCFeedback.Data.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("ModuleQuestions");
-                });
-
-            modelBuilder.Entity("SoCFeedback.Models.PossibleAnswer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<Guid>("QuestionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("PossibleAnswer");
                 });
 
             modelBuilder.Entity("SoCFeedback.Models.Question", b =>
@@ -179,6 +155,10 @@ namespace SoCFeedback.Data.Migrations
                         .HasColumnName("Question")
                         .HasMaxLength(500);
 
+                    b.Property<int>("QuestionNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("99");
+
                     b.Property<int>("Status")
                         .HasColumnName("Status");
 
@@ -191,6 +171,26 @@ namespace SoCFeedback.Data.Migrations
                     b.ToTable("Question");
                 });
 
+            modelBuilder.Entity("SoCFeedback.Models.RateAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ModuleId");
+
+                    b.Property<Guid>("QuestionId");
+
+                    b.Property<float>("Rating");
+
+                    b.Property<int>("Year");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("RateAnswer");
+                });
+
             modelBuilder.Entity("SoCFeedback.Models.Supervisor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -198,7 +198,7 @@ namespace SoCFeedback.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(254);
 
                     b.Property<string>("Forename")
                         .IsRequired()
@@ -256,13 +256,6 @@ namespace SoCFeedback.Data.Migrations
                         .HasConstraintName("FK_Answer_Question");
                 });
 
-            modelBuilder.Entity("SoCFeedback.Models.Level", b =>
-                {
-                    b.HasOne("SoCFeedback.Models.Year")
-                        .WithMany("Levels")
-                        .HasForeignKey("YearId");
-                });
-
             modelBuilder.Entity("SoCFeedback.Models.Module", b =>
                 {
                     b.HasOne("SoCFeedback.Models.Level", "Level")
@@ -289,20 +282,20 @@ namespace SoCFeedback.Data.Migrations
                         .HasConstraintName("FK_ModuleQuestions_Question");
                 });
 
-            modelBuilder.Entity("SoCFeedback.Models.PossibleAnswer", b =>
-                {
-                    b.HasOne("SoCFeedback.Models.Question", "Question")
-                        .WithMany("PossibleAnswer")
-                        .HasForeignKey("QuestionId")
-                        .HasConstraintName("FK_PossibleAnswer_Question");
-                });
-
             modelBuilder.Entity("SoCFeedback.Models.Question", b =>
                 {
                     b.HasOne("SoCFeedback.Models.Category", "Category")
                         .WithMany("Question")
                         .HasForeignKey("CategoryId")
                         .HasConstraintName("FK_Question_Category");
+                });
+
+            modelBuilder.Entity("SoCFeedback.Models.RateAnswer", b =>
+                {
+                    b.HasOne("SoCFeedback.Models.Question", "Question")
+                        .WithMany("RateAnswer")
+                        .HasForeignKey("QuestionId")
+                        .HasConstraintName("FK_RateAnswer_Question");
                 });
 
             modelBuilder.Entity("SoCFeedback.Models.YearModules", b =>

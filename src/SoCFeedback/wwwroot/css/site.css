@@ -1,26 +1,12 @@
 ﻿body {
     padding-top: 150px;
 }
-.form-control-select {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.25;
-    color: #55595c;
-    background-color: #fff;
-    background-image: none;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
-}
 
 
 @media (min-width: 768px) {
     .dl-horizontal dt {
         float: left;
-        width: 160px;
+        width: 250px;
         overflow: hidden;
         clear: left;
         text-align: right;
@@ -29,7 +15,7 @@
     }
 
     .dl-horizontal dd {
-        margin-left: 180px;
+        margin-left: 270px;
     }
 }
 
@@ -37,4 +23,113 @@
 .dl-horizontal dd:after {
     display: table;
     content: " ";
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: white;
+    border: none;
+    resize: none;
+    color: #373a3c;
+}
+.autosize {
+    /*Class for auto size textarea*/
+}
+
+.hide {
+    display: none !important;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+a.label:hover,
+a.label:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.label:empty {
+    display: none;
+}
+
+.label {
+    position: relative;
+    top: -1px;
+}
+
+.label-default {
+    background-color: #777;
+}
+
+    .label-default[href]:hover,
+    .label-default[href]:focus {
+        background-color: #5e5e5e;
+    }
+
+.label-primary {
+    background-color: #337ab7;
+}
+
+    .label-primary[href]:hover,
+    .label-primary[href]:focus {
+        background-color: #286090;
+    }
+
+.label-success {
+    background-color: #5cb85c;
+}
+
+    .label-success[href]:hover,
+    .label-success[href]:focus {
+        background-color: #449d44;
+    }
+
+.label-info {
+    background-color: #5bc0de;
+}
+
+    .label-info[href]:hover,
+    .label-info[href]:focus {
+        background-color: #31b0d5;
+    }
+
+.label-warning {
+    background-color: #f0ad4e;
+}
+
+    .label-warning[href]:hover,
+    .label-warning[href]:focus {
+        background-color: #ec971f;
+    }
+
+.label-danger {
+    background-color: #d9534f;
+}
+
+    .label-danger[href]:hover,
+    .label-danger[href]:focus {
+        background-color: #c9302c;
+    }
+
+ .no-marginBot {
+     margin-bottom: 0px;
+ }
+
+.ct-label {
+    fill: #000000;
+    color: #000000;
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: bold;
 }

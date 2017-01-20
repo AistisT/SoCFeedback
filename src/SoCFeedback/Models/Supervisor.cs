@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoCFeedback.Models
 {
+
     public partial class Supervisor
     {
         public Supervisor()
@@ -30,6 +31,6 @@ namespace SoCFeedback.Models
         public virtual ICollection<Module> Module { get; set; }
 
         [NotMapped]
-        public string FullName { get => $"{Title} {Forename} {Surname}"; }
+        public string FullName => $"{Title} {Forename} {Surname}";
     }
 }

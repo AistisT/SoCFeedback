@@ -1,8 +1,40 @@
-﻿@{
+﻿
+@using SoCFeedback.Enums
+@model SoCFeedback.Models.Year
+@{
     ViewData["Title"] = "Home Page";
 }
+@if (Model != null)
+{
+    int followingYear = Model.Year1 + 1;
+    <h2>Academic Year @Html.DisplayFor(model => model.Year1)/@followingYear </h2>
 
-
-<div class="row">
-
-</div>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <hr/>
+                @for (int j = 0; j < Model.Levels.Count; j++)
+                {
+                    <span class="h4 form-text">
+                        @Html.DisplayFor(m => m.Levels[j].Title)
+                    </span>
+                    <ul class="list-group">
+                        @for (int i = 0; i < Model.Modules.Count; i++)
+                        {
+                            if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                            {
+                                <li class=" list-group-item ">
+                                    <a asp-action="Module" asp-controller="Home" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Module feedback forms for this year are not yet published, please check back closer to end of semester.</h2>
+}

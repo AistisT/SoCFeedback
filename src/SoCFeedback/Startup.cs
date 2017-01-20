@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,8 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SoCFeedback.Services;
 using SoCFeedback.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using SoCFeedback.Data;
 
 namespace SoCFeedback
 {
@@ -53,8 +49,10 @@ namespace SoCFeedback
             }*/)
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
-            services.Configure<AuthMessageSenderOptions>(options => Configuration.GetSection("AuthMessageSenderOptions").Bind(options)); 
-            services.AddMvc();
+            services.Configure<AuthMessageSenderOptions>(options => Configuration.GetSection("AuthMessageSenderOptions").Bind(options));
+            services.AddMvc().AddMvcOptions(options => {
+                options.ModelBinderProviders.Insert(0, new TrimmingModelBinderProvider());
+            });
 
             services.AddAuthorization(options =>
             {

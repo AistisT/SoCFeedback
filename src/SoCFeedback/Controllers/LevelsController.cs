@@ -1,16 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SoCFeedback.Data;
+using SoCFeedback.Enums;
 using SoCFeedback.Models;
-using SoCFeedback.Services;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SoCFeedback.Controllers
 {
+    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Lecturer")]
     public class LevelsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -120,10 +121,7 @@ namespace SoCFeedback.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
@@ -154,7 +152,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
             var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
-            level.Status = Enums.Status.Archived;
+            level.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -183,7 +181,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
             var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
-            level.Status = Enums.Status.Active;
+            level.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -192,19 +190,5 @@ namespace SoCFeedback.Controllers
         {
             return _context.Level.Any(e => e.Id == id);
         }
-
-        //[AcceptVerbs("Get", "Post")]
-        //public IActionResult CheckLevelExists(string title)
-        //{
-        //    if (!string.IsNullOrEmpty(title))
-        //    {
-        //        var level = _context.Level.Any(e => e.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
-        //        if (level)
-        //        {
-        //            return Json(data: $"Level {title} already exists.");
-        //        }
-        //    }
-        //    return Json(data: true);
-        //}
     }
 }

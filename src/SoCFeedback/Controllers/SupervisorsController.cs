@@ -1,15 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SoCFeedback.Data;
+using SoCFeedback.Enums;
 using SoCFeedback.Models;
-using SoCFeedback.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SoCFeedback.Controllers
 {
+    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Lecturer")]
     public class SupervisorsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -136,10 +138,7 @@ namespace SoCFeedback.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
@@ -170,7 +169,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
             var supervisor = await _context.Supervisor.SingleOrDefaultAsync(m => m.Id == id);
-            supervisor.Status = Enums.Status.Archived;
+            supervisor.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -199,7 +198,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
             var supervisor = await _context.Supervisor.SingleOrDefaultAsync(m => m.Id == id);
-            supervisor.Status = Enums.Status.Active;
+            supervisor.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -1,15 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SoCFeedback.Data;
+using SoCFeedback.Enums;
 using SoCFeedback.Models;
-using SoCFeedback.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SoCFeedback.Controllers
 {
+    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Lecturer")]
     public class CategoriesController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -54,7 +56,7 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Status")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Status,CategoryOrder")] Category category)
         {
             var obj = _context.Category.Any(e => e.Title.Equals(category.Title, StringComparison.OrdinalIgnoreCase));
             if (obj)
@@ -92,7 +94,7 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,Status")] Category category)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,Status,CategoryOrder")] Category category)
         {
             if (id ==null)
             {
@@ -118,10 +120,7 @@ namespace SoCFeedback.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
@@ -152,7 +151,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
             var category = await _context.Category.SingleOrDefaultAsync(m => m.Id == id);
-            category.Status = Enums.Status.Archived;
+            category.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -181,7 +180,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
             var category = await _context.Category.SingleOrDefaultAsync(m => m.Id == id);
-            category.Status = Enums.Status.Active;
+            category.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

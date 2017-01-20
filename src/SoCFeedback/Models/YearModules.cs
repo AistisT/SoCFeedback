@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SoCFeedback.Models
 {
@@ -7,7 +6,6 @@ namespace SoCFeedback.Models
     {
         public Guid YearId { get; set; }
         public Guid ModuleId { get; set; }
-
         public virtual Module ModuleCodeNavigation { get; set; }
         public virtual Year YearNavigation { get; set; }
     }

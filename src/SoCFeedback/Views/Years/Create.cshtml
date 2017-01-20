@@ -2,65 +2,60 @@
 @using SoCFeedback.Enums
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Year Form";
 }
 
 <h2>Create</h2>
 
 <form asp-action="Create">
-    <div class="form-horizontal col-md-12">
-        <h4>Year Questionnaires Form</h4>
+    <div>
+        <h4>Year Form</h4>
         <hr />
-       
-        <div class="form-group">
-            <label asp-for="Year1" class="col-md-2 control-label"></label>
+
+        <div class="form-group row">
+            <label asp-for="Year1" class="col-md-2 form-control-label"></label>
             <div class="col-md-2">
                 <input asp-for="Year1" class="form-control" id="yearInput" />
                 <span asp-validation-for="Year1" class="text-danger"></span>
             </div>
             <div class="col-md-8"> Please enter only starting year for academic term, e.g. 2016/2017 academic year would be 2016. </div>
         </div>
-
-
-        <div class="col-md-12">
-            <hr />
-            <h4>Modules running this year. Can be edited later, until published.</h4>
-            <h6>Archived modules will not show up in this list, active modules can be paused if they are not running this academic year.</h6>
-            <hr />
-            @for (int j = 0; j < Model.Levels.Count; j++)
-            {
-                <input type="hidden" asp-for="Levels[j].Id" /><input type="hidden" asp-for="Levels[j].Title" />
-                <span class=" text-primary h4">
-                    @Html.DisplayFor(m => m.Levels[j].Title)
-                </span>
-                <ul class="list-group">
-                    @for (int i = 0; i < Model.Modules.Count; i++)
+        <div class="row">
+            <div class="col-md-12">
+                <hr />
+                <h4>Modules running this year. Can be edited later, until published.</h4>
+                <h6>Archived modules will not show up in this list, active modules can be paused if they are not running this academic year.</h6>
+                <hr />
+                @for (int j = 0; j < Model.Levels.Count; j++)
                 {
-                        if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                    <input type="hidden" asp-for="@Model.Levels[j].Id" /><input type="hidden" asp-for="@Model.Levels[j].Title" />
+                    <span class=" text-primary h4 form-text">
+                        @Html.DisplayFor(m => m.Levels[j].Title)
+                    </span>
+                    <ul class="list-group">
+                        @for (int i = 0; i < Model.Modules.Count; i++)
                         {
-                            <li class=" list-group-item col-md-12">
-                                @Html.HiddenFor(m => m.Modules[i].Id) @Html.HiddenFor(m => m.Modules[i].Code) @Html.HiddenFor(m => m.Modules[i].Title) @Html.HiddenFor(m => m.Modules[i].LevelId)
-                                @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) <select asp-for="Modules[i].RunningStatus" asp-items="Html.GetEnumSelectList<ModuleStatus>()"></select>
-                            </li>
+                            if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                            {
+                                <li class=" list-group-item col-md-12">
+                                    @Html.HiddenFor(m => m.Modules[i].Id) @Html.HiddenFor(m => m.Modules[i].Code) @Html.HiddenFor(m => m.Modules[i].Title) @Html.HiddenFor(m => m.Modules[i].LevelId)
+                                    @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title)
+                                    <select asp-for="@Model.Modules[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-right"></select>
+                                </li>
+                            }
                         }
-                    }
-
-                </ul>
-            }
+                    </ul>
+                }
+            </div>
         </div>
-
         <div class="form-group col-sm-12">
             <hr />
             <input type="submit" id="submitButton" value="Create" class="btn btn-primary" />
-            <a asp-action="Index" class="float-xs-right">Back to List</a>
+            <a asp-action="Index" class="float-right">Back to List</a>
         </div>
     </div>
-
-
 </form>
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/YearQFormAdd.js" asp-append-version="true"></script>
 }

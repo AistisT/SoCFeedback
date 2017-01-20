@@ -16,5 +16,10 @@ namespace SoCFeedback.Enums
         /// Year is published, visible to students and closed to modications
         /// </summary>
         Published = 1,
+
+        /// <summary>
+        /// Year is finished, no longer visible to students or editable 
+        /// </summary>
+        Archived = 2
     }
 }

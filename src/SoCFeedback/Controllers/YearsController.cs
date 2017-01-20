@@ -1,17 +1,18 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SoCFeedback.Data;
+using SoCFeedback.Enums;
+using SoCFeedback.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SoCFeedback.Models;
-using SoCFeedback.Services;
-using SoCFeedback.Enums;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace SoCFeedback.Controllers
 {
+    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Lecturer")]
     public class YearsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -35,27 +36,16 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var year = await _context.Year.Include(y=>y.YearModules).SingleOrDefaultAsync(m => m.Id == id);
-            
+            var year = await _context.Year.Include(y => y.YearModules).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+
             if (year == null)
             {
                 return NotFound();
             }
 
-            List<Module> tempModuleList=new List<Module>();
-          
-            foreach (YearModules yearModule in year.YearModules)
-            {
-                tempModuleList.Add(_context.Module.Include(l=>l.Level).SingleOrDefault(m => m.Id == yearModule.ModuleId));
-            }
-            year.Modules= tempModuleList.OrderBy(o=>o.Code).ToList();
+            year.Modules = GetYearModules(year, _context);
+            year.Levels = GetYearLevels(year);
 
-            List<Level> tempLevelsList = new List<Level>();
-            foreach (var module in year.Modules)
-            {
-                tempLevelsList.Add(module.Level); 
-            }
-            year.Levels = tempLevelsList.GroupBy(e => e.Title).Select(group => group.First()).OrderBy(e=>e.OrderingNumber).ToList();
             return View(year);
         }
 
@@ -87,7 +77,7 @@ namespace SoCFeedback.Controllers
                 Year newYear = new Year { Year1 = year.Year1 };
                 _context.Add(newYear);
 
-                foreach (Module module in year.Modules.Where(m => m.RunningStatus == ModuleStatus.Running))
+                foreach (Module module in year.Modules.Where(m => m.RunningStatus == RunningStatus.Active))
                 {
                     _context.YearModules.Add(new YearModules
                     {
@@ -95,7 +85,6 @@ namespace SoCFeedback.Controllers
                         ModuleId = module.Id
                     });
                 }
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -110,11 +99,28 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
+            var year = await _context.Year.AsNoTracking().Include(y => y.YearModules).SingleOrDefaultAsync(m => m.Id == id);
             if (year == null)
             {
                 return NotFound();
             }
+            if (year.Status == YearStatus.Published)
+            {
+                RedirectToAction("Index");
+            }
+
+            year.Modules = _context.Module.AsNoTracking().Include(l => l.Level).Where(m => m.Status == Status.Active).OrderBy(o => o.Code).ToList();
+
+            List<Module> temptList = GetYearModules(year, _context);
+
+            foreach (var module in year.Modules)
+            {
+                if (!temptList.Exists(m => m.Id == module.Id))
+                    module.RunningStatus = RunningStatus.Inactive;
+            }
+
+            year.Levels = GetYearLevels(year);
+
             return View(year);
         }
 
@@ -123,37 +129,69 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Year1,Status")] Year year)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Year1,Status,Modules,Levels")] Year year)
         {
             if (id != year.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (year.Status == YearStatus.Published)
             {
-                try
-                {
-                    _context.Update(year);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!YearExists(year.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Index");
+                RedirectToAction("Index");
             }
-            return View(year);
+            var obj = _context.Year.AsNoTracking().Any(e => e.Year1 == year.Year1 && e.Id != year.Id);
+
+            if (obj)
+            {
+                ModelState.AddModelError("Year1", $"Questionnaire form for year {year.Year1} already exists.");
+            }
+
+            if (!ModelState.IsValid) return View(year);
+
+            try
+            {
+                var dbYear = await _context.Year.Include(y => y.YearModules).SingleOrDefaultAsync(m => m.Id == id);
+                dbYear.Year1 = year.Year1;
+                foreach (Module module in year.Modules)
+                {
+                    var tYearModule = new YearModules
+                    {
+                        YearId = year.Id,
+                        ModuleId = module.Id
+                    };
+
+                    if (!YearModuleExists(tYearModule) && module.RunningStatus == RunningStatus.Active)
+                    {
+                        dbYear.YearModules.Add(tYearModule);
+                        _context.YearModules.Add(tYearModule);
+                    }
+
+                    else if (module.RunningStatus == RunningStatus.Inactive)
+                    {
+                        var moduleToRemove =
+                            dbYear.YearModules.SingleOrDefault(y => y.YearId == year.Id && y.ModuleId == module.Id);
+                        if (moduleToRemove != null)
+                        {
+                            dbYear.YearModules.Remove(moduleToRemove);
+                            _context.YearModules.Remove(moduleToRemove);
+                        }
+                    }
+                }
+                _context.Update(dbYear);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!YearExists(year.Id))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return RedirectToAction("Index");
         }
 
-        // GET: Years/Delete/5
+        // GET: Years/Publish/5
         public async Task<IActionResult> Publish(Guid? id)
         {
             if (id == null)
@@ -161,23 +199,57 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
 
-            var year = await _context.Year
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var year = await _context.Year.Include(y => y.YearModules).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (year == null)
             {
                 return NotFound();
             }
-
+            year.Modules = GetYearModules(year,_context);
+            year.Levels = GetYearLevels(year);
             return View(year);
         }
 
-        // POST: Years/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Years/Publish/5
+        [HttpPost, ActionName("Publish")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PublishConfirmed(Guid id)
         {
+            var years = _context.Year.Where(y => y.Status == YearStatus.Published);
+            foreach (var dbYear in years)
+            {
+                dbYear.Status=YearStatus.Archived;
+            }
             var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
             year.Status = YearStatus.Published;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Years/Archive/5
+        public async Task<IActionResult> Archive(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var year = await _context.Year.Include(y => y.YearModules).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            if (year == null)
+            {
+                return NotFound();
+            }
+            year.Modules = GetYearModules(year, _context);
+            year.Levels = GetYearLevels(year);
+            return View(year);
+        }
+
+        // POST: Years/Archive/5
+        [HttpPost, ActionName("Archive")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ArchiveConfirmed(Guid id)
+        {
+            var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
+            year.Status = YearStatus.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -185,6 +257,29 @@ namespace SoCFeedback.Controllers
         private bool YearExists(Guid id)
         {
             return _context.Year.Any(e => e.Id == id);
+        }
+
+        private bool YearModuleExists(YearModules yearModule)
+        {
+            return _context.YearModules.AsNoTracking().FirstOrDefault(y => y.YearId == yearModule.YearId && y.ModuleId == yearModule.ModuleId) != null;
+        }
+
+        public static List<Module> GetYearModules(Year year, FeedbackDbContext context)
+        {
+            List<Module> tempModuleList = new List<Module>();
+
+            foreach (YearModules yearModule in year.YearModules)
+            {
+                tempModuleList.Add(context.Module.Include(l => l.Level).AsNoTracking().SingleOrDefault(m => m.Id == yearModule.ModuleId));
+            }
+            context.Dispose();
+            return tempModuleList.OrderBy(o => o.Code).ToList();
+        }
+
+        public static List<Level> GetYearLevels(Year year)
+        {
+            List<Level> tempLevelsList = year.Modules.Select(module => module.Level).ToList();
+            return tempLevelsList.GroupBy(e => e.Title).Select(group => group.First()).OrderBy(e => e.OrderingNumber).ToList();
         }
     }
 }

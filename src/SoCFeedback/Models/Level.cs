@@ -20,6 +20,7 @@ namespace SoCFeedback.Models
         public Status Status { get; set; }
         [Required]
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
+        [Display(Name = "Level Order In a Year")]
         public int OrderingNumber { get; set; }
         [MaxLength(Constants.CategoryDescriptionLength)]
 

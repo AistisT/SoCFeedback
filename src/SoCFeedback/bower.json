@@ -2,16 +2,21 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "bootstrap": "v4.0.0-alpha.5",
     "jquery": "3.1.1",
     "jquery-validation": "1.16.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "datatables": "DataTables#1.10.13",
-    "Sortable": "sortablejs#1.5.0-rc1"
+    "bootstrap": "v4.0.0-alpha.5",
+    "textarea-autosize": "v0.4.2",
+    "bootstrap-star-rating": "v4.0.1",
+    "font-awesome": "Font-Awesome#v4.7.0",
+    "chartist": "v0.10.1",
+    "chartist-plugin-axistitle": "0.1.0"
   },
   "resolutions": {
     "bootstrap": "v4.0.0-alpha.5",
     "jquery": "3.1.1",
-    "jquery-validation": "1.16.0"
+    "jquery-validation": "1.16.0",
+    "chartist": "v0.10.1"
   }
 }

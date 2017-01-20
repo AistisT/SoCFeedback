@@ -8,13 +8,8 @@
         Standard = 0,
 
         /// <summary>
-        /// Rating scale
+        /// Rating scale question
         /// </summary>
         Rate = 1,
-
-        /// <summary>
-        /// Multiple choices 
-        /// </summary>
-        MultiChoise = 2,
     }
 }
