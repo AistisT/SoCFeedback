@@ -1,5 +1,5 @@
 @using SoCFeedback.Enums
-@model SoCFeedback.Models.Year
+@model Year
 
 @{
     ViewData["Title"] = "Year Form Details";
@@ -9,7 +9,7 @@
 
 <div>
     <h4>Year Form</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Year1)
@@ -26,25 +26,24 @@
     </dl>
     <div class="row">
         <div class="col-md-12">
-            <hr />
+            <hr/>
             <h3>Running Modules</h3>
-            @for (int j = 0; j < Model.Levels.Count; j++)
+            @for (var j = 0; j < Model.Levels.Count; j++)
             {
-
                 <span class=" text-primary h4 form-text">
                     @Html.DisplayFor(m => m.Levels[j].Title)
                 </span>
                 <ul class="list-group">
-                    @for (int i = 0; i < Model.Modules.Count; i++)
-                {
-                    if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                    @for (var i = 0; i < Model.Modules.Count; i++)
                     {
+                        if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                        {
                             <li class=" list-group-item ">
                                 <a asp-action="Details" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
-                               @if (Model.Status == YearStatus.Pending)
-                               {
-                                   <a class="btn btn-sm btn-primary float-sm-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
-                               }
+                                @if (Model.Status == YearStatus.Pending)
+                                {
+                                    <a class="btn btn-sm btn-success float-sm-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
+                                }
                                 @if (Model.Status != YearStatus.Pending)
                                 {
                                     <a class="btn btn-sm btn-primary float-sm-right" asp-action="Feedback" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Feedback"> Module Feedback</a>
@@ -59,12 +58,11 @@
 </div>
 
 <div class="col-md-12">
-    <hr />
+    <hr/>
     @if (Model.Status != YearStatus.Published)
     {
         <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     }
-    <a  class="float-right" asp-action="Index">Back to List</a>
-    <hr />
+    <a class="float-sm-right" asp-action="Index">Back to List</a>
+    <hr/>
 </div>
-

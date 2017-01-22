@@ -1,5 +1,5 @@
-@model IEnumerable<SoCFeedback.Models.Module>
 @using SoCFeedback.Enums
+@model IEnumerable<Module>
 @{
     ViewData["Title"] = "Modules Index";
 }
@@ -11,65 +11,65 @@
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Supervisor)
-            </th>
-            <th>
-                Action
-            </th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Level)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Supervisor)
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Code)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Url)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Level.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Supervisor.FullName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    @if (item.Status == Status.Archived)
-                    {
-                        <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
-                    }
-                    else if (item.Status == Status.Active)
-                    {
-                        <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
-                    }
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Level.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supervisor.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @if (item.Status == Status.Archived)
+                {
+                    <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
+                }
+                else if (item.Status == Status.Active)
+                {
+                    <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
+                }
+            </td>
+        </tr>
+    }
     </tbody>
 </table>

@@ -3,38 +3,38 @@
     public enum Title
     {
         /// <summary>
-        /// Doctor
+        ///     Doctor
         /// </summary>
         Dr = 0,
 
         /// <summary>
-        /// Profesor
+        ///     Profesor
         /// </summary>
         Prof = 1,
 
         /// <summary>
-        ///  Mr
+        ///     Mr
         /// </summary>
         Mr = 2,
 
         /// <summary>
-        ///  Mrs
+        ///     Mrs
         /// </summary>
         Mrs = 3,
 
         /// <summary>
-        ///  Ms
+        ///     Ms
         /// </summary>
         Ms = 4,
 
         /// <summary>
-        ///  Miss
+        ///     Miss
         /// </summary>
         Miss = 5,
 
         /// <summary>
-        ///  Mx
+        ///     Mx
         /// </summary>
-        Mx = 6,
+        Mx = 6
     }
 }

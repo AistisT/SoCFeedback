@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SoCFeedback.Services;
-using SoCFeedback.Models;
 using SoCFeedback.Data;
+using SoCFeedback.Models;
+using SoCFeedback.Services;
 
 namespace SoCFeedback
 {
@@ -18,14 +18,11 @@ namespace SoCFeedback
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
             if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets("aspnet-SoCFeedback-db47c17e-fea0-4d2a-aec3-afe01ee9f79c");
-            }
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -43,16 +40,16 @@ namespace SoCFeedback
             services.AddDbContext<FeedbackDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(/*config =>
+            services.AddIdentity<ApplicationUser, IdentityRole>( /*config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
             }*/)
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
-            services.Configure<AuthMessageSenderOptions>(options => Configuration.GetSection("AuthMessageSenderOptions").Bind(options));
-            services.AddMvc().AddMvcOptions(options => {
-                options.ModelBinderProviders.Insert(0, new TrimmingModelBinderProvider());
-            });
+            services.Configure<AuthMessageSenderOptions>(
+                options => Configuration.GetSection("AuthMessageSenderOptions").Bind(options));
+            services.AddMvc()
+                .AddMvcOptions(options => { options.ModelBinderProviders.Insert(0, new TrimmingModelBinderProvider()); });
 
             services.AddAuthorization(options =>
             {
@@ -86,7 +83,6 @@ namespace SoCFeedback
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,8 +111,8 @@ namespace SoCFeedback
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

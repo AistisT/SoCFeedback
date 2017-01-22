@@ -2,7 +2,7 @@
 
 namespace SoCFeedback.Models
 {
-    public partial class YearModules
+    public class YearModules
     {
         public Guid YearId { get; set; }
         public Guid ModuleId { get; set; }

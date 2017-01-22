@@ -3,13 +3,13 @@
     public enum Roles
     {
         /// <summary>
-        /// Lecturer Role
+        ///     Lecturer Role
         /// </summary>
         Lecturer = 0,
 
         /// <summary>
-        /// Admin Role
+        ///     Admin Role
         /// </summary>
-        Admin = 1,
+        Admin = 1
     }
 }

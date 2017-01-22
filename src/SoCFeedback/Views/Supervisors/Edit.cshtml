@@ -1,5 +1,4 @@
-@model SoCFeedback.Models.Supervisor
-@using SoCFeedback.Enums
+@model Supervisor
 @{
     ViewData["Title"] = "Edit Supervisor";
 }
@@ -9,9 +8,9 @@
 <form asp-action="Edit">
     <div>
         <h4>Supervisor</h4>
-        <hr />
+        <hr/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id"/>
         <div class="form-group row">
             <label asp-for="Title" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
@@ -22,32 +21,28 @@
         <div class="form-group row">
             <label asp-for="Forename" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Forename" class="form-control" />
+                <input asp-for="Forename" class="form-control"/>
                 <span asp-validation-for="Forename" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
             <label asp-for="Surname" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Surname" class="form-control" />
+                <input asp-for="Surname" class="form-control"/>
                 <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
             <label asp-for="Email" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control"/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
-        <input type="hidden" asp-for="Status" />
+        <input type="hidden" asp-for="Status"/>
         <div class="form-group col-sm-12">
-            <input type="submit" value="Save" class="btn btn-primary" />
-            <a asp-action="Index" class="float-right">Back to List</a>
+            <input type="submit" value="Save" class="btn btn-primary"/>
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </div>
 </form>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

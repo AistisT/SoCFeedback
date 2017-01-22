@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
@@ -9,8 +8,8 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RateAnswer",
-                columns: table => new
+                "RateAnswer",
+                table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ModuleId = table.Column<Guid>(nullable: false),
@@ -22,23 +21,23 @@ namespace SoCFeedback.Data.Migrations
                 {
                     table.PrimaryKey("PK_RateAnswer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RateAnswer_Question",
-                        column: x => x.QuestionId,
-                        principalTable: "Question",
-                        principalColumn: "Id",
+                        "FK_RateAnswer_Question",
+                        x => x.QuestionId,
+                        "Question",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RateAnswer_QuestionId",
-                table: "RateAnswer",
-                column: "QuestionId");
+                "IX_RateAnswer_QuestionId",
+                "RateAnswer",
+                "QuestionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RateAnswer");
+                "RateAnswer");
         }
     }
 }

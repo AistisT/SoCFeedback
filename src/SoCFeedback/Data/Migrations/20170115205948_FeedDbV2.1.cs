@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
 {
@@ -9,18 +7,16 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                 name: "Year",
-                 table: "Answer");
+                "Year",
+                "Answer");
             migrationBuilder.AddColumn<int>(
-                name: "Year",
-                table: "Answer",
+                "Year",
+                "Answer",
                 nullable: false);
-
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
         }
     }
 }

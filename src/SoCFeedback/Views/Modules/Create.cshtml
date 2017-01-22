@@ -1,5 +1,4 @@
-@model SoCFeedback.Models.Module
-@using SoCFeedback.Enums
+@model Module
 @{
     ViewData["Title"] = "Create Module";
 }
@@ -7,21 +6,21 @@
 <h2>Create</h2>
 
 <form asp-action="Create">
-    <div class="">
+    <div>
         <h4>Module</h4>
-        <hr />
+        <hr/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group row">
             <label asp-for="Code" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Code" class="form-control" />
+                <input asp-for="Code" class="form-control"/>
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
             <label asp-for="Title" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="form-control"/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
@@ -49,17 +48,13 @@
         <div class="form-group row">
             <label asp-for="Url" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Url" class="form-control" />
+                <input asp-for="Url" class="form-control"/>
                 <span asp-validation-for="Url" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group col-sm-12">
-            <input type="submit" value="Create" class="btn btn-primary" />
-            <a asp-action="Index" class="float-right">Back to List</a>
+            <input type="submit" value="Create" class="btn btn-primary"/>
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </div>
 </form>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

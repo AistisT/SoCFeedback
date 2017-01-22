@@ -9,13 +9,12 @@ namespace SoCFeedback.Services
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (context.Metadata.IsComplexType && !context.Metadata.IsCollectionType)
             {
-                var propertyBinders = context.Metadata.Properties.ToDictionary(property => property, context.CreateBinder);
+                var propertyBinders = context.Metadata.Properties.ToDictionary(property => property,
+                    context.CreateBinder);
 
                 return new TrimmingModelBinder(propertyBinders);
             }

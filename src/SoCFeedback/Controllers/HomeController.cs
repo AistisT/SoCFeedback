@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,6 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-
     public class HomeController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -19,9 +17,13 @@ namespace SoCFeedback.Controllers
         {
             _context = context;
         }
+
         public async Task<IActionResult> Index()
         {
-            var year = await _context.Year.Include(y => y.YearModules).AsNoTracking().FirstOrDefaultAsync(m => m.Status==YearStatus.Published);
+            var year =
+                await _context.Year.Include(y => y.YearModules)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Status == YearStatus.Published);
 
             if (year != null)
             {
@@ -36,40 +38,34 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Module(Guid? id, Guid yid)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
-            var year = await _context.Year.AsNoTracking().SingleOrDefaultAsync(y => y.Id == yid && y.Status == YearStatus.Published);
+            var year =
+                await _context.Year.AsNoTracking()
+                    .SingleOrDefaultAsync(y => y.Id == yid && y.Status == YearStatus.Published);
             if (year == null)
-            {
                 return RedirectToAction("Index");
-            }
             var module = await _context.Module.AsNoTracking()
-
                 .Include(s => s.Supervisor)
                 .Include(q => q.ModuleQuestions)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (module == null)
-            {
                 return NotFound();
-            }
             module.Questions = _context.Question.Include(c => c.Category)
-                    .AsNoTracking()
-                    .OrderBy(q => q.QuestionNumber)
-                    .ToList();
+                .AsNoTracking()
+                .OrderBy(q => q.QuestionNumber)
+                .ToList();
 
-            for (var i = module.Questions.Count-1; i >=0 ; i--)
+            for (var i = module.Questions.Count - 1; i >= 0; i--)
             {
                 var question = module.Questions[i];
                 if (!module.ModuleQuestions.Exists(m => m.QuestionId == question.Id))
-                {
                     module.Questions.Remove(question);
-                }
             }
 
-            List<Category> tempCategory = module.Questions.Select(m => m.Category).ToList();
+            var tempCategory = module.Questions.Select(m => m.Category).ToList();
             module.YearId = yid;
-            module.Categories= tempCategory.GroupBy(e => e.Title).Select(group => group.First()).OrderBy(e => e.CategoryOrder).ToList();
+            module.Categories =
+                tempCategory.GroupBy(e => e.Title).Select(group => group.First()).OrderBy(e => e.CategoryOrder).ToList();
 
             return View(module);
         }
@@ -81,24 +77,19 @@ namespace SoCFeedback.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Module(Guid? id, Module module)
         {
-            if (id != module.Id )
-            {
+            if (id != module.Id)
                 return NotFound();
-            }
 
             var dbModule = _context.Module.AsNoTracking().FirstOrDefault(e => e.Id == id);
             var dbYear = _context.Year.AsNoTracking().FirstOrDefault(y => y.Id == module.YearId);
             if (dbModule == null || dbYear == null)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     foreach (var question in module.Questions)
-                    {
                         switch (question.Type)
                         {
                             case QuestionType.Standard:
@@ -119,14 +110,13 @@ namespace SoCFeedback.Controllers
                                     Year = dbYear.Year1
                                 });
                                 break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
-                    }
                     await _context.SaveChangesAsync();
-
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-  
                     throw;
                 }
                 return RedirectToAction("Index");

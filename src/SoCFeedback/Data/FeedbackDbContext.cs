@@ -5,8 +5,13 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Data
 {
-    public partial class FeedbackDbContext : DbContext
+    public class FeedbackDbContext : DbContext
     {
+        public FeedbackDbContext(DbContextOptions<FeedbackDbContext> options)
+            : base(options)
+        {
+        }
+
         public virtual DbSet<Answer> Answer { get; set; }
         public virtual DbSet<RateAnswer> RateAnswer { get; set; }
         public virtual DbSet<Category> Category { get; set; }
@@ -18,10 +23,6 @@ namespace SoCFeedback.Data
         public virtual DbSet<YearModules> YearModules { get; set; }
         public virtual DbSet<Supervisor> Supervisor { get; set; }
 
-        public FeedbackDbContext(DbContextOptions<FeedbackDbContext> options)
-            : base(options)
-        {
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Answer>(entity =>
@@ -139,8 +140,8 @@ namespace SoCFeedback.Data
                     .HasColumnName("Status");
 
                 entity.Property(e => e.LevelId)
-                        .IsRequired()
-                        .HasMaxLength(Constants.LevelTitleLength);
+                    .IsRequired()
+                    .HasMaxLength(Constants.LevelTitleLength);
 
                 entity.HasOne(d => d.Level)
                     .WithMany(p => p.Module)
@@ -157,7 +158,7 @@ namespace SoCFeedback.Data
 
             modelBuilder.Entity<ModuleQuestions>(entity =>
             {
-                entity.HasKey(e => new { e.ModuleId, e.QuestionId })
+                entity.HasKey(e => new {e.ModuleId, e.QuestionId})
                     .HasName("PK_ModuleQuestions");
 
                 entity.HasOne(d => d.ModuleCodeNavigation)
@@ -212,7 +213,7 @@ namespace SoCFeedback.Data
 
             modelBuilder.Entity<YearModules>(entity =>
             {
-                entity.HasKey(e => new { e.YearId, e.ModuleId })
+                entity.HasKey(e => new {e.YearId, e.ModuleId})
                     .HasName("PK_YearModules");
 
                 entity.HasOne(d => d.ModuleCodeNavigation)
@@ -228,6 +229,5 @@ namespace SoCFeedback.Data
                     .HasConstraintName("FK_YearModules_Year");
             });
         }
-
     }
 }

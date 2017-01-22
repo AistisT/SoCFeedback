@@ -4,7 +4,7 @@
     public static class Constants
     {
         public const int ModuleTitleLength = 200;
-        public const int UrlLength = 254;       
+        public const int UrlLength = 254;
         public const int AnswerLength = 3000;
         public const int ModuleDescLength = 3000;
         public const int ModuleCodeLength = 20;

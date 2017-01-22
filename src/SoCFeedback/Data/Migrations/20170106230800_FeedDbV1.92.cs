@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
 {
@@ -9,8 +7,8 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "CategoryOrder",
-                table: "Category",
+                "CategoryOrder",
+                "Category",
                 nullable: false,
                 defaultValue: 0);
         }
@@ -18,8 +16,8 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CategoryOrder",
-                table: "Category");
+                "CategoryOrder",
+                "Category");
         }
     }
 }

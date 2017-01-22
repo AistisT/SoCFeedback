@@ -3,13 +3,13 @@
     public enum RunningStatus
     {
         /// <summary>
-        /// Item is active
+        ///     Item is active
         /// </summary>
         Active = 0,
 
         /// <summary>
-        /// Item is inactive 
+        ///     Item is inactive
         /// </summary>
-        Inactive = 1,
+        Inactive = 1
     }
 }

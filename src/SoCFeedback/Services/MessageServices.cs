@@ -1,10 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using zxm.MailKit;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using zxm.MailKit.Outlook365;
 
 namespace SoCFeedback.Services
@@ -26,7 +21,7 @@ namespace SoCFeedback.Services
             // Plug in your email service here to send an email.
 
             var mailsender = new Outlook365MailSender("ataraskevicius@dundee.ac.uk", "password");
-           // mailsender.SendEmailAsync(email, subject, message);
+            // mailsender.SendEmailAsync(email, subject, message);
             //var myMessage = new SendGrid.SendGridMessage();
             //myMessage.AddTo(email);
             //myMessage.From = new System.Net.Mail.MailAddress("ataraskevicius@dundee.ac.uk", "Aistis Taraskevicius");

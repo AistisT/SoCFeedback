@@ -1,18 +1,18 @@
-@model SoCFeedback.Models.Level
+@model Level
 
 @{
     ViewData["Title"] = "Archive Level";
 }
 
 <h2>Archive</h2>
-<hr />
+<hr/>
 <h3>Are you sure you want to archive this level?</h3>
 
 <h5>Archived levels will not show up when creating year questionaires.</h5>
 <div>
-    <hr />
+    <hr/>
     <h4>Level</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Title)
@@ -42,8 +42,8 @@
 
     <form asp-action="Archive">
         <div class="form-group col-sm-12">
-            <input type="submit" value="Archive" class="btn btn-primary" />
-            <a asp-action="Index" class="float-right">Back to List</a>
+            <input type="submit" value="Archive" class="btn btn-primary"/>
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </form>
 </div>

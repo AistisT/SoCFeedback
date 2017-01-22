@@ -1,24 +1,23 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoCFeedback.Data;
 using SoCFeedback.Enums;
 using SoCFeedback.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Policy = "Admin")]
-    [Authorize(Policy = "Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer")]
     public class SupervisorsController : Controller
     {
         private readonly FeedbackDbContext _context;
 
         public SupervisorsController(FeedbackDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Supervisors
@@ -31,16 +30,12 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var supervisor = await _context.Supervisor
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (supervisor == null)
-            {
                 return NotFound();
-            }
 
             return View(supervisor);
         }
@@ -56,21 +51,24 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Forename,Surname,Email,PhoneNr,Status")] Supervisor supervisor)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Title,Forename,Surname,Email,PhoneNr,Status")] Supervisor supervisor)
         {
-            var obj = _context.Supervisor.Any(e => e.Forename.Equals(supervisor.Forename, StringComparison.OrdinalIgnoreCase) 
-                                                && e.Surname.Equals(supervisor.Surname, StringComparison.OrdinalIgnoreCase));
+            var obj =
+                _context.Supervisor.Any(e => e.Forename.Equals(supervisor.Forename, StringComparison.OrdinalIgnoreCase)
+                                             && e.Surname.Equals(supervisor.Surname, StringComparison.OrdinalIgnoreCase));
             if (obj)
             {
-                ModelState.AddModelError("Forename", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
-                ModelState.AddModelError("Surname", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
+                ModelState.AddModelError("Forename",
+                    string.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
+                ModelState.AddModelError("Surname",
+                    string.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
             }
 
-            var emailCheck = _context.Supervisor.Any(e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase));
+            var emailCheck =
+                _context.Supervisor.Any(e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase));
             if (emailCheck)
-            {
-                ModelState.AddModelError("Email", String.Format("Email {0} is already in use.", supervisor.Email));
-            }
+                ModelState.AddModelError("Email", string.Format("Email {0} is already in use.", supervisor.Email));
 
             if (ModelState.IsValid)
             {
@@ -86,15 +84,11 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var supervisor = await _context.Supervisor.SingleOrDefaultAsync(m => m.Id == id);
             if (supervisor == null)
-            {
                 return NotFound();
-            }
             return View(supervisor);
         }
 
@@ -103,27 +97,29 @@ namespace SoCFeedback.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Forename,Surname,Email,PhoneNr,Status")] Supervisor supervisor)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind("Id,Title,Forename,Surname,Email,PhoneNr,Status")] Supervisor supervisor)
         {
             if (id != supervisor.Id)
-            {
                 return NotFound();
-            }
 
-            var obj = _context.Supervisor.Any(e => e.Forename.Equals(supervisor.Forename, StringComparison.OrdinalIgnoreCase)
-                                    && e.Surname.Equals(supervisor.Surname, StringComparison.OrdinalIgnoreCase) 
-                                    && e.Id != supervisor.Id);
+            var obj =
+                _context.Supervisor.Any(e => e.Forename.Equals(supervisor.Forename, StringComparison.OrdinalIgnoreCase)
+                                             && e.Surname.Equals(supervisor.Surname, StringComparison.OrdinalIgnoreCase)
+                                             && e.Id != supervisor.Id);
             if (obj)
             {
-                ModelState.AddModelError("Forename", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
-                ModelState.AddModelError("Surname", String.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
+                ModelState.AddModelError("Forename",
+                    string.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
+                ModelState.AddModelError("Surname",
+                    string.Format("Supervisor {0} {1} already exists.", supervisor.Forename, supervisor.Surname));
             }
 
-            var emailCheck = _context.Supervisor.Any(e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase)&& e.Id != supervisor.Id);
+            var emailCheck =
+                _context.Supervisor.Any(
+                    e => e.Email.Equals(supervisor.Email, StringComparison.OrdinalIgnoreCase) && e.Id != supervisor.Id);
             if (emailCheck)
-            {
-                ModelState.AddModelError("Email", String.Format("Email {0} is already in use.", supervisor.Email));
-            }
+                ModelState.AddModelError("Email", string.Format("Email {0} is already in use.", supervisor.Email));
 
             if (ModelState.IsValid)
             {
@@ -135,9 +131,7 @@ namespace SoCFeedback.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!SupervisorExists(supervisor.Id))
-                    {
                         return NotFound();
-                    }
                     throw;
                 }
                 return RedirectToAction("Index");
@@ -149,22 +143,19 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var supervisor = await _context.Supervisor
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (supervisor == null)
-            {
                 return NotFound();
-            }
 
             return View(supervisor);
         }
 
         // POST: Supervisors/Archive/5
-        [HttpPost, ActionName("Archive")]
+        [HttpPost]
+        [ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
@@ -178,22 +169,19 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var supervisor = await _context.Supervisor
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (supervisor == null)
-            {
                 return NotFound();
-            }
 
             return View(supervisor);
         }
 
         // POST: Supervisors/Archive/5
-        [HttpPost, ActionName("Restore")]
+        [HttpPost]
+        [ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {

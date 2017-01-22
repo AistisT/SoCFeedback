@@ -1,17 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoCFeedback.Data;
 using SoCFeedback.Enums;
 using SoCFeedback.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Policy = "Admin")]
-    [Authorize(Policy = "Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer")]
     public class LevelsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -31,16 +30,12 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var level = await _context.Level
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (level == null)
-            {
                 return NotFound();
-            }
 
             return View(level);
         }
@@ -60,9 +55,7 @@ namespace SoCFeedback.Controllers
         {
             var obj = _context.Level.Any(e => e.Title.Equals(level.Title, StringComparison.OrdinalIgnoreCase));
             if (obj)
-            {
-                ModelState.AddModelError("Title", String.Format("Level {0} already exists.", level.Title));
-            }
+                ModelState.AddModelError("Title", string.Format("Level {0} already exists.", level.Title));
 
             if (ModelState.IsValid)
             {
@@ -78,15 +71,11 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
             if (level == null)
-            {
                 return NotFound();
-            }
             return View(level);
         }
 
@@ -98,15 +87,13 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Status,Description,OrderingNumber")] Level level)
         {
             if (id != level.Id)
-            {
                 return NotFound();
-            }
 
-            var obj = await _context.Level.SingleOrDefaultAsync(e => e.Title.Equals(level.Title, StringComparison.OrdinalIgnoreCase) && e.Id!=level.Id);
+            var obj =
+                await _context.Level.SingleOrDefaultAsync(
+                    e => e.Title.Equals(level.Title, StringComparison.OrdinalIgnoreCase) && e.Id != level.Id);
             if (obj != null)
-            {
-                ModelState.AddModelError("Title", String.Format("Level {0} already exists.", level.Title));
-            }
+                ModelState.AddModelError("Title", string.Format("Level {0} already exists.", level.Title));
 
             if (ModelState.IsValid)
             {
@@ -118,9 +105,7 @@ namespace SoCFeedback.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!LevelExists(level.Id))
-                    {
                         return NotFound();
-                    }
                     throw;
                 }
                 return RedirectToAction("Index");
@@ -132,22 +117,19 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var level = await _context.Level
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (level == null)
-            {
                 return NotFound();
-            }
 
             return View(level);
         }
 
         // POST: Levels/Archive/5
-        [HttpPost, ActionName("Archive")]
+        [HttpPost]
+        [ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
@@ -161,22 +143,19 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var level = await _context.Level
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (level == null)
-            {
                 return NotFound();
-            }
 
             return View(level);
         }
 
         // POST: Categories/Restore/5
-        [HttpPost, ActionName("Restore")]
+        [HttpPost]
+        [ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {

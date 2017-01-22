@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using System.Collections.Generic;
 
 namespace SoCFeedback.Services
 {
@@ -10,12 +10,13 @@ namespace SoCFeedback.Services
         {
         }
 
-        protected override void SetProperty(ModelBindingContext bindingContext, string modelName, ModelMetadata propertyMetadata, ModelBindingResult result)
+        protected override void SetProperty(ModelBindingContext bindingContext, string modelName,
+            ModelMetadata propertyMetadata, ModelBindingResult result)
         {
             var s = result.Model as string;
             if (s != null)
             {
-                string resultStr = s.Trim();
+                var resultStr = s.Trim();
                 result = ModelBindingResult.Success(resultStr);
             }
 

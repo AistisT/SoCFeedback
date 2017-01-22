@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
@@ -9,17 +8,17 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ModuleCode",
-                table: "Answer");
+                "ModuleCode",
+                "Answer");
 
             migrationBuilder.RenameColumn(
-                name: "QuestionOrderNumberInCategory",
-                table: "Question",
-                newName: "QuestionNumber");
+                "QuestionOrderNumberInCategory",
+                "Question",
+                "QuestionNumber");
 
             migrationBuilder.AddColumn<Guid>(
-                name: "ModuleId",
-                table: "Answer",
+                "ModuleId",
+                "Answer",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
         }
@@ -27,17 +26,17 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ModuleId",
-                table: "Answer");
+                "ModuleId",
+                "Answer");
 
             migrationBuilder.RenameColumn(
-                name: "QuestionNumber",
-                table: "Question",
-                newName: "QuestionOrderNumberInCategory");
+                "QuestionNumber",
+                "Question",
+                "QuestionOrderNumberInCategory");
 
             migrationBuilder.AddColumn<string>(
-                name: "ModuleCode",
-                table: "Answer",
+                "ModuleCode",
+                "Answer",
                 maxLength: 20,
                 nullable: false,
                 defaultValue: "");

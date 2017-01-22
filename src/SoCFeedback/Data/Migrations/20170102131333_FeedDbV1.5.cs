@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
 {
@@ -9,8 +7,8 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Module",
+                "Description",
+                "Module",
                 maxLength: 2000,
                 nullable: true,
                 oldClrType: typeof(string),
@@ -18,8 +16,8 @@ namespace SoCFeedback.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Answer",
-                table: "Answer",
+                "Answer",
+                "Answer",
                 maxLength: 2000,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -29,8 +27,8 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Module",
+                "Description",
+                "Module",
                 maxLength: 1000,
                 nullable: true,
                 oldClrType: typeof(string),
@@ -38,8 +36,8 @@ namespace SoCFeedback.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Answer",
-                table: "Answer",
+                "Answer",
+                "Answer",
                 maxLength: 1000,
                 nullable: false,
                 oldClrType: typeof(string),

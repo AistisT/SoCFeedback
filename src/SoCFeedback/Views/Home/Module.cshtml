@@ -1,5 +1,5 @@
-﻿@model SoCFeedback.Models.Module
-@using SoCFeedback.Enums
+﻿@using SoCFeedback.Enums
+@model Module
 @{
     ViewData["Title"] = "Module Year Form";
 }
@@ -34,21 +34,22 @@
         </dl>
     </div>
     <div class="col-md-12">
-        <hr />
+        <hr/>
         <h5 class="text-muted">
             Please complete the below form, making sure to answer all questions.
             Once you have completed the form and are happy with your responses, please submit the form to us using the <span class="text-primary">"Submit"</span> button at the foot of the page.
         </h5>
         <h5>This procedure is completely anonymous.</h5>
-        <hr />
-        @for (int j = 0; j < Model.Categories.Count; j++)
-            {
-            <input asp-for="@Model.Categories[j].Id" type="hidden" /><input type="hidden" asp-for="@Model.Categories[j].Title" />
+        <hr/>
+        @for (var j = 0; j < Model.Categories.Count; j++)
+        {
+            <input asp-for="@Model.Categories[j].Id" type="hidden"/>
+            <input type="hidden" asp-for="@Model.Categories[j].Title"/>
             <span class=" text-primary h4 form-text">
                 @Html.DisplayFor(m => m.Categories[j].Title)
             </span>
             <ul class="list-group">
-                @for (int i = 0; i < Model.Questions.Count; i++)
+                @for (var i = 0; i < Model.Questions.Count; i++)
                 {
                     if (Model.Questions[i].CategoryId == Model.Categories[j].Id)
                     {
@@ -67,7 +68,7 @@
                                     @Html.DisplayFor(m => m.Questions[i].Question1)
                                 </div>
                                 <div class="col-md-5">
-                                    <input data-min="0" data-max="5" data-step="0.5" data-size="xs" asp-for="@Model.Questions[i].RateAnswerToSave.Rating" class="rating rating-loading" />
+                                    <input data-min="0" data-max="5" data-step="0.5" data-size="xs" asp-for="@Model.Questions[i].RateAnswerToSave.Rating" class="rating rating-loading"/>
                                 </div>
                                 <span asp-validation-for="@Model.Questions[i].RateAnswerToSave.Rating" class="text-danger"></span>
                             }
@@ -78,11 +79,11 @@
             </ul>
         }
     </div>
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="YearId" />
+    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="YearId"/>
     <div class="form-group col-sm-12">
-        <hr />
-        <input type="submit" value="Submit" class="btn btn-primary" />
+        <hr/>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
         <a asp-action="Index" asp-controller="Home" class="float-sm-right">Back to Module List</a>
     </div>
 </form>

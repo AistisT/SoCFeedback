@@ -10,17 +10,20 @@ namespace SoCFeedback.Models.ViewModels
     {
         public QuestionViewModel()
         {
-            StandardAnswers=new List<string>();
-            RateAnswers= new List<float>();
-            LabelsList=new List<float>();
-            RatingsList =new List<int>();
+            StandardAnswers = new List<string>();
+            RateAnswers = new List<float>();
+            LabelsList = new List<float>();
+            RatingsList = new List<int>();
         }
+
         public Guid Id { get; set; }
         public QuestionType Type { get; set; }
         public string Question { get; set; }
         public int Order { get; set; }
+
         [Display(Name = "Answer")]
-        public List<String> StandardAnswers { get; set; }
+        public List<string> StandardAnswers { get; set; }
+
         public List<float> RateAnswers { get; set; }
         public float Average => RateAnswers.Average();
         public List<float> LabelsList { get; set; }
@@ -29,7 +32,7 @@ namespace SoCFeedback.Models.ViewModels
 
         public void SetLabelsList()
         {
-            LabelsList= RateAnswers.Distinct().OrderBy(e=>e).ToList();
+            LabelsList = RateAnswers.Distinct().OrderBy(e => e).ToList();
         }
 
         public void SetRatingsList()

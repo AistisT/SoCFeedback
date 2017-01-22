@@ -1,17 +1,17 @@
-@model SoCFeedback.Models.Question
+@model Question
 
 @{
     ViewData["Title"] = "Archive Question";
 }
 
 <h2>Archive</h2>
-<hr />
+<hr/>
 <h3>Are you sure you want to Archive this question?</h3>
 <h5>Archived questions will not show up when creating or editing modules.</h5>
 <div>
-    <hr />
+    <hr/>
     <h4>Question</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Question1)
@@ -50,11 +50,11 @@
             @Html.DisplayFor(model => model.QuestionNumber)
         </dd>
     </dl>
-    
+
     <form asp-action="Archive">
         <div class="form-group col-sm-12">
-            <input type="submit" value="Archive" class="btn btn-primary" />
-            <a asp-action="Index" class="float-right">Back to List</a>
+            <input type="submit" value="Archive" class="btn btn-primary"/>
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </form>
 </div>

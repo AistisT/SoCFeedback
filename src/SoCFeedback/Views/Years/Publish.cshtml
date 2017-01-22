@@ -1,4 +1,4 @@
-@model SoCFeedback.Models.Year
+@model Year
 
 @{
     ViewData["Title"] = "Publish Year Form";
@@ -8,10 +8,10 @@
 
 <h3 class="text-danger">Once published this year form will be visible to students and closed to any further modifications.</h3>
 <h3>Only one year can be published at a time, publishing this year will archive any currently published years.</h3>
-<hr />
+<hr/>
 <div>
     <h4>Year Form</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Year1)
@@ -27,16 +27,16 @@
         </dd>
     </dl>
     <div class="col-md-12">
-        <hr />
+        <hr/>
         <h4>Modules</h4>
-        <hr />
-        @for (int j = 0; j < Model.Levels.Count; j++)
+        <hr/>
+        @for (var j = 0; j < Model.Levels.Count; j++)
         {
             <span class=" text-primary h4 form-text">
                 @Html.DisplayFor(m => m.Levels[j].Title)
             </span>
             <ul class="list-group">
-                @for (int i = 0; i < Model.Modules.Count; i++)
+                @for (var i = 0; i < Model.Modules.Count; i++)
                 {
                     if (Model.Modules[i].LevelId == Model.Levels[j].Id)
                     {
@@ -49,14 +49,11 @@
             </ul>
         }
     </div>
-    <hr />
+    <hr/>
     <form asp-action="Publish">
-
-        <div class="col-md-12">
-            <hr />
-            <input type="submit" value="Publish" class="btn btn-primary" /> |
-            <a asp-action="Index">Back to List</a>
-            <hr />
+        <div class="form-group col-sm-12">
+            <input type="submit" value="Publish" class="btn btn-primary" />
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </form>
 </div>

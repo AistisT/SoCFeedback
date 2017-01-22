@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
 {
@@ -9,12 +7,12 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PhoneNr",
-                table: "Supervisor");
+                "PhoneNr",
+                "Supervisor");
 
             migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "Supervisor",
+                "Email",
+                "Supervisor",
                 maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -25,16 +23,16 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "Supervisor",
+                "Email",
+                "Supervisor",
                 maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
 
             migrationBuilder.AddColumn<string>(
-                name: "PhoneNr",
-                table: "Supervisor",
+                "PhoneNr",
+                "Supervisor",
                 maxLength: 30,
                 nullable: true);
         }

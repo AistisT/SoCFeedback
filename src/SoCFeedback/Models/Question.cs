@@ -1,12 +1,12 @@
-﻿using SoCFeedback.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SoCFeedback.Enums;
 
 namespace SoCFeedback.Models
 {
-    public partial class Question
+    public class Question
     {
         public Question()
         {
@@ -16,17 +16,22 @@ namespace SoCFeedback.Models
         }
 
         public Guid Id { get; set; }
+
         [Display(Name = "Question")]
         [Required]
         [StringLength(Constants.QuestionLength)]
         public string Question1 { get; set; }
+
         [Required]
         public QuestionType Type { get; set; }
+
         [Required]
         [Display(Name = "Category")]
         public Guid CategoryId { get; set; }
+
         [Display(Name = "Optional")]
         public bool Optional { get; set; }
+
         public Status Status { get; set; }
 
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
@@ -35,8 +40,10 @@ namespace SoCFeedback.Models
 
         [NotMapped]
         public RunningStatus RunningStatus { get; set; }
+
         [NotMapped]
         public Answer AnswerToSave { get; set; }
+
         [NotMapped]
         public RateAnswer RateAnswerToSave { get; set; }
 

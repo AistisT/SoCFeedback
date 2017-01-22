@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
@@ -9,26 +8,26 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "QuestionOrder",
-                table: "ModuleQuestions",
+                "QuestionOrder",
+                "ModuleQuestions",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<Guid>(
-                name: "YearId",
-                table: "Level",
+                "YearId",
+                "Level",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Level_YearId",
-                table: "Level",
-                column: "YearId");
+                "IX_Level_YearId",
+                "Level",
+                "YearId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Level_Year_YearId",
-                table: "Level",
-                column: "YearId",
-                principalTable: "Year",
+                "FK_Level_Year_YearId",
+                "Level",
+                "YearId",
+                "Year",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -36,20 +35,20 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Level_Year_YearId",
-                table: "Level");
+                "FK_Level_Year_YearId",
+                "Level");
 
             migrationBuilder.DropIndex(
-                name: "IX_Level_YearId",
-                table: "Level");
+                "IX_Level_YearId",
+                "Level");
 
             migrationBuilder.DropColumn(
-                name: "QuestionOrder",
-                table: "ModuleQuestions");
+                "QuestionOrder",
+                "ModuleQuestions");
 
             migrationBuilder.DropColumn(
-                name: "YearId",
-                table: "Level");
+                "YearId",
+                "Level");
         }
     }
 }

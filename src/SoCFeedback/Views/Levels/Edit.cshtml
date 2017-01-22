@@ -1,4 +1,4 @@
-@model SoCFeedback.Models.Level
+@model Level
 
 @{
     ViewData["Title"] = "Edit Level";
@@ -9,13 +9,13 @@
 <form asp-action="Edit">
     <div>
         <h4>Level</h4>
-        <hr />
+        <hr/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id"/>
         <div class="form-group row">
             <label asp-for="Title" class="col-md-2 form-control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="form-control"/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
@@ -33,14 +33,10 @@
                 <span asp-validation-for="OrderingNumber" class="text-danger"></span>
             </div>
         </div>
-        <input type="hidden" asp-for="Status" />
+        <input type="hidden" asp-for="Status"/>
         <div class="form-group col-sm-12">
-            <input type="submit" value="Save" class="btn btn-primary" />
-            <a asp-action="Index" class="float-right">Back to List</a>
+            <input type="submit" value="Save" class="btn btn-primary"/>
+            <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </div>
 </form>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

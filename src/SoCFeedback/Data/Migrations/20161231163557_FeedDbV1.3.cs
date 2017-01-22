@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoCFeedback.Data.Migrations
 {
@@ -9,16 +7,16 @@ namespace SoCFeedback.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Question",
-                table: "Question",
+                "Question",
+                "Question",
                 maxLength: 500,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 250);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Module",
+                "Description",
+                "Module",
                 maxLength: 1000,
                 nullable: true,
                 oldClrType: typeof(string),
@@ -26,8 +24,8 @@ namespace SoCFeedback.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Code",
-                table: "Module",
+                "Code",
+                "Module",
                 maxLength: 20,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -35,8 +33,8 @@ namespace SoCFeedback.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Answer",
-                table: "Answer",
+                "Answer",
+                "Answer",
                 maxLength: 1000,
                 nullable: false,
                 oldClrType: typeof(string),
@@ -46,16 +44,16 @@ namespace SoCFeedback.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Question",
-                table: "Question",
+                "Question",
+                "Question",
                 maxLength: 250,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldMaxLength: 500);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Description",
-                table: "Module",
+                "Description",
+                "Module",
                 maxLength: 500,
                 nullable: true,
                 oldClrType: typeof(string),
@@ -63,16 +61,16 @@ namespace SoCFeedback.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Code",
-                table: "Module",
+                "Code",
+                "Module",
                 maxLength: 20,
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 20);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Answer",
-                table: "Answer",
+                "Answer",
+                "Answer",
                 maxLength: 500,
                 nullable: false,
                 oldClrType: typeof(string),

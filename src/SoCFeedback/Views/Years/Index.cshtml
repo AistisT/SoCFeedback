@@ -1,59 +1,69 @@
-@model IEnumerable<SoCFeedback.Models.Year>
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
+@model IEnumerable<Year>
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = " Year Forms Index";
 }
 
 <h2>Year Forms Index</h2>
-
-<p>
-    <a asp-action="Create">Create New Year Form</a>
-</p>
+@if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New Year Form</a>
+    </p>
+}
 <div class="table-responsive">
     <table class="table">
         <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Year1)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    Action
-                </th>
-            </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Year1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Year1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @if (item.Status == YearStatus.Pending)
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                             @:|
-                        }
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        @if (item.Status == YearStatus.Pending)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (item.Status == YearStatus.Pending)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        @:|
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (item.Status == YearStatus.Pending)
+                    {
+                        if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
                         {
                             @:|
                             <a asp-action="Publish" asp-route-id="@item.Id">Publish</a>
                         }
-                        @if (item.Status == YearStatus.Published)
+                    }
+                    @if (item.Status == YearStatus.Published)
+                    {
+                        if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
                         {
                             @:|
                             <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
                         }
-                    </td>
-                </tr>
-            }
+                    }
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>

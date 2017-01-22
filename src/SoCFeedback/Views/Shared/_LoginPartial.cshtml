@@ -1,14 +1,10 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using SoCFeedback.Models
-@using Microsoft.AspNetCore.Authorization;
-@inject IAuthorizationService AuthorizationService
-@inject SignInManager<ApplicationUser> SignInManager
+﻿@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
     <div class=" form-group form-inline">
-        <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" >
+        <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
             <a asp-area=""asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User) </a>
             <button class="btn btn-link" type="submit">Log off</button>
         </form>
@@ -16,6 +12,5 @@
 }
 else
 {
-    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
     <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Staff Log in</a>
 }
