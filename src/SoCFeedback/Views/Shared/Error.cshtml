@@ -1,9 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Error";
-}
-
+﻿
 <div class="row text-sm-center">
-    <h1 class="text-danger">Error.</h1>
-    <h2 class="text-danger">An error occurred while processing your request.</h2>
-    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    <h1 class="text-danger">@ViewData["Error"]</h1>
+    <h2 class="text-danger">@ViewData["Message"]</h2>
+    <a asp-area="" asp-controller="Home" asp-action="Index"> Home</a>
 </div>

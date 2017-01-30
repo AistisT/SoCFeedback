@@ -59,7 +59,6 @@ namespace SoCFeedback
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
 
             // Configure Identity
             services.Configure<IdentityOptions>(options =>
@@ -99,20 +98,19 @@ namespace SoCFeedback
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/error?error={0}");
+                //app.UseExceptionHandler("/error?error={0}");
             }
+           
 
             app.UseStaticFiles();
-
             app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                    "{controller=Home}/{action=Index}");
             });
         }
     }

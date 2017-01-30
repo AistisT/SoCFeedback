@@ -142,14 +142,14 @@ namespace SoCFeedback.Controllers
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //code = System.Net.WebUtility.UrlEncode(code);
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(model.Email, "SoC Feedback Website Account",
-                        $"An account on http://feedback.computing.dundee.ac.uk has been created for you.{Environment.NewLine}" +
-                        $"Your login details are:{Environment.NewLine}" +
-                        $"Id/Email:{model.Email}.{Environment.NewLine}" +
-                        $"Password:{model.Password}");
+                    //await _emailSender.SendEmailAsync(model.Email, "SoC Feedback Website Account",
+                    //    $"An account on http://feedback.computing.dundee.ac.uk has been created for you.{Environment.NewLine}" +
+                    //    $"Your login details are:{Environment.NewLine}" +
+                    //    $"Id/Email:{model.Email}.{Environment.NewLine}" +
+                    //    $"Password:{model.Password}");
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "Admin created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index");
                 }
                 AddErrors(result);
             }
@@ -400,7 +400,6 @@ namespace SoCFeedback.Controllers
 
         //
         // GET: /Account/AccessDenied
-        [HttpGet]
         [AllowAnonymous]
         public IActionResult AccessDenied(string returnUrl = null)
         {

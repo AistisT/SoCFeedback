@@ -1,7 +1,4 @@
-﻿body {
-    padding-top: 150px;
-}
-
+﻿
 @media (min-width: 768px) {
     .dl-horizontal dt {
         float: left;
@@ -30,6 +27,7 @@
     resize: none;
     color: #373a3c;
 }
+
 .autosize {
     /*Class for auto size textarea*/
 }
@@ -121,9 +119,9 @@ a.label:focus {
         background-color: #c9302c;
     }
 
- .no-marginBot {
-     margin-bottom: 0px;
- }
+.no-marginBot {
+    margin-bottom: 0px;
+}
 
 .ct-label {
     fill: #000000;
@@ -132,3 +130,21 @@ a.label:focus {
     line-height: 1;
     font-weight: bold;
 }
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+    .link:hover {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+    }
+
+    .link.dropdown-item:hover {
+        background: inherit;
+        cursor: pointer;
+    }

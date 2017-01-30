@@ -43,7 +43,7 @@ namespace SoCFeedback.Controllers
                 await _context.Year.AsNoTracking()
                     .SingleOrDefaultAsync(y => y.Id == yid && y.Status == YearStatus.Published);
             if (year == null)
-                return RedirectToAction("Index");
+                return NotFound();
             var module = await _context.Module.AsNoTracking()
                 .Include(s => s.Supervisor)
                 .Include(q => q.ModuleQuestions)
@@ -141,8 +141,23 @@ namespace SoCFeedback.Controllers
             return View();
         }
 
-        public IActionResult Error()
+        [Route("/Error")]
+        public IActionResult Error(int error)
         {
+            ViewData["Title"] = error;
+            ViewData["Error"] = error;
+            switch (error)
+            {
+                case 404:
+                    ViewData["Message"] = "Sorry, but this page doesn't exsts.";
+                    break;
+                case 500:
+                    ViewData["Message"] = "Sorry, server has encountered an error";
+                    break;
+                default:
+                    ViewData["Message"] = "An error occurred while processing your request";
+                    break;
+            }
             return View();
         }
     }

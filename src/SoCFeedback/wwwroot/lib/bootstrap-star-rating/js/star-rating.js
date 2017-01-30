@@ -24,7 +24,7 @@
             factory(window.jQuery);
         }
     }
-}(function ($) {
+} (function ($) {
     "use strict";
 
     $.fn.ratingLocales = {};
@@ -150,7 +150,7 @@
             caption = '<span class="' + self.clearCaptionClass + '">' + self.clearCaption + '</span>';
             val = self.clearValue;
             width = self.getWidthFromValue(val) || 0;
-            out = {caption: caption, width: width, val: val};
+            out = { caption: caption, width: width, val: val };
             self._toggleHover(out);
             self.$element.trigger('rating.hover', [val, caption, 'clear']);
         },
@@ -227,7 +227,7 @@
             }
             w = self.getWidthFromValue(v) + '%';
             self.$filledStars.width(w);
-            self.cache = {caption: cap, width: w, val: v};
+            self.cache = { caption: cap, width: w, val: v };
         },
         _getContainerCss: function () {
             var self = this;
@@ -244,7 +244,7 @@
             self.disabled = opts.disabled === undefined ? $el.attr('disabled') || false : opts.disabled;
             self.readonly = opts.readonly === undefined ? $el.attr('readonly') || false : opts.readonly;
             self.inactive = (self.disabled || self.readonly);
-            $el.attr({disabled: self.disabled, readonly: self.readonly});
+            $el.attr({ disabled: self.disabled, readonly: self.readonly });
         },
         _addContent: function (type, content) {
             var self = this, $container = self.$container, isClear = type === 'clear';
@@ -304,7 +304,7 @@
             css = self._getClearClass();
             if ($clr.length) {
                 addCss($clr, css);
-                $clr.attr({"title": self.clearButtonTitle}).html(self.clearButton);
+                $clr.attr({ "title": self.clearButtonTitle }).html(self.clearButton);
                 self.$clear = $clr;
                 return;
             }
@@ -401,7 +401,7 @@
                 val = arguments.length ? self.getValueFromPosition(pos) : defaultVal,
                 caption = self.fetchCaption(val), width = self.getWidthFromValue(val);
             width += '%';
-            return {caption: caption, width: width, val: val};
+            return { caption: caption, width: width, val: val };
         },
         getValueFromPosition: function (pos) {
             var self = this, precision = getDecimalPlaces(self.step), val, factor, maxWidth = self.$rating.width();
@@ -520,15 +520,55 @@
         showClear: true,
         showCaption: true,
         starCaptionClasses: {
+            0.1: 'label label-danger',
+            0.2: 'label label-danger',
+            0.3: 'label label-danger',
+            0.4: 'label label-danger',
             0.5: 'label label-danger',
+            0.6: 'label label-danger',
+            0.7: 'label label-danger',
+            0.8: 'label label-danger',
+            0.9: 'label label-danger',
             1: 'label label-danger',
+            1.1: 'label label-warning',
+            1.2: 'label label-warning',
+            1.3: 'label label-warning',
+            1.4: 'label label-warning',
             1.5: 'label label-warning',
+            1.6: 'label label-warning',
+            1.7: 'label label-warning',
+            1.8: 'label label-warning',
+            1.9: 'label label-warning',
             2: 'label label-warning',
+            2.1: 'label label-info',
+            2.2: 'label label-info',
+            2.3: 'label label-info',
+            2.4: 'label label-info',
             2.5: 'label label-info',
+            2.6: 'label label-info',
+            2.7: 'label label-info',
+            2.8: 'label label-info',
+            2.9: 'label label-info',
             3: 'label label-info',
+            3.1: 'label label-primary',
+            3.2: 'label label-primary',
+            3.3: 'label label-primary',
+            3.4: 'label label-primary',
             3.5: 'label label-primary',
+            3.6: 'label label-primary',
+            3.7: 'label label-primary',
+            3.8: 'label label-primary',
+            3.9: 'label label-primary',
             4: 'label label-primary',
+            4.1: 'label label-success',
+            4.2: 'label label-success',
+            4.3: 'label label-success',
+            4.4: 'label label-success',
             4.5: 'label label-success',
+            4.6: 'label label-success',
+            4.7: 'label label-success',
+            4.8: 'label label-success',
+            4.9: 'label label-success',
             5: 'label label-success'
         },
         clearButton: '<i class="fa fa-lg fa-minus-circle"></i>',

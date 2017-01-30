@@ -19,8 +19,6 @@ namespace SoCFeedback.Controllers
         public ManageController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ISmsSender smsSender,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
@@ -46,6 +44,8 @@ namespace SoCFeedback.Controllers
                                     ? "Your phone number was added."
                                     : message == ManageMessageId.RemovePhoneSuccess
                                         ? "Your phone number was removed."
+                                        : message==ManageMessageId.ChangeNameSuccess
+                                        ? "Your name has been changed."
                                         : "";
 
             var user = await GetCurrentUserAsync();
@@ -93,6 +93,46 @@ namespace SoCFeedback.Controllers
             }
             return RedirectToAction(nameof(Index), new {Message = ManageMessageId.Error});
         }
+
+        //
+        // GET: /Manage/ChangeName
+        [HttpGet]
+        public async Task<IActionResult> ChangeName()
+        {
+            var user = await GetCurrentUserAsync();
+            var model = new ChangeNameViewModel
+            {
+                Surname = user.Surname,
+                Forename = user.Forename
+            };
+            return View(model);
+        }
+
+        //
+        // POST: /Manage/ChangeName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeName(ChangeNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                user.Forename = model.Forename;
+                user.Surname = model.Surname;
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation(3, "User changed their name successfully.");
+                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangeNameSuccess });
+                }
+                AddErrors(result);
+                return View(model);
+            }
+            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)
@@ -108,7 +148,8 @@ namespace SoCFeedback.Controllers
             SetTwoFactorSuccess,
             SetPasswordSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
+            ChangeNameSuccess
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync()

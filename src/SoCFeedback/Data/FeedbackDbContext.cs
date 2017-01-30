@@ -161,6 +161,8 @@ namespace SoCFeedback.Data
                 entity.HasKey(e => new {e.ModuleId, e.QuestionId})
                     .HasName("PK_ModuleQuestions");
 
+                //entity.Property(e => e.Year).IsRequired();
+
                 entity.HasOne(d => d.ModuleCodeNavigation)
                     .WithMany(p => p.ModuleQuestions)
                     .HasForeignKey(d => d.ModuleId)
