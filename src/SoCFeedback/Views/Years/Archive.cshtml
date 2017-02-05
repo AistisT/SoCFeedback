@@ -17,7 +17,7 @@
             @Html.DisplayNameFor(model => model.Year1)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Year1)
+            @Html.DisplayFor(model => model.AcademicYear)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)
@@ -50,7 +50,7 @@
         }
     </div>
     <hr/>
-    <form asp-action="Archive">
+    <form asp-action="Archive"asp-route-id="@Model.Id">
         <div class="form-group col-sm-12">
             <input type="submit" value="Archive" class="btn btn-primary" />
             <a asp-action="Index" class="float-sm-right">Back to List</a>

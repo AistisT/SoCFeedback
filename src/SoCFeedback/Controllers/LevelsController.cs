@@ -10,7 +10,7 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
     public class LevelsController : Controller
     {
         private readonly FeedbackDbContext _context;

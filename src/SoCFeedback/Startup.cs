@@ -55,6 +55,8 @@ namespace SoCFeedback
             {
                 options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("Lecturer", policy => policy.RequireRole("Lecturer"));
+                options.AddPolicy("LecturerLimited", policy => policy.RequireRole("LecturerLimited"));
+                options.AddPolicy("TeachingStaff", policy => policy.RequireRole("TeachingStaff"));
             });
 
             // Add application services.

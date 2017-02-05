@@ -12,7 +12,7 @@ using SoCFeedback.Models.ViewModels;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer,LecturerLimited,TeachingStaff")]
     public class ModulesController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -21,7 +21,7 @@ namespace SoCFeedback.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         // GET: Modules
         public async Task<IActionResult> Index()
         {
@@ -45,6 +45,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Create
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public IActionResult Create()
         {
             ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title");
@@ -53,8 +54,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -80,6 +80,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Edit/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -96,8 +97,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
@@ -135,6 +135,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Archive/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
@@ -151,6 +152,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Archive/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
@@ -163,6 +165,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Restore/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
@@ -179,6 +182,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Restore/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]
@@ -191,6 +195,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Questions/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public async Task<IActionResult> Questions(Guid? id, Guid yid)
         {
             if (id == null)
@@ -225,6 +230,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Questions/5
+        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Questions(Guid? id, [Bind("Id,Questions,Categories,YearId")] Module module)
@@ -370,7 +376,9 @@ namespace SoCFeedback.Controllers
                 .OrderBy(e => e.Order)
                 .ToList();
 
-
+            viewModel.SetAverage();
+            viewModel.SetLabelsList();
+            viewModel.SetRatingsList();
             return View(viewModel);
         }
 

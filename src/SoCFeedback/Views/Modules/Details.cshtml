@@ -1,3 +1,5 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 @model Module
 
 @{
@@ -55,6 +57,9 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    <a class="float-sm-right" asp-action="Index">Back to List</a>
+    @if (!await AuthorizationService.AuthorizeAsync(User, "TeachingStaff"))
+    {
+        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="float-sm-right" asp-action="Index">Module List</a>
+    }
 </div>

@@ -1,5 +1,7 @@
 ﻿@model Module
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Module Questions";
 }
@@ -8,7 +10,7 @@
     <div class="col-md-12">
         <h2>Module Questions</h2>
         <h4>Module</h4>
-        <hr/>
+        <hr />
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.Code)
@@ -37,13 +39,13 @@
         </dl>
     </div>
     <div class="col-md-12">
-        <hr/>
+        <hr />
         <h4>Questions</h4>
-        <hr/>
+        <hr />
         @for (var j = 0; j < Model.Categories.Count; j++)
         {
-            <input asp-for="@Model.Categories[j].Id" type="hidden"/>
-            <input type="hidden" asp-for="@Model.Categories[j].Title"/>
+            <input asp-for="@Model.Categories[j].Id" type="hidden" />
+            <input type="hidden" asp-for="@Model.Categories[j].Title" />
             <span class=" text-primary h4 form-text">
                 @Html.DisplayFor(m => m.Categories[j].Title)
             </span>
@@ -53,23 +55,40 @@
                     if (Model.Questions[i].CategoryId == Model.Categories[j].Id)
                     {
                         <li class=" list-group-item col-md-12">
-                            @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type) 
+                            @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type)
                             @Html.HiddenFor(m => m.Questions[i].CategoryId) @Html.HiddenFor(m => m.Questions[i].Optional)
                             <label asp-for="@Model.Questions[i].Optional" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Optional)
                             <label asp-for="@Model.Questions[i].Type" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Type)
                             <label asp-for="@Model.Questions[i].Question1" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Question1)
-                            <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-md-right" data></select>
+                            @if (await AuthorizationService.AuthorizeAsync(User, "LecturerLimited"))
+                            {
+                                if (Model.Questions[i].Optional == false)
+                                {
+
+                                    <input asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="text-danger float-md-right font-weight-bold readonly  text-md-right" readonly="readonly" />
+
+                                }
+                                else
+                                {
+                                    <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-md-right"></select>
+                                }
+                            }
+                            else
+                            {
+                                <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-md-right"></select>
+                            }
                         </li>
                     }
                 }
             </ul>
         }
+
     </div>
-    <input type="hidden" asp-for="YearId"/>
-    <input type="hidden" asp-for="Id"/>
+    <input type="hidden" asp-for="YearId" />
+    <input type="hidden" asp-for="Id" />
     <div class="form-group col-sm-12">
-        <hr/>
-        <input type="submit" value="Save" class="btn btn-primary"/>
+        <hr />
+        <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-sm-right">Back to Year form</a>
     </div>
 </form>

@@ -1,5 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
 @model Question
-
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Question Details";
 }
@@ -48,7 +49,12 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+<div class="col-md-12">
+    @if (!(await AuthorizationService.AuthorizeAsync(User, "LecturerLimited") && !Model.Optional))
+    {
+        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    }
     <a class="float-sm-right" asp-action="Index">Back to List</a>
+    <br/>
+   <hr/>
 </div>

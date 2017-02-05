@@ -28,6 +28,13 @@
     color: #373a3c;
 }
 
+.readonly {
+    background-color: white;
+    border: none;
+    resize: none;
+    color: #373a3c;
+}
+
 .autosize {
     /*Class for auto size textarea*/
 }

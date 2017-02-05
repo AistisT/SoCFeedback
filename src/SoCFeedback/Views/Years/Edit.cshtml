@@ -16,7 +16,13 @@
             <input asp-for="Year1" class="form-control" id="yearInput"/>
             <span asp-validation-for="Year1" class="text-danger"></span>
         </div>
-        <div class="col-md-8"> Please enter only starting year for academic term, e.g. 2016/2017 academic year would be 2016. </div>
+        <div class="col-md-8"> Ending: <label id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label></div>
+        <script type="text/javascript">
+                $('#yearInput').on('input', function () {
+                    $("#endingYear").text(
+                        parseInt($('#yearInput').val())+1);
+                });
+        </script>
     </div>
     <div class="col-md-12">
         <hr/>

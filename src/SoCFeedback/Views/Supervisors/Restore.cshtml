@@ -45,7 +45,7 @@
         </dd>
     </dl>
 
-    <form asp-action="Restore">
+    <form asp-action="Restore"asp-route-id="@Model.Id">
         <div class="form-group col-sm-12">
             <input type="submit" value="Restore" class="btn btn-primary"/>
             <a asp-action="Index" class="float-sm-right">Back to List</a>

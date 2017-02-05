@@ -1,5 +1,7 @@
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
 @model Year
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Year Form Details";
@@ -15,7 +17,7 @@
             @Html.DisplayNameFor(model => model.Year1)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Year1)
+            @Html.DisplayFor(model => model.AcademicYear)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)
@@ -40,7 +42,7 @@
                         {
                             <li class=" list-group-item ">
                                 <a asp-action="Details" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
-                                @if (Model.Status == YearStatus.Pending)
+                                @if (Model.Status == YearStatus.Pending && !await AuthorizationService.AuthorizeAsync(User, "TeachingStaff"))
                                 {
                                     <a class="btn btn-sm btn-success float-sm-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
                                 }
@@ -58,11 +60,11 @@
 </div>
 
 <div class="col-md-12">
-    <hr/>
-    @if (Model.Status != YearStatus.Published)
+    <br/>
+    @if (Model.Status != YearStatus.Published && await AuthorizationService.AuthorizeAsync(User, "Admin"))
     {
         <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
     }
     <a class="float-sm-right" asp-action="Index">Back to List</a>
-    <hr/>
+  
 </div>

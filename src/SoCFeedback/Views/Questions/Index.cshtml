@@ -1,5 +1,7 @@
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
 @model IEnumerable<Question>
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Questions Index";
 }
@@ -59,7 +61,11 @@
                 @Html.DisplayFor(modelItem => item.QuestionNumber)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @if (!(await AuthorizationService.AuthorizeAsync(User, "LecturerLimited") && !item.Optional))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    @:|
+                }
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 @if (item.Status == Status.Archived)
                 {

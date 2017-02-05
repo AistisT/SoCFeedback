@@ -11,7 +11,7 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer,LecturerLimited,TeachingStaff")]
     public class YearsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -73,6 +73,7 @@ namespace SoCFeedback.Controllers
                 ModelState.AddModelError("Year1", $"Questionnaire form for year {year.Year1} already exists.");
             if (ModelState.IsValid)
             {
+                ArchiveNotArchivedYears();
                 var newYear = new Year {Year1 = year.Year1};
                 _context.Add(newYear);
 
@@ -88,7 +89,18 @@ namespace SoCFeedback.Controllers
             return View(year);
         }
 
+        private void ArchiveNotArchivedYears()
+        {
+            var years = _context.Year.Where(y=>y.Status==YearStatus.Published|| y.Status==YearStatus.Pending);
+            foreach (var year in years)
+            {
+                year.Status=YearStatus.Archived;
+            }
+             _context.SaveChanges();
+        }
+
         // GET: Years/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -120,6 +132,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Years/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Year1,Status,Modules,Levels")] Year year)
@@ -199,9 +212,11 @@ namespace SoCFeedback.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PublishConfirmed(Guid id)
         {
+            // can be remove for final version
             var years = _context.Year.Where(y => y.Status == YearStatus.Published);
             foreach (var dbYear in years)
                 dbYear.Status = YearStatus.Archived;
+
             var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
             year.Status = YearStatus.Published;
             await _context.SaveChangesAsync();

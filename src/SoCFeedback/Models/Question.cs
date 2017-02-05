@@ -30,7 +30,7 @@ namespace SoCFeedback.Models
         public Guid CategoryId { get; set; }
 
         [Display(Name = "Optional")]
-        public bool Optional { get; set; }
+        public bool Optional { get; set; } = true;
 
         public Status Status { get; set; }
 

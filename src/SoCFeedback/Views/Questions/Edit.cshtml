@@ -1,5 +1,7 @@
 @model Question
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Edit Question";
 }
@@ -43,7 +45,14 @@
         <div class="form-group row">
             <div class="offset-md-2 col-md-10">
                 <div>
-                    <input asp-for="Optional"/>
+                    @if (await AuthorizationService.AuthorizeAsync(User, "LecturerLimited"))
+                    {
+                        <input asp-for="Optional" onclick="return false;" />
+                    }
+                    else
+                    {
+                        <input asp-for="Optional" />
+                    }
                     <label asp-for="Optional"></label>
                 </div>
             </div>

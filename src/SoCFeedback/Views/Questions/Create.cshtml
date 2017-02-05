@@ -1,6 +1,7 @@
 @model Question
+@using Microsoft.AspNetCore.Authorization
 @using SoCFeedback.Enums
-
+@inject IAuthorizationService AuthorizationService
 @{
     ViewData["Title"] = "Create Question";
 }
@@ -42,7 +43,14 @@
         </div>
         <div class="col-md-12">
             <div class="offset-md-2 ">
-                <input asp-for="Optional"/>
+                @if (await AuthorizationService.AuthorizeAsync(User, "LecturerLimited"))
+                {
+                    <input asp-for="Optional" onclick="return false;"/>
+                }
+                else
+                {
+                    <input asp-for="Optional" />
+                }
                 <label asp-for="Optional"></label>
                 <label>Non optional questions will be added to new modules on creation. Optional questions can be manually added to modules. Module questions can be edited after year form is created.</label>
             </div>

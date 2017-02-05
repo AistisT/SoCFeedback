@@ -36,11 +36,11 @@
 
             @if (!UserManager.GetUserName(User).Equals(Model.Email))
             {
-                @: <select asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control"></select>
+                 <select asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control"></select>
             }
             else
             {
-                @: <input asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control" readonly="readonly" />
+                <input asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control" readonly="readonly"/>
             }
             <span asp-validation-for="Role" class="text-danger"></span>
 

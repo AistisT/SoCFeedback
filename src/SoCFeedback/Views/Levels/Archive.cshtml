@@ -40,7 +40,7 @@
         </dd>
     </dl>
 
-    <form asp-action="Archive">
+    <form asp-action="Archive"asp-route-id="@Model.Id">
         <div class="form-group col-sm-12">
             <input type="submit" value="Archive" class="btn btn-primary"/>
             <a asp-action="Index" class="float-sm-right">Back to List</a>

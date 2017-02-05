@@ -11,7 +11,7 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer")]
+    [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
     public class QuestionsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -47,7 +47,7 @@ namespace SoCFeedback.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title");
-            return View();
+            return View(new Question());
         }
 
         // POST: Questions/Create
