@@ -1,4 +1,9 @@
-@media (min-width: 768px) {
+.ct-label, .label {
+    line-height: 1;
+    font-weight: 700
+}
+
+@media (min-width:768px) {
     .dl-horizontal dt {
         float: left;
         width: 250px;
@@ -6,132 +11,132 @@
         clear: left;
         text-align: right;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: nowrap
     }
 
     .dl-horizontal dd {
-        margin-left: 270px;
+        margin-left: 270px
     }
 }
 
-.dl-horizontal dd:before, .dl-horizontal dd:after {
+.dl-horizontal dd:after, .dl-horizontal dd:before {
     display: table;
-    content: " ";
+    content: " "
 }
 
-.form-control:disabled, .form-control[readonly] {
-    background-color: white;
+.form-control:disabled, .form-control[readonly], .readonly {
+    background-color: #fff;
     border: none;
     resize: none;
-    color: #373a3c;
+    color: #373a3c
 }
 
 .hide {
-    display: none !important;
+    display: none !important
 }
 
 .label {
     display: inline;
     padding: .2em .6em .3em;
     font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25em;
+    position: relative;
+    top: -1px
 }
 
-a.label:hover, a.label:focus {
+a.label:focus, a.label:hover {
     color: #fff;
     text-decoration: none;
-    cursor: pointer;
+    cursor: pointer
 }
 
 .label:empty {
-    display: none;
-}
-
-.label {
-    position: relative;
-    top: -1px;
+    display: none
 }
 
 .label-default {
-    background-color: #777;
+    background-color: #777
 }
 
-    .label-default[href]:hover, .label-default[href]:focus {
-        background-color: #5e5e5e;
+    .label-default[href]:focus, .label-default[href]:hover {
+        background-color: #5e5e5e
     }
 
 .label-primary {
-    background-color: #337ab7;
+    background-color: #337ab7
 }
 
-    .label-primary[href]:hover, .label-primary[href]:focus {
-        background-color: #286090;
+    .label-primary[href]:focus, .label-primary[href]:hover {
+        background-color: #286090
     }
 
 .label-success {
-    background-color: #5cb85c;
+    background-color: #5cb85c
 }
 
-    .label-success[href]:hover, .label-success[href]:focus {
-        background-color: #449d44;
+    .label-success[href]:focus, .label-success[href]:hover {
+        background-color: #449d44
     }
 
 .label-info {
-    background-color: #5bc0de;
+    background-color: #5bc0de
 }
 
-    .label-info[href]:hover, .label-info[href]:focus {
-        background-color: #31b0d5;
+    .label-info[href]:focus, .label-info[href]:hover {
+        background-color: #31b0d5
     }
 
 .label-warning {
-    background-color: #f0ad4e;
+    background-color: #f0ad4e
 }
 
-    .label-warning[href]:hover, .label-warning[href]:focus {
-        background-color: #ec971f;
+    .label-warning[href]:focus, .label-warning[href]:hover {
+        background-color: #ec971f
     }
 
 .label-danger {
-    background-color: #d9534f;
+    background-color: #d9534f
 }
 
-    .label-danger[href]:hover, .label-danger[href]:focus {
-        background-color: #c9302c;
+    .label-danger[href]:focus, .label-danger[href]:hover {
+        background-color: #c9302c
     }
 
 .no-marginBot {
-    margin-bottom: 0px;
+    margin-bottom: 0
 }
 
 .ct-label {
-    fill: #000000;
-    color: #000000;
-    font-size: 1rem;
-    line-height: 1;
-    font-weight: bold;
+    fill: #000;
+    color: #000;
+    font-size: 1rem
 }
 
 .navbar {
-    margin-bottom: 20px;
+    margin-bottom: 20px
 }
 
 .link {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255,255,255,.5)
 }
 
     .link:hover {
-        color: rgba(255, 255, 255, 0.75);
-        text-decoration: none;
+        color: rgba(255,255,255,.75);
+        text-decoration: none
     }
 
     .link.dropdown-item:hover {
         background: inherit;
-        cursor: pointer;
+        cursor: pointer
     }
+
+textarea {
+    box-sizing: border-box;
+    height: 38px;
+    min-height: 31px;
+    overflow-x: hidden
+}
