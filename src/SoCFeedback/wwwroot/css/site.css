@@ -155,3 +155,9 @@ a.label:focus {
         background: inherit;
         cursor: pointer;
     }
+textarea {
+    box-sizing: border-box;
+    height: 38px;
+    min-height: 31px;
+    overflow-x: hidden; /* for Firefox (issue #5) */
+}

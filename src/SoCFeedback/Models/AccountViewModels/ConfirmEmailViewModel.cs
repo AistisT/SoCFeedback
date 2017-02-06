@@ -2,12 +2,8 @@
 
 namespace SoCFeedback.Models.AccountViewModels
 {
-    public class ResetPasswordViewModel
+    public class ConfirmEmailViewModel
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 8)]
@@ -20,5 +16,7 @@ namespace SoCFeedback.Models.AccountViewModels
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+        public string PassCode { get; set; }
+        public string UserId { get; set; }
     }
 }

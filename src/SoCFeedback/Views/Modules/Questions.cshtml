@@ -54,10 +54,11 @@
                 {
                     if (Model.Questions[i].CategoryId == Model.Categories[j].Id)
                     {
+                         var temp = Model.Questions[i].Optional.ToString();
                         <li class=" list-group-item col-md-12">
                             @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type)
                             @Html.HiddenFor(m => m.Questions[i].CategoryId) @Html.HiddenFor(m => m.Questions[i].Optional)
-                            <label asp-for="@Model.Questions[i].Optional" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Optional)
+                            <label asp-for="@Model.Questions[i].Optional" class="form-control-label font-weight-bold"></label>: <span class="text-danger">@Html.DisplayFor(model => temp)</span>
                             <label asp-for="@Model.Questions[i].Type" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Type)
                             <label asp-for="@Model.Questions[i].Question1" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Question1)
                             @if (await AuthorizationService.AuthorizeAsync(User, "LecturerLimited"))

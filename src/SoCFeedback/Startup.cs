@@ -40,10 +40,10 @@ namespace SoCFeedback
             services.AddDbContext<FeedbackDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>( /*config =>
+            services.AddIdentity<ApplicationUser, IdentityRole>( config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
-            }*/)
+            })
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
             services.Configure<AuthMessageSenderOptions>(
@@ -74,7 +74,7 @@ namespace SoCFeedback
 
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.MaxFailedAccessAttempts = 5;
 
                 // Cookie settings
                 options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
@@ -103,7 +103,6 @@ namespace SoCFeedback
                 app.UseStatusCodePagesWithRedirects("/error?error={0}");
                 //app.UseExceptionHandler("/error?error={0}");
             }
-           
 
             app.UseStaticFiles();
             app.UseIdentity();

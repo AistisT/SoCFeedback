@@ -2,28 +2,23 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SoCFeedback.Models;
 using SoCFeedback.Models.ManageViewModels;
-using SoCFeedback.Services;
 
 namespace SoCFeedback.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
-        private readonly ILogger _logger;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ManageController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILoggerFactory loggerFactory)
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
         //
@@ -34,16 +29,8 @@ namespace SoCFeedback.Controllers
             ViewData["StatusMessage"] =
                 message == ManageMessageId.ChangePasswordSuccess
                     ? "Your password has been changed."
-                    : message == ManageMessageId.SetPasswordSuccess
-                        ? "Your password has been set."
-                        : message == ManageMessageId.SetTwoFactorSuccess
-                            ? "Your two-factor authentication provider has been set."
                             : message == ManageMessageId.Error
                                 ? "An error has occurred."
-                                : message == ManageMessageId.AddPhoneSuccess
-                                    ? "Your phone number was added."
-                                    : message == ManageMessageId.RemovePhoneSuccess
-                                        ? "Your phone number was removed."
                                         : message==ManageMessageId.ChangeNameSuccess
                                         ? "Your name has been changed."
                                         : "";
@@ -85,7 +72,6 @@ namespace SoCFeedback.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    _logger.LogInformation(3, "User changed their password successfully.");
                     return RedirectToAction(nameof(Index), new {Message = ManageMessageId.ChangePasswordSuccess});
                 }
                 AddErrors(result);
@@ -124,7 +110,6 @@ namespace SoCFeedback.Controllers
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(3, "User changed their name successfully.");
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangeNameSuccess });
                 }
                 AddErrors(result);
@@ -143,11 +128,7 @@ namespace SoCFeedback.Controllers
 
         public enum ManageMessageId
         {
-            AddPhoneSuccess,
             ChangePasswordSuccess,
-            SetTwoFactorSuccess,
-            SetPasswordSuccess,
-            RemovePhoneSuccess,
             Error,
             ChangeNameSuccess
         }
@@ -156,7 +137,6 @@ namespace SoCFeedback.Controllers
         {
             return _userManager.GetUserAsync(HttpContext.User);
         }
-
         #endregion
     }
 }

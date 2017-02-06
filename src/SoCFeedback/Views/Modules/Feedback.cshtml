@@ -49,46 +49,46 @@
 
     <script type="text/javascript">
         new Chartist.Line('#overallAverage',
-        {
-            labels: 
-                @Html.Raw(JsonConvert.SerializeObject(Model.LabelsList)),
-            series: [
-                @Html.Raw(JsonConvert.SerializeObject(Model.RatingsList))
-            ]
-        },
-        {
-            chartPadding: {
-                top: 30,
-                right: 0,
-                bottom: 30,
-                left: 30
+            {
+                labels:
+                    @Html.Raw(JsonConvert.SerializeObject(Model.LabelsList)),
+                series: [
+                    @Html.Raw(JsonConvert.SerializeObject(Model.RatingsList))
+                ]
             },
-            stretch: true,
-            height: 400,
-            plugins: [
-                Chartist.plugins.ctAxisTitle({
-                    axisX: {
-                        axisTitle: 'Questions',
-                        axisClass: 'font-weight-bold form-control-label',
-                        offset: {
-                            x: 0,
-                            y: 50
+            {
+                chartPadding: {
+                    top: 30,
+                    right: 0,
+                    bottom: 30,
+                    left: 30
+                },
+                stretch: true,
+                height: 400,
+                plugins: [
+                    Chartist.plugins.ctAxisTitle({
+                        axisX: {
+                            axisTitle: 'Questions',
+                            axisClass: 'font-weight-bold form-control-label',
+                            offset: {
+                                x: 0,
+                                y: 50
+                            },
+                            textAnchor: 'middle'
                         },
-                        textAnchor: 'middle'
-                    },
-                    axisY: {
-                        axisTitle: 'Average',
-                        axisClass: 'font-weight-bold form-control-label',
-                        offset: {
-                            x: 0,
-                            y: -15
-                        },
-                        textAnchor: 'middle',
-                        flipTitle: false
-                    }
-                })
-            ]
-        });
+                        axisY: {
+                            axisTitle: 'Average',
+                            axisClass: 'font-weight-bold form-control-label',
+                            offset: {
+                                x: 0,
+                                y: -15
+                            },
+                            textAnchor: 'middle',
+                            flipTitle: false
+                        }
+                    })
+                ]
+            });
     </script>
 
     <hr />
@@ -110,11 +110,13 @@
                         <label asp-for="@Model.Questions[i].Question" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Question)
                         @if (Model.Questions[i].Type == QuestionType.Standard)
                         {
+                            <br /><label class="form-control-label font-weight-bold">Answers:</label>
                             <ul>
                                 @foreach (var answer in Model.Questions[i].StandardAnswers)
                                 {
                                     <li class=" list-group-item ">
-                                        <label class="form-control-label font-weight-bold">Answer</label> : @Html.DisplayFor(m => answer)
+                                        <textarea readonly="readonly" rows="1" class="form-control autosize" asp-for="@answer"></textarea>
+
                                     </li>
                                 }
                             </ul>
@@ -126,12 +128,7 @@
                                 <table>
                                     <tr>
                                         <td>
-                                            <label class="font-weight-bold no-marginBot">Number of Votes: </label>
-                                        </td>
-                                        <td>
-                                            <span class="font-weight-bold no-marginBot">
-                                                @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count).&nbsp;
-                                            </span>
+                                            <label class="font-weight-bold no-marginBot">Number of Votes: @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count).&nbsp;</label>
                                         </td>
                                         <td>
                                             <label class="font-weight-bold no-marginBot">Average:</label>
@@ -149,7 +146,7 @@
                                 <script type="text/javascript">
                                     new Chartist.Bar('#@Chart@j@i',
                                         {
-                                            labels: 
+                                            labels:
                                                 @Html.Raw(JsonConvert.SerializeObject(Model.Questions[i].LabelsList))
                                             ,
                                             series: [
@@ -203,6 +200,6 @@
 </div>
 <input type="hidden" asp-for="YearId" />
 <div class="col-md-12">
- <br/>
+    <br />
     <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-sm-right">Back to Year form</a>
 </div>

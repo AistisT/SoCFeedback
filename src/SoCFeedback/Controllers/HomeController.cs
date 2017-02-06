@@ -87,56 +87,49 @@ namespace SoCFeedback.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    foreach (var question in module.Questions)
-                        switch (question.Type)
-                        {
-                            case QuestionType.Standard:
-                                _context.Answer.Add(new Answer
-                                {
-                                    Answer1 = question.AnswerToSave.Answer1,
-                                    ModuleId = module.Id,
-                                    QuestionId = question.Id,
-                                    Year = dbYear.Year1
-                                });
-                                break;
-                            case QuestionType.Rate:
-                                _context.RateAnswer.Add(new RateAnswer
-                                {
-                                    Rating = question.RateAnswerToSave.Rating,
-                                    ModuleId = module.Id,
-                                    QuestionId = question.Id,
-                                    Year = dbYear.Year1
-                                });
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    throw;
-                }
-                return RedirectToAction("Index");
+                foreach (var question in module.Questions)
+                    switch (question.Type)
+                    {
+                        case QuestionType.Standard:
+                            _context.Answer.Add(new Answer
+                            {
+                                Answer1 = question.AnswerToSave.Answer1,
+                                ModuleId = module.Id,
+                                QuestionId = question.Id,
+                                Year = dbYear.Year1
+                            });
+                            break;
+                        case QuestionType.Rate:
+                            _context.RateAnswer.Add(new RateAnswer
+                            {
+                                Rating = question.RateAnswerToSave.Rating,
+                                ModuleId = module.Id,
+                                QuestionId = question.Id,
+                                Year = dbYear.Year1
+                            });
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                await _context.SaveChangesAsync();
+              
+                return RedirectToAction(nameof(FeedbackConfirmation), new { moduleName = module.ModuleName });
             }
-
             return View(module);
+        }
+
+        // GET: /FeedbackConfirmation
+        [HttpGet]
+        public IActionResult FeedbackConfirmation(string moduleName)
+        {
+            ViewData["Module"] = moduleName;
+            return View();
         }
 
         [Route("About")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        [Route("Contact")]
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
             return View();
         }

@@ -25,5 +25,8 @@ namespace SoCFeedback.Models.AccountViewModels
         [Required]
         [Display(Name = "Account type")]
         public Roles Role { get; set; }
+
+        [Display(Name = "Email Confirmed")]
+        public bool EmailConfirmed { get; set; }
     }
 }

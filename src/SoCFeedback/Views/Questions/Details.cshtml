@@ -1,3 +1,4 @@
+@using System.Runtime.InteropServices.ComTypes
 @using Microsoft.AspNetCore.Authorization
 @model Question
 @inject IAuthorizationService AuthorizationService
@@ -27,7 +28,8 @@
             @Html.DisplayNameFor(model => model.Optional)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Optional)
+            @{var temp = Model.Optional.ToString();}
+            @Html.DisplayFor(model => temp)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)

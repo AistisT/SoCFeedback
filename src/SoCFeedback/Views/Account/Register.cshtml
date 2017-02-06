@@ -1,14 +1,13 @@
 ﻿@model RegisterViewModel
 @using SoCFeedback.Enums
 @{
-    ViewData["Title"] = "Create an Account";
+    ViewData["Title"] = "Create Staff Account";
 }
 
 <h2>@ViewData["Title"].</h2>
-
+<br/>
 <form asp-controller="Account" asp-action="Register" method="post">
-    <h4>Create a new staff account.</h4>
-    <p>Notification will be sent to supplied email address.</p>
+    <h4 class="text-primary">Account creation notification will be sent to supplied email address.</h4>
     <hr/>
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group row">
@@ -33,21 +32,6 @@
         </div>
     </div>
     <div class="form-group row">
-        <label asp-for="Password" class="col-md-2 form-control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control"/>
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label asp-for="ConfirmPassword" class="col-md-2 form-control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control"/>
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="form-group row">
         <label asp-for="Role"class="form-control-label col-md-2"></label>
         <div class="col-md-10">
             <select asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control"></select>
@@ -55,7 +39,7 @@
         </div>
     </div>
     <div class="form-group col-sm-12">
-        <input type="submit" value="Register" class="btn btn-primary"/>
+        <input type="submit" value="Create" class="btn btn-primary"/>
         <a asp-action="Index" class="float-sm-right">Back to List</a>
     </div>
 </form>

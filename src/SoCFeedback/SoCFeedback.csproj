@@ -12,12 +12,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <UserSecretsId>aspnet-SoCFeedback-db3a8d35-20e7-4a80-98f6-6db326452ecf</UserSecretsId>
+    <Authors>Aistis Taraskevicius</Authors>
+    <Company />
+    <Description />
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="jquery.datatables" Version="1.10.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Tools" Version="1.1.0-preview4-final" />
-    <PackageReference Include="Microsoft.NETCore.App" Version="1.1.0" />
+    <!--<PackageReference Include="Microsoft.NETCore.App" Version="1.1.0" />-->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.0" />
@@ -53,10 +56,5 @@
     <Reference Include="System.Web">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\System.Web.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
   </ItemGroup>
 </Project>

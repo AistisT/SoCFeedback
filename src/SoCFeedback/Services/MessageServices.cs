@@ -7,7 +7,7 @@ namespace SoCFeedback.Services
     // This class is used by the application to send Email and SMS
     // when you turn on two-factor authentication in ASP.NET Identity.
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
-    public class AuthMessageSender : IEmailSender, ISmsSender
+    public class AuthMessageSender : IEmailSender
     {
         public AuthMessageSender(IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
@@ -20,7 +20,7 @@ namespace SoCFeedback.Services
         {
             // Plug in your email service here to send an email.
 
-            var mailsender = new Outlook365MailSender("ataraskevicius@dundee.ac.uk", "password");
+            var mailsender = new Outlook365MailSender("ataraskevicius@dundee.ac.uk", "XinyueWuXinyueWu");
             // mailsender.SendEmailAsync(email, subject, message);
             //var myMessage = new SendGrid.SendGridMessage();
             //myMessage.AddTo(email);
@@ -34,12 +34,6 @@ namespace SoCFeedback.Services
             //// Create a Web transport for sending email.
             //var transportWeb = new SendGrid.Web(credentials);
             return mailsender.SendEmailAsync(email, subject, message);
-        }
-
-        public Task SendSmsAsync(string number, string message)
-        {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
         }
     }
 }

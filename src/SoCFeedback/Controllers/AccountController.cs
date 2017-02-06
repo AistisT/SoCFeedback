@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SoCFeedback.Enums;
 using SoCFeedback.Models;
 using SoCFeedback.Models.AccountViewModels;
@@ -19,7 +18,6 @@ namespace SoCFeedback.Controllers
     public class AccountController : Controller
     {
         private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -28,13 +26,11 @@ namespace SoCFeedback.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILoggerFactory loggerFactory,
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            _logger = loggerFactory.CreateLogger<AccountController>();
             _roleManager = roleManager;
         }
 
@@ -58,29 +54,24 @@ namespace SoCFeedback.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // Require the user to have a confirmed email before they can log on.
-                //var user = await _userManager.FindByNameAsync(model.Email);
-                //if (user != null)
-                //{
-                //    if (!await _userManager.IsEmailConfirmedAsync(user))
-                //    {
-                //        ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
-                //        return View(model);
-                //    }
-                //}
+                //Require the user to have a confirmed email before they can log on.
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
+                        return View(model);
+                    }
+                }
 
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,
-                    false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning(2, "User account locked out.");
                     return View("Lockout");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -120,7 +111,7 @@ namespace SoCFeedback.Controllers
                     Forename = model.Forename
                 };
 
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     if (!_roleManager.RoleExistsAsync(model.Role.ToString()).Result)
@@ -137,19 +128,9 @@ namespace SoCFeedback.Controllers
                         }
                     }
                     await _userManager.AddToRoleAsync(user, model.Role.ToString());
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                    // Send an email with this link
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = System.Net.WebUtility.UrlEncode(code);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(model.Email, "SoC Feedback Website Account",
-                    //    $"An account on http://feedback.computing.dundee.ac.uk has been created for you.{Environment.NewLine}" +
-                    //    $"Your login details are:{Environment.NewLine}" +
-                    //    $"Id/Email:{model.Email}.{Environment.NewLine}" +
-                    //    $"Password:{model.Password}");
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "Admin created a new account with password.");
-                    return RedirectToAction("Index");
+                    await SendConfirmation(user);
+
+                    return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AccountCreated });
                 }
                 AddErrors(result);
             }
@@ -158,15 +139,57 @@ namespace SoCFeedback.Controllers
             return View(model);
         }
 
-        // GET: Supervisors
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
+        private async Task SendConfirmation(ApplicationUser user)
         {
+            // Send an email with this link
+            var code = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+            var passCode = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "SoC Feedback Account",
+                $"An account on http://feedback.computing.dundee.ac.uk has been created for you.{Environment.NewLine}" +
+                $"You must first confirm your email and set a new password before you can use the account, please follow this URL:{Environment.NewLine}" +
+                $"{callbackUrl}");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ResendConfirmationEmail(string email)
+        {
+            if (email == null)
+            {
+                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.Error });
+            }
+            var dbUser = await _userManager.FindByNameAsync(email);
+            if (dbUser == null)
+                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.Error });
+            await SendConfirmation(dbUser);
+            return RedirectToAction(nameof(Index), new { Message = AccountMessageId.EmailResent });
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Index(AccountMessageId? message = null)
+        {
+            ViewData["StatusMessage"] =
+                message == AccountMessageId.AcountUpdated
+                    ? "Account has been updated."
+                        : message == AccountMessageId.AccountCreated
+                            ? "Account has been created and email sent."
+                                : message == AccountMessageId.Error
+                                    ? "An error has occurred."
+                                        : message == AccountMessageId.EmailResent
+                                             ? "Email confirmation has been resent."
+                                                 : message == AccountMessageId.AccountDeleted
+                                                      ? "Account has been deleted."
+                                                             : "";
+
             var users = _userManager.Users.Select(user => new AccountViewModel
             {
                 Forename = user.Forename,
                 Surname = user.Surname,
-                Email = user.Email
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed
             });
 
             var list = await users.ToListAsync();
@@ -174,13 +197,14 @@ namespace SoCFeedback.Controllers
             {
                 var dbUser = await _userManager.FindByNameAsync(user.Email);
                 var role = await _userManager.GetRolesAsync(dbUser);
-                user.Role = (Roles) Enum.Parse(typeof(Roles), role.FirstOrDefault());
+                user.Role = (Roles)Enum.Parse(typeof(Roles), role.FirstOrDefault());
             }
 
             return View(list);
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> Edit(string email)
         {
             if (email == null)
@@ -188,7 +212,7 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             }
             var dbUser = await _userManager.FindByNameAsync(email);
-            if (dbUser==null)
+            if (dbUser == null)
                 return NotFound();
 
             return View(await GetAccountViewModel(dbUser));
@@ -222,7 +246,7 @@ namespace SoCFeedback.Controllers
                     return NotFound();
 
                 var roles = await _userManager.GetRolesAsync(dbUser);
-                var role = (Roles) Enum.Parse(typeof(Roles), roles.FirstOrDefault());
+                var role = (Roles)Enum.Parse(typeof(Roles), roles.FirstOrDefault());
                 if (model.Role != role)
                 {
                     var roleResult = IdentityResult.Success;
@@ -246,12 +270,13 @@ namespace SoCFeedback.Controllers
                 dbUser.Surname = model.Surname;
 
                 await _userManager.UpdateAsync(dbUser);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AcountUpdated });
             }
             return View(model);
         }
 
         // GET: Levels/Delete/5
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string email)
         {
@@ -286,7 +311,7 @@ namespace SoCFeedback.Controllers
 
             await _userManager.DeleteAsync(dbUser);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AccountDeleted });
         }
 
         //
@@ -296,24 +321,44 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-
+        //
         // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public IActionResult ConfirmEmail(string code = null, string passCode = null, string userId = null)
         {
-            if (userId == null || code == null)
-                return View("Error");
-            var user = await _userManager.FindByIdAsync(userId);
+            return code == null || passCode == null || userId == null ? View("Error") : View();
+        }
+
+        // GET: /Account/ConfirmEmail
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
                 return View("Error");
-            code = WebUtility.UrlDecode(code);
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+
+            var result = await _userManager.ConfirmEmailAsync(user, WebUtility.UrlDecode(model.Code));
+            var passResult = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.PassCode), model.Password);
+            if (result.Succeeded && passResult.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                return RedirectToAction("ConfirmEmailConfirmation");
+            }
+            return View("Error");
+        }
+
+        //
+        // GET: /Account/ConfirmEmailConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ConfirmEmailConfirmation()
+        {
+            return View();
         }
 
         //
@@ -338,13 +383,13 @@ namespace SoCFeedback.Controllers
                 if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
                     return View("ForgotPasswordConfirmation");
 
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                // Send an email with this link
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code},
+                var code = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code },
                     HttpContext.Request.Scheme);
+                // Send an email with this link
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                    $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                    $"Please reset your password by clicking here:{Environment.NewLine} {callbackUrl} {Environment.NewLine}" +
+                    "Or by copying this URL address to your browser.");
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -382,7 +427,7 @@ namespace SoCFeedback.Controllers
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null)
                 return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.Code), model.Password);
             if (result.Succeeded)
                 return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
             AddErrors(result);
@@ -425,6 +470,15 @@ namespace SoCFeedback.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        public enum AccountMessageId
+        {
+            AccountCreated,
+            Error,
+            AcountUpdated,
+            EmailResent,
+            AccountDeleted
         }
         #endregion
     }

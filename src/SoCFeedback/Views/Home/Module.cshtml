@@ -24,10 +24,10 @@
                 <a href="mailto:@Model.Supervisor.Email?Subject=@Model.Code"> @Html.DisplayFor(model => model.Supervisor.FullName)</a>
             </dd>
             <dt>
-                <a href="#descCollapse" data-toggle="collapse" aria-expanded="True"> Toggle Module @Html.DisplayNameFor(model => model.Description) </a>
+                <a href="#descCollapse" data-toggle="collapse" aria-expanded="False"> Toggle Module @Html.DisplayNameFor(model => model.Description) </a>
             </dt>
             <dd>
-                <div id="descCollapse" class="collapsing">
+                <div id="descCollapse" class="collapse in">
                     <textarea readonly="readonly" class="form-control autosize" asp-for="@Model.Description"></textarea>
                 </div>
             </dd>

@@ -1,10 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Confirm Email";
+﻿@model ConfirmEmailViewModel
+@{
+    ViewData["Title"] = "Set Your Password";
 }
 
-<h2>@ViewData["Title"].</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
-    </p>
-</div>
+<form asp-controller="Account" asp-action="ConfirmEmail" method="post">
+    <h4>Set your password.</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="Code" type="hidden" />
+    <input asp-for="PassCode" type="hidden" />
+    <input asp-for="UserId" type="hidden" />
+    <div class="form-group row">
+        <label asp-for="Password" class="col-md-2 form-control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="ConfirmPassword" class="col-md-2 form-control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group col-sm-12">
+        <input type="submit" value="Set" class="btn btn-primary" />
+    </div>
+</form>
