@@ -137,15 +137,22 @@ namespace SoCFeedback.Controllers
         [Route("/Error")]
         public IActionResult Error(int error)
         {
-            ViewData["Title"] = error;
-            ViewData["Error"] = error;
+            ViewData["Title"] = "Error";
+            ViewData["Error"] = "Error";
             switch (error)
             {
                 case 404:
+                    ViewData["Title"] = error;
+                    ViewData["Error"] = error;
                     ViewData["Message"] = "Sorry, but this page doesn't exsts.";
                     break;
                 case 500:
+                    ViewData["Title"] = error;
+                    ViewData["Error"] = error;
                     ViewData["Message"] = "Sorry, server has encountered an error";
+                    break;
+                case 1:
+                    ViewData["Message"] = "This link is no longer valid, if you have forgotten your password please use password recovery.";
                     break;
                 default:
                     ViewData["Message"] = "An error occurred while processing your request";

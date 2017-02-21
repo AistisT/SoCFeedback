@@ -46,7 +46,7 @@ namespace SoCFeedback.Controllers
         // GET: Questions/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title");
+            ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title");
             return View(new Question());
         }
 
@@ -71,7 +71,7 @@ namespace SoCFeedback.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title", question.CategoryId);
             return View(question);
         }
 
@@ -84,7 +84,9 @@ namespace SoCFeedback.Controllers
             var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
             if (question == null)
                 return NotFound();
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category
+                .AsNoTracking().Where(c => c.Status == Status.Active || c.Id == question.CategoryId).OrderBy(c => c.CategoryOrder)
+                , "Id", "Title", question.CategoryId);
             return View(question);
         }
 
@@ -122,7 +124,9 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Title", question.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category
+                .AsNoTracking().Where(c => c.Status == Status.Active || c.Id == question.CategoryId).OrderBy(c => c.CategoryOrder)
+                , "Id", "Title", question.CategoryId);
             return View(question);
         }
 

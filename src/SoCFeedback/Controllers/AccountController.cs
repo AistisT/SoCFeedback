@@ -128,7 +128,10 @@ namespace SoCFeedback.Controllers
                         }
                     }
                     await _userManager.AddToRoleAsync(user, model.Role.ToString());
-                    await SendConfirmation(user);
+
+                    #pragma warning disable 4014
+                    SendConfirmation(user);
+                    #pragma warning restore 4014
 
                     return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AccountCreated });
                 }
@@ -140,16 +143,15 @@ namespace SoCFeedback.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        private async Task SendConfirmation(ApplicationUser user)
+        private async void SendConfirmation(ApplicationUser user)
         {
             // Send an email with this link
             var code = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
             var passCode = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
             await _emailSender.SendEmailAsync(user.Email, "SoC Feedback Account",
-                $"An account on http://feedback.computing.dundee.ac.uk has been created for you.{Environment.NewLine}" +
-                $"You must first confirm your email and set a new password before you can use the account, please follow this URL:{Environment.NewLine}" +
-                $"{callbackUrl}");
+                $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for {user.Email}.<br/>" +
+                $"You must first set new a password before you can use your account by clicking <a href='{callbackUrl}'>here</a>.<br/>");
         }
 
         [Authorize(Roles = "Admin")]
@@ -162,7 +164,9 @@ namespace SoCFeedback.Controllers
             var dbUser = await _userManager.FindByNameAsync(email);
             if (dbUser == null)
                 return RedirectToAction(nameof(Index), new { Message = AccountMessageId.Error });
-            await SendConfirmation(dbUser);
+            #pragma warning disable 4014
+            SendConfirmation(dbUser);
+            #pragma warning restore 4014
             return RedirectToAction(nameof(Index), new { Message = AccountMessageId.EmailResent });
         }
 
@@ -307,7 +311,7 @@ namespace SoCFeedback.Controllers
             if (dbUser == null)
                 return NotFound();
             if (cUser == dbUser)
-                return View("Error");
+                return RedirectToAction(nameof(HomeController.Error),"Home");
 
             await _userManager.DeleteAsync(dbUser);
 
@@ -328,9 +332,15 @@ namespace SoCFeedback.Controllers
         // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ConfirmEmail(string code = null, string passCode = null, string userId = null)
+        public async Task<IActionResult> ConfirmEmail(string code = null, string passCode = null, string userId = null)
         {
-            return code == null || passCode == null || userId == null ? View("Error") : View();
+            if (code == null || passCode == null || userId == null)
+                return RedirectToAction(nameof(HomeController.Error), "Home");
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user.EmailConfirmed)
+                return RedirectToAction(nameof(HomeController.Error), "Home", new { error = 1 });
+
+            return View();
         }
 
         // GET: /Account/ConfirmEmail
@@ -340,7 +350,9 @@ namespace SoCFeedback.Controllers
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
-                return View("Error");
+                return RedirectToAction(nameof(HomeController.Error), "Home");
+            if (user.EmailConfirmed)
+                return RedirectToAction(nameof(HomeController.Error), "Home", new { error = 1 });
 
             var result = await _userManager.ConfirmEmailAsync(user, WebUtility.UrlDecode(model.Code));
             var passResult = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.PassCode), model.Password);
@@ -349,7 +361,9 @@ namespace SoCFeedback.Controllers
                 await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("ConfirmEmailConfirmation");
             }
-            return View("Error");
+            AddErrors(result);
+            AddErrors(passResult);
+            return View();
         }
 
         //
@@ -384,12 +398,12 @@ namespace SoCFeedback.Controllers
                     return View("ForgotPasswordConfirmation");
 
                 var code = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code },
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { code },
                     HttpContext.Request.Scheme);
                 // Send an email with this link
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                    $"Please reset your password by clicking here:{Environment.NewLine} {callbackUrl} {Environment.NewLine}" +
-                    "Or by copying this URL address to your browser.");
+                #pragma warning disable 4014
+                _emailSender.SendEmailAsync(model.Email, "Reset Password", $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>.");
+                #pragma warning restore 4014
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -412,7 +426,7 @@ namespace SoCFeedback.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            return code == null ? View("Error") : View();
+            return code == null ? (IActionResult) RedirectToAction(nameof(HomeController.Error), "Home") : View();
         }
 
         //
@@ -426,7 +440,7 @@ namespace SoCFeedback.Controllers
                 return View(model);
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null)
-                return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
+                return RedirectToAction(nameof(HomeController.Error), "Home");
             var result = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.Code), model.Password);
             if (result.Succeeded)
                 return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");

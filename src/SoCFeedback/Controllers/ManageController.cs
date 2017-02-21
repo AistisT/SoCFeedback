@@ -37,7 +37,7 @@ namespace SoCFeedback.Controllers
 
             var user = await GetCurrentUserAsync();
             if (user == null)
-                return View("Error");
+                return RedirectToAction(nameof(HomeController.Error), "Home");
             var model = new IndexViewModel
             {
                 HasPassword = await _userManager.HasPasswordAsync(user),

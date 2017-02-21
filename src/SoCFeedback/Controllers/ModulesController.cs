@@ -48,8 +48,8 @@ namespace SoCFeedback.Controllers
         [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
         public IActionResult Create()
         {
-            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title");
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName");
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "Title");
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "FullName");
             return View();
         }
 
@@ -72,9 +72,9 @@ namespace SoCFeedback.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title",
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "Title",
                 module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName",
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "FullName",
                 module.SupervisorId);
             return View(module);
         }
@@ -89,9 +89,11 @@ namespace SoCFeedback.Controllers
             var module = await _context.Module.SingleOrDefaultAsync(m => m.Id == id);
             if (module == null)
                 return NotFound();
-            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title",
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking()
+                .Where(s => s.Status == Status.Active || s.Id == module.LevelId), "Id", "Title",
                 module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName",
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking()
+                .Where(s => s.Status == Status.Active || s.Id == module.SupervisorId), "Id", "FullName",
                 module.SupervisorId);
             return View(module);
         }
@@ -127,9 +129,11 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber), "Id", "Title",
-                module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename), "Id", "FullName",
+            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking()
+                 .Where(s => s.Status == Status.Active || s.Id == module.LevelId), "Id", "Title",
+                 module.LevelId);
+            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking()
+                .Where(s => s.Status == Status.Active || s.Id == module.SupervisorId), "Id", "FullName",
                 module.SupervisorId);
             return View(module);
         }
@@ -220,7 +224,7 @@ namespace SoCFeedback.Controllers
                     question.RunningStatus = RunningStatus.Inactive;
 
             module.YearId = yid;
-            module.Categories =_context.Category
+            module.Categories = _context.Category
                     .AsNoTracking()
                     .Where(c => c.Status == Status.Active)
                     .OrderBy(c => c.CategoryOrder)
@@ -278,7 +282,7 @@ namespace SoCFeedback.Controllers
                         return NotFound();
                     throw;
                 }
-            return RedirectToAction("Details", "Years", new {id = module.YearId});
+            return RedirectToAction("Details", "Years", new { id = module.YearId });
         }
 
         // GET: Modules/Feedback/5

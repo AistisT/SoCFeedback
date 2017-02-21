@@ -52,7 +52,7 @@ namespace SoCFeedback.Controllers
             var year = new Year
             {
                 Modules =
-                    _context.Module.Where(m => m.Status == Status.Active).OrderBy(o => o.Code).AsNoTracking().ToList(),
+                    _context.Module.Where(m => m.Status == Status.Active && m.Level.Status==Status.Active).OrderBy(o => o.Code).AsNoTracking().ToList(),
                 Levels =
                     _context.Level.Where(m => m.Status == Status.Active && m.Module.Count != 0)
                         .OrderBy(o => o.OrderingNumber)

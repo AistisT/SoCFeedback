@@ -14,17 +14,20 @@
         <h6 class="text-muted">Please only create new year form at the start of new academic year.</h6>
         <hr/>
         <div class="form-group row">
-            <label asp-for="Year1" class="col-md-2 form-control-label"></label>
+            
+            <label asp-for="Year1" class="col-md-4 col-form-label"></label>
             <div class="col-md-2">
                 <input asp-for="Year1" class="form-control" id="yearInput"/>
                 <span asp-validation-for="Year1" class="text-danger"></span>
             </div>
-            <div class="col-md-8"> Ending: <label id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label></div>
+            <div class="col-md-6 col-form-label "> Ending: <label class="font-weight-bold"id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label>
+            </div>
             <script type="text/javascript">
-                $('#yearInput').on('input', function () {
-                    $("#endingYear").text(
-                        parseInt($('#yearInput').val())+1);
-                });
+                $('#yearInput').on('input',
+                    function() {
+                        $("#endingYear").text(
+                            parseInt($('#yearInput').val()) + 1);
+                    });
             </script>
         </div>
         <div class="row">
