@@ -361,6 +361,8 @@ namespace SoCFeedback.Controllers
                 await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("ConfirmEmailConfirmation");
             }
+            user.EmailConfirmed = false;
+            await _userManager.UpdateAsync(user);
             AddErrors(result);
             AddErrors(passResult);
             return View();
