@@ -14,8 +14,11 @@
     <UserSecretsId>aspnet-SoCFeedback-db3a8d35-20e7-4a80-98f6-6db326452ecf</UserSecretsId>
     <Authors>Aistis Taraskevicius</Authors>
     <Company />
-    <Description />
+    <Description>School of Computing Module Feedback Website</Description>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\favicon.ico" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="jquery.datatables" Version="1.10.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="1.1.1" />
