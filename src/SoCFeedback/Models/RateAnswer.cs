@@ -12,7 +12,7 @@ namespace SoCFeedback.Models
         public Guid QuestionId { get; set; }
 
         [Required]
-        [Range(0.5, float.MaxValue, ErrorMessage = "Rating is required.")]
+        [Range(0.5, 5, ErrorMessage = "Rating is required.")]
         public float Rating { get; set; }
 
         [Required]

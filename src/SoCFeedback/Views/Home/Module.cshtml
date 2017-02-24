@@ -41,6 +41,7 @@
         </h5>
         <h5>This procedure is completely anonymous.</h5>
         <hr/>
+        <div asp-validation-summary="All" class="text-danger"></div>
         @for (var j = 0; j < Model.Categories.Count; j++)
         {
             <input asp-for="@Model.Categories[j].Id" type="hidden"/>
@@ -56,21 +57,23 @@
                         <li class=" list-group-item row">
                             @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type) @Html.HiddenFor(m => m.Questions[i].CategoryId)
 
-                            @if (Model.Questions[i].Type == QuestionType.Standard)
+                            @switch (Model.Questions[i].Type)
                             {
-                                @Html.DisplayFor(m => m.Questions[i].Question1)
-                                <textarea asp-for="@Model.Questions[i].AnswerToSave.Answer1" class="form-control autosize"></textarea>
-                                <span asp-validation-for="@Model.Questions[i].AnswerToSave.Answer1" class="text-danger"></span>
-                            }
-                            @if (Model.Questions[i].Type == QuestionType.Rate)
-                            {
-                                <div class=" col-md-7">
+                                case QuestionType.Rate:
+                                    <div class=" col-md-7">
+                                        @Html.DisplayFor(m => m.Questions[i].Question1)
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input data-min="0" data-max="5" data-step="0.5" data-size="xs" asp-for="@Model.Questions[i].RateAnswerToSave.Rating" class="rating rating-loading" />
+                                    </div>
+                                    <span asp-validation-for="@Model.Questions[i].RateAnswerToSave.Rating" class="text-danger"></span>
+                                    break;
+                                case QuestionType.Standard:
                                     @Html.DisplayFor(m => m.Questions[i].Question1)
-                                </div>
-                                <div class="col-md-5">
-                                    <input data-min="0" data-max="5" data-step="0.5" data-size="xs" asp-for="@Model.Questions[i].RateAnswerToSave.Rating" class="rating rating-loading"/>
-                                </div>
-                                <span asp-validation-for="@Model.Questions[i].RateAnswerToSave.Rating" class="text-danger"></span>
+                                    <textarea asp-for="@Model.Questions[i].AnswerToSave.Answer1" class="form-control autosize"></textarea>
+                                    <span asp-validation-for="@Model.Questions[i].AnswerToSave.Answer1" class="text-danger"></span>
+                                    break;
+     
                             }
 
                         </li>

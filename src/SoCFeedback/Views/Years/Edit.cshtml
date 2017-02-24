@@ -10,13 +10,13 @@
         <h4>Year Form</h4>
         <hr/>
     </div>
-    <div class="form-group">
-        <label asp-for="Year1" class="col-md-2 form-control-label"></label>
+    <div class="col-md-12">
+        <label asp-for="Year1" class="col-md-3 form-control-label"></label>
         <div class="col-md-2">
             <input asp-for="Year1" class="form-control" id="yearInput"/>
             <span asp-validation-for="Year1" class="text-danger"></span>
         </div>
-        <div class="col-md-8"> Ending: <label id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label></div>
+        <div class="col-md-7"> Ending: <label id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label></div>
         <script type="text/javascript">
                 $('#yearInput').on('input', function () {
                     $("#endingYear").text(
