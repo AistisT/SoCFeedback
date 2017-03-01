@@ -7,14 +7,14 @@
 <h2>Create</h2>
 <form asp-action="Create">
     <div>
-        <h4>Year Form</h4>
+        <h4>Academic Year Form</h4>
         <hr />
-        <h5 class="text-danger">Only one year form can be active at a time! </h5>
+        <h5 class="text-danger">Only one academic year form can be active at a time! </h5>
         <h5 class="text-danger">Any currently pending or published forms will be automatically archived upon creation of a new year form.</h5>
         <h6 class="text-muted">Please only create new year form at the start of new academic year.</h6>
         <hr/>
         <div class="form-group row">
-            <label asp-for="Year1" class="col-md-3 col-form-label"></label>
+            <label class="col-md-3 col-form-label">Academic year starting:</label>
             <div class="col-md-2">
                 <input asp-for="Year1" class="form-control" id="yearInput"/>
                 <span asp-validation-for="Year1" class="text-danger"></span>

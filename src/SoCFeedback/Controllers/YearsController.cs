@@ -70,7 +70,7 @@ namespace SoCFeedback.Controllers
         {
             var obj = _context.Year.Any(e => e.Year1 == year.Year1);
             if (obj)
-                ModelState.AddModelError("Year1", $"Questionnaire form for year {year.Year1} already exists.");
+                ModelState.AddModelError("Year1", $"Academic Year form for year {year.Year1} already exists.");
             if (ModelState.IsValid)
             {
                 ArchiveNotArchivedYears();
@@ -144,7 +144,7 @@ namespace SoCFeedback.Controllers
             var obj = _context.Year.AsNoTracking().Any(e => e.Year1 == year.Year1 && e.Id != year.Id);
 
             if (obj)
-                ModelState.AddModelError("Year1", $"Questionnaire form for year {year.Year1} already exists.");
+                ModelState.AddModelError("Year1", $"Academic year form for year {year.Year1} already exists.");
 
             if (!ModelState.IsValid) return View(year);
 

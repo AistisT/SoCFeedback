@@ -18,10 +18,8 @@ namespace SoCFeedback.Models
         public Guid Id { get; set; }
 
         [Required]
-        [MinLength(4)]
-        [MaxLength(4)]
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
-        [Display(Name = "Academic year starting:", Description = "Enter Start of Academic year only etc:2016")]
+        [Display(Name = "Academic Year", Description = "Enter Start of Academic year only etc:2016")]
         public int Year1 { get; set; } = DateTime.Now.Year;
         
         [NotMapped]

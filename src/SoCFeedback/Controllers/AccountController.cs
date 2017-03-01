@@ -151,7 +151,8 @@ namespace SoCFeedback.Controllers
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
             await _emailSender.SendEmailAsync(user.Email, "SoC Feedback Account",
                 $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for {user.Email}.<br/>" +
-                $"You must first set new a password before you can use your account by clicking <a href='{callbackUrl}'>here</a>.<br/>");
+                $"You must first set new a password before you can use your account by clicking <a href='{callbackUrl}'>here</a>.<br/>" +
+                $"This is an automated email, please do not reply.<br/>");
         }
 
         [Authorize(Roles = "Admin")]
@@ -404,7 +405,8 @@ namespace SoCFeedback.Controllers
                     HttpContext.Request.Scheme);
                 // Send an email with this link
                 #pragma warning disable 4014
-                _emailSender.SendEmailAsync(model.Email, "Reset Password", $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>.");
+                _emailSender.SendEmailAsync(model.Email, "SoC Feedback Password Reset", $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>.<br/>" +
+                                                                                $"This is an automated email, please do not reply.<br/> ");
                 #pragma warning restore 4014
                 return View("ForgotPasswordConfirmation");
             }

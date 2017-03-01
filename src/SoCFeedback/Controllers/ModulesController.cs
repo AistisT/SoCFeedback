@@ -164,6 +164,17 @@ namespace SoCFeedback.Controllers
         {
             var module = await _context.Module.SingleOrDefaultAsync(m => m.Id == id);
             module.Status = Status.Archived;
+
+            // remove module that is being archived from pending academic year forms
+            var yearModules = _context.YearModules.Where(m => m.ModuleId == module.Id && m.YearNavigation.Status == YearStatus.Pending);
+            if (yearModules != null)
+            {
+                foreach (var ymodule in yearModules)
+                {
+                    _context.YearModules.Remove(ymodule);
+                }
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -5,7 +5,8 @@
 }
 
 <h2>Publish</h2>
-
+<h3 class="text-danger">Once published this year form will visible to students and closed to any further modifications. This action cannot be undone!</h3>
+<h3>Publishing should be performed close to the end of semester.</h3>
 <hr/>
 <div>
     <h4>Year Form</h4>
@@ -50,7 +51,8 @@
     <hr/>
     <form asp-action="Publish" asp-route-id="@Model.Id">
         <div class="form-group col-sm-12">
-            <input type="submit" value="Publish" class="btn btn-primary" />
+            <br/>
+            <input type="submit" value="Publish" class="btn btn-primary"/>
             <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>
     </form>

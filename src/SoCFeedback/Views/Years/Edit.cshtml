@@ -7,15 +7,16 @@
 <form asp-action="Edit">
     <div class="col-md-12">
         <h2>Edit</h2>
-        <h4>Year Form</h4>
+        <h4>Academic Year Form</h4>
         <hr/>
     </div>
     <div class="col-md-12">
-        <label asp-for="Year1" class="col-md-3 form-control-label"></label>
+        <label class="col-md-3 form-control-label">Academic year starting:</label>
         <div class="col-md-2">
             <input asp-for="Year1" class="form-control" id="yearInput"/>
             <span asp-validation-for="Year1" class="text-danger"></span>
         </div>
+        <input type="hidden" asp-for="Id" />
         <div class="col-md-7"> Ending: <label id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label></div>
         <script type="text/javascript">
                 $('#yearInput').on('input', function () {

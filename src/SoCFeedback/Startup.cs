@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ namespace SoCFeedback
 {
     public class Startup
     {
+        private const string DefaultTokenProviderName = "Default";
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -45,9 +47,9 @@ namespace SoCFeedback
                 config.SignIn.RequireConfirmedEmail = true;
             })
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
-                .AddDefaultTokenProviders();
-            services.Configure<AuthMessageSenderOptions>(
-                options => Configuration.GetSection("AuthMessageSenderOptions").Bind(options));
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<DefaultDataProtectorTokenProvider<ApplicationUser>>(DefaultTokenProviderName);
+
             services.AddMvc()
                 .AddMvcOptions(options => { options.ModelBinderProviders.Insert(0, new TrimmingModelBinderProvider()); });
 
@@ -83,6 +85,11 @@ namespace SoCFeedback
 
                 // User settings
                 options.User.RequireUniqueEmail = true;
+            });
+            // token lifespan
+            services.Configure<DefaultDataProtectorTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan=TimeSpan.FromDays(365);
             });
         }
 
