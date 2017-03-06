@@ -19,6 +19,7 @@ namespace SoCFeedback.Models.AccountViewModels
 
         [Required]
         [EmailAddress]
+        [RegularExpression("(^.*@dundee.ac.uk$)", ErrorMessage = "Only @dundee.ac.uk emails are allowed.")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
