@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using zxm.MailKit.Abstractions;
+﻿using zxm.MailKit.Abstractions;
 
 namespace SoCFeedback.Services
 {

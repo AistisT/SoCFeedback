@@ -1,16 +1,25 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using zxm.MailKit.Outlook365;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SoCFeedback.Services
 {
     public class AuthMessageSender : IEmailSender
     {
-
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var mailsender = new Outlook365Sender("ataraskevicius@dundee.ac.uk", "XinyueWuXinyueWu");
-            return mailsender.SendEmailAsync(email, subject, message);
+            try
+            {
+                var mailsender = new Outlook365Sender("doc-feedback@dundee.ac.uk", "faymmimerwdkmg");
+                await mailsender.SendEmailAsync(email, subject, message);
+            }
+            catch (Exception e)
+            {
+
+                var mailsender = new Outlook365Sender("doc-request@dundee.ac.uk", "dcbdmjhbdmvhmj");
+                 #pragma warning disable 4014
+                 mailsender.SendEmailAsync(email, subject, message);
+                #pragma warning restore 4014
+            }
         }
     }
 }

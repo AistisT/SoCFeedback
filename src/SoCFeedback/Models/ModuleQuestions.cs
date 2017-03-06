@@ -6,8 +6,6 @@ namespace SoCFeedback.Models
     {
         public Guid ModuleId { get; set; }
         public Guid QuestionId { get; set; }
-        //public int Year { get; set; }
-
         public virtual Module ModuleCodeNavigation { get; set; }
         public virtual Question Question { get; set; }
     }
