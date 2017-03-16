@@ -6,10 +6,9 @@
     ViewData["Title"] = "Module Details";
 }
 
-<h2>Details</h2>
+<h2>Module Details</h2>
 
 <div>
-    <h4>Module</h4>
     <hr/>
     <dl class="dl-horizontal">
         <dt>
@@ -60,6 +59,6 @@
     @if (!await AuthorizationService.AuthorizeAsync(User, "TeachingStaff"))
     {
         <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a class="float-sm-right" asp-action="Index">Module List</a>
+        <a class="float-xs-right" asp-action="Index">Module List</a>
     }
 </div>

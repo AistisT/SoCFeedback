@@ -6,48 +6,48 @@
     var Chart = "chart";
     var Collapse = "Collapse";
 }
-
-<div class="col-md-12">
-    <h2>Module Feedback</h2>
-    <h4>Module</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Level)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Level)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Coordinator)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Coordinator)
-        </dd>
-    </dl>
-</div>
-<div class="col-md-12">
-    <hr />
-    <h4>Overall Average</h4>
-    <input data-min="0" data-max="5" data-step="0.1" data-size="md" data-display-only="true" asp-for="@Model.Average" class="rating rating-loading" />
-    <a href="#averageCollapse" data-toggle="collapse" aria-expanded="True"> Toggle overall average chart </a>
-    <div id="averageCollapse" class="collapsing">
-        <div class="" id="overallAverage"></div>
+<div>
+    <div class="col-md-12">
+        <h2>Module Feedback</h2>
+        <h4>Module</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Code)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Code)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Level)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Level)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Coordinator)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Coordinator)
+            </dd>
+        </dl>
     </div>
+    <div class="col-md-12">
+        <hr />
+        <h4>Overall Average</h4>
+        <input data-min="0" data-max="5" data-step="0.1" data-size="md" data-display-only="true" asp-for="@Model.Average" class="rating rating-loading" />
+        <a href="#averageCollapse" data-toggle="collapse" aria-expanded="True" class="font-weight-bold"> Toggle overall average chart </a>
+        <div id="averageCollapse" class="collapsing">
+            <div class="" id="overallAverage"></div>
+        </div>
 
-    <script type="text/javascript">
+        <script type="text/javascript">
         new Chartist.Line('#overallAverage',
             {
                 labels:
@@ -89,66 +89,57 @@
                     })
                 ]
             });
-    </script>
+        </script>
 
-    <hr />
-    <h4>Questions</h4>
-    <h6>Questions without answers won't be displayed.</h6>
-    <hr />
-    @for (var j = 0; j < Model.Categories.Count; j++)
-    {
-        <span class=" text-primary h4 form-text">
-            @Html.DisplayFor(m => m.Categories[j].Title)
-        </span>
-        <ul class="list-group">
-            @for (var i = 0; i < Model.Questions.Count; i++)
-            {
-                if (Model.Questions[i].Category.CategoryId == Model.Categories[j].CategoryId)
+        <hr />
+        <h4>Questions</h4>
+        <h6>Questions without answers won't be displayed.</h6>
+        <hr />
+        @for (var j = 0; j < Model.Categories.Count; j++)
+        {
+            <span class=" text-primary h4 form-text">
+                @Html.DisplayFor(m => m.Categories[j].Title)
+            </span>
+            <ul class="list-group">
+                @for (var i = 0; i < Model.Questions.Count; i++)
                 {
-                    <li class=" list-group-item">
+                    if (Model.Questions[i].Category.CategoryId == Model.Categories[j].CategoryId)
+                    {
+                        <li class=" list-group-item clearfix">
 
-                        <label asp-for="@Model.Questions[i].Question" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Question)
-                        @if (Model.Questions[i].Type == QuestionType.Standard)
+                            <label asp-for="@Model.Questions[i].Question" class="form-control-label font-weight-bold"></label> : @Html.DisplayFor(m => m.Questions[i].Question)
+                            @if (Model.Questions[i].Type == QuestionType.Standard)
                         {
-                            <br /><label class="form-control-label font-weight-bold">Answers:</label>
-                            <ul>
-                                @foreach (var answer in Model.Questions[i].StandardAnswers)
-                                {
-                                    <li class=" list-group-item ">
-                                        <textarea readonly="readonly" rows="1" class="form-control autosize" asp-for="@answer"></textarea>
+                                <br /><label class="form-control-label font-weight-bold">Answers:</label>
+                                <ul>
+                                    @foreach (var answer in Model.Questions[i].StandardAnswers)
+                                    {
+                                        <li class=" list-group-item ">
+                                            <textarea readonly="readonly" rows="1" class="form-control autosize" asp-for="@answer"></textarea>
 
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        @if (Model.Questions[i].Type == QuestionType.Rate)
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            @if (Model.Questions[i].Type == QuestionType.Rate)
                         {
-                            <div>
-
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <label class="font-weight-bold no-marginBot">Number of Votes: @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count).&nbsp;</label>
-                                        </td>
-                                        <td>
-                                            <label class="font-weight-bold no-marginBot">Average:</label>
-                                        </td>
-                                        <td>
-                                            <input data-min="0" data-max="5" data-step="0.1" data-size="xs" data-display-only="true" asp-for="@Model.Questions[i].Average" class="rating rating-loading" />
-                                        </td>
-
-                                    </tr>
-                                </table>
-                                <a href="#@Collapse@j@i" data-toggle="collapse" aria-expanded="True"> Toggle vote distribution chart </a>
-                                <div id="@Collapse@j@i" class="collapsing">
-                                    <div class="" id="@Chart@j@i"></div>
-                                </div>
-                                <script type="text/javascript">
+                                <div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 font-weight-bold topMargin">Number of Votes: @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count)</label>
+                                        <div class="col-md-8 row">
+                                            <label class="font-weight-bold col-md-3 topMargin">Average:</label>
+                                            <input data-min="0" data-max="5" data-step="0.1" data-size="xs" data-display-only="true" asp-for="@Model.Questions[i].Average" class="rating rating-loading col-md-9" />
+                                        </div>
+                                    </div>
+                                    <a href="#@Collapse@j@i" data-toggle="collapse" aria-expanded="True" class="font-weight-bold"> Toggle vote distribution chart </a>
+                                    <div id="@Collapse@j@i" class="collapsing">
+                                        <div class="" id="@Chart@j@i"></div>
+                                    </div>
+                                    <script type="text/javascript">
                                     new Chartist.Bar('#@Chart@j@i',
                                         {
                                             labels:
-                                                @Html.Raw(JsonConvert.SerializeObject(Model.Questions[i].LabelsList))
-                                            ,
+                                                @Html.Raw(JsonConvert.SerializeObject(Model.Questions[i].LabelsList)),
                                             series: [
                                                 @Html.Raw(JsonConvert.SerializeObject(Model.Questions[i].RatingsList))
                                             ]
@@ -189,17 +180,20 @@
                                                 })
                                             ]
                                         });
-                                </script>
-                            </div>
-                        }
-                    </li>
+                                    </script>
+                                </div>
+                            }
+                        </li>
+                    }
                 }
-            }
-        </ul>
-    }
-</div>
-<input type="hidden" asp-for="YearId" />
-<div class="col-md-12">
-    <br />
-    <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-sm-right">Back to Year form</a>
+            </ul>
+        }
+    </div>
+    <input type="hidden" asp-for="YearId" />
+    <div class="col-md-12">
+        <br />
+        <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-xs-right">Back to Year form</a>
+        <br />
+        <hr />
+    </div>
 </div>

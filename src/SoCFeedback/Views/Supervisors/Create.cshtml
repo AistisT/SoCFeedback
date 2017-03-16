@@ -4,11 +4,10 @@
     ViewData["Title"] = "Create Supervisor";
 }
 
-<h2>Create</h2>
+<h2>Create a Supervisor</h2>
 
 <form asp-action="Create">
     <div>
-        <h4>Supervisor</h4>
         <hr/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group row">
@@ -39,10 +38,10 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group col-sm-12">
+        <div class="form-group">
             <br/>
             <input type="submit" value="Create" class="btn btn-primary"/>
-            <a asp-action="Index" class="float-sm-right">Back to List</a>
+            <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </div>
 </form>

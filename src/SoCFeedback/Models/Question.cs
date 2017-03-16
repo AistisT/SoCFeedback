@@ -35,7 +35,7 @@ namespace SoCFeedback.Models
         public Status Status { get; set; }
 
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
-        [Display(Name = "Question Order In Category")]
+        [Display(Name = "Question Order in the Category")]
         public int QuestionNumber { get; set; } = 99;
 
         [NotMapped]

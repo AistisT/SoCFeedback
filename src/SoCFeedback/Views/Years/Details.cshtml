@@ -40,15 +40,15 @@
                     {
                         if (Model.Modules[i].LevelId == Model.Levels[j].Id)
                         {
-                            <li class=" list-group-item ">
+                            <li class=" list-group-item clearfix">
                                 <a asp-action="Details" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
                                 @if (Model.Status == YearStatus.Pending && !await AuthorizationService.AuthorizeAsync(User, "TeachingStaff"))
                                 {
-                                    <a class="btn btn-sm btn-success float-sm-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
+                                    <a class="btn btn-sm btn-success float-xs-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
                                 }
                                 @if (Model.Status != YearStatus.Pending)
                                 {
-                                    <a class="btn btn-sm btn-primary float-sm-right" asp-action="Feedback" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Feedback"> Module Feedback</a>
+                                    <a class="btn btn-sm btn-primary float-xs-right" asp-action="Feedback" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Feedback"> Module Feedback</a>
                                 }
                             </li>
                         }

@@ -109,7 +109,9 @@ a.label:focus, a.label:hover {
 .no-marginBot {
     margin-bottom: 0
 }
-
+.topMargin {
+    margin-top: 1rem;
+}
 .ct-label {
     fill: #000;
     color: #000;

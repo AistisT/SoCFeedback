@@ -7,7 +7,7 @@
 <h2>Archive</h2>
 <hr/>
 <h3>Are you sure you want to archive this supervisor?</h3>
-<h5 class="text-danger">Archived supervisors will not show up when creating modules. Modules with archived supervisor will not be affected and will require to be manually edited.</h5>
+<h5 class="text-danger">The archived supervisor will not show up when creating new modules. The modules with the archived supervisor will not be affected and will require to be manually updated.</h5>
 <div>
     <hr/>
     <h4>Supervisor</h4>
@@ -46,7 +46,7 @@
     </dl>
 
     <form asp-action="Archive"asp-route-id="@Model.Id">
-        <div class="form-group col-sm-12">
+        <div class="form-group">
             <input type="submit" value="Archive" class="btn btn-primary"/>
             <a asp-action="Index" class="float-sm-right">Back to List</a>
         </div>

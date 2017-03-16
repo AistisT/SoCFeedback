@@ -55,7 +55,7 @@
                     if (Model.Questions[i].CategoryId == Model.Categories[j].Id)
                     {
                          var temp = Model.Questions[i].Optional.ToString();
-                        <li class=" list-group-item col-md-12">
+                        <li class=" list-group-item col-md-12 clearfix">
                             @Html.HiddenFor(m => m.Questions[i].Id) @Html.HiddenFor(m => m.Questions[i].Question1) @Html.HiddenFor(m => m.Questions[i].Type)
                             @Html.HiddenFor(m => m.Questions[i].CategoryId) @Html.HiddenFor(m => m.Questions[i].Optional)
                             <label asp-for="@Model.Questions[i].Optional" class="form-control-label font-weight-bold"></label>: <span class="text-danger">@Html.DisplayFor(model => temp)</span>
@@ -66,17 +66,17 @@
                                 if (Model.Questions[i].Optional == false)
                                 {
 
-                                    <input asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="text-danger float-md-right font-weight-bold readonly  text-md-right" readonly="readonly" />
+                                    <input asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="text-danger float-xs-right font-weight-bold readonly  text-xs-right" readonly="readonly" />
 
                                 }
                                 else
                                 {
-                                    <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-md-right"></select>
+                                    <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-xs-right"></select>
                                 }
                             }
                             else
                             {
-                                <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-md-right"></select>
+                                <select asp-for="@Model.Questions[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-xs-right"></select>
                             }
                         </li>
                     }
@@ -90,6 +90,6 @@
     <div class="form-group col-sm-12">
         <hr />
         <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-sm-right">Back to Year form</a>
+        <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-xs-right">Back to Year form</a>
     </div>
 </form>

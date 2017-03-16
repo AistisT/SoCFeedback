@@ -15,10 +15,10 @@ namespace SoCFeedback.Services
             catch (Exception e)
             {
 
-                var mailsender = new Outlook365Sender("doc-request@dundee.ac.uk", "dcbdmjhbdmvhmj");
-                 #pragma warning disable 4014
-                 mailsender.SendEmailAsync(email, subject, message);
-                #pragma warning restore 4014
+                //var mailsender = new Outlook365Sender("doc-request@dundee.ac.uk", "dcbdmjhbdmvhmj");
+                // #pragma warning disable 4014
+                // mailsender.SendEmailAsync(email, subject, message);
+                //#pragma warning restore 4014
             }
         }
     }

@@ -129,6 +129,9 @@ a.label:focus {
 .no-marginBot {
     margin-bottom: 0px;
 }
+.topMargin {
+    margin-top: 1rem;
+}
 
 .ct-label {
     fill: #000000;

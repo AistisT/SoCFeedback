@@ -7,7 +7,7 @@
 <h2>Archive</h2>
 <hr/>
 <h3>Are you sure you want to archive this module?</h3>
-<h5 class="text-danger">Archived modules will not be available for new academic year forms and will be removed from pending academic year form. Published or Archived academic year forms will not be affected.</h5>
+<h5 class="text-danger">The archived module will not be available for the new academic year forms and will be removed from the pending academic year forms. Published or Archived academic year forms will not be affected.</h5>
 <div>
     <hr/>
     <h4>Module</h4>
@@ -58,9 +58,9 @@
     </dl>
 
     <form asp-action="Archive"asp-route-id="@Model.Id">
-        <div class="form-group col-sm-12">
+        <div class="form-group">
             <input type="submit" value="Archive" class="btn btn-primary"/>
-            <a asp-action="Index" class="float-sm-right">Back to List</a>
+            <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </form>
 </div>

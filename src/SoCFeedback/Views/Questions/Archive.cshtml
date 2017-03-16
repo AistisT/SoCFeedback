@@ -7,7 +7,7 @@
 <h2>Archive</h2>
 <hr/>
 <h3>Are you sure you want to Archive this question?</h3>
-<h5 class="text-danger">Archived questions will not be available for module questionnaires, published and archived questionnaires will not be affected. </h5>
+<h5 class="text-danger">The archived question will not be available for the questionnaires, published and archived questionnaires will not be affected.</h5>
 <div>
     <hr/>
     <h4>Question</h4>
@@ -53,9 +53,9 @@
     </dl>
 
     <form asp-action="Archive"asp-route-id="@Model.Id">
-        <div class="form-group col-sm-12">
+        <div class="form-group">
             <input type="submit" value="Archive" class="btn btn-primary"/>
-            <a asp-action="Index" class="float-sm-right">Back to List</a>
+            <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </form>
 </div>

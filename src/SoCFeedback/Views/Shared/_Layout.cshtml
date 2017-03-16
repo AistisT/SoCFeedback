@@ -39,9 +39,12 @@
 <body>
     <nav class="navbar bg-inverse navbar-dark navbar-toggleable-xs ">
         <div class="container-fluid">
-            <button class="navbar-toggler hidden-sm-up float-xs-right " type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"></button>
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">SoC Feedback</a>
-            <div class="collapse navbar-toggleable-xs " id="navbarSupportedContent">
+            <button class="navbar-toggler hidden-md-up float-xs-right " type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"></button>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
+                <img src="/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="SoC logo">
+                SoC Feedback
+            </a>
+            <div class="collapse navbar-toggleable-sm " id="navbarSupportedContent">
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -95,7 +98,8 @@
         @RenderBody()
         <hr />
         <footer class="text-sm-center">
-            <p>Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.</p>
+            <p>Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.
+            </p>
         </footer>
     </div>
 
