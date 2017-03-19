@@ -30,14 +30,14 @@
         <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/star-rating.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/theme-krajee-fa.min.css" />
         <link rel="stylesheet" href="~/lib/chartist/dist/chartist.min.css" />
-        <link rel="stylesheet" href="~/css/site.css"/>
+        <link rel="stylesheet" href="~/css/site.min.css"/>
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/chartist/dist/chartist.min.js"></script>
         <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.min.js"></script>
     </environment>
 </head>
 <body>
-    <nav class="navbar bg-inverse navbar-dark navbar-toggleable-xs ">
+    <nav class="navbar bg-inverse navbar-dark navbar-toggleable-sm ">
         <div class="container-fluid">
             <button class="navbar-toggler hidden-md-up float-xs-right " type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"></button>
             <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
@@ -97,7 +97,7 @@
     <div class="container">
         @RenderBody()
         <hr />
-        <footer class="text-sm-center">
+        <footer class="text-xs-center">
             <p>Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.
             </p>
         </footer>
@@ -125,7 +125,7 @@
         <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.min.js"></script>
         <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js"></script>
         <script src="~/lib/bootstrap-star-rating/themes/krajee-fa/theme.min.js"></script>
-        <script src="~/js/site.js"></script>
+        <script src="~/js/site.min.js"></script>
     </environment>
     @RenderSection("scripts", false)
 </body>

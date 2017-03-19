@@ -7,53 +7,54 @@
 <h2>Publish</h2>
 <h3 class="text-danger">Once published this year form will visible to students and closed to any further modifications. This action cannot be undone!</h3>
 <h3>Publishing should be performed close to the end of semester.</h3>
-<hr/>
-<div>
-    <h4>Year Form</h4>
-    <hr/>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Year1)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.AcademicYear)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-    <div class="col-md-12">
-        <hr/>
-        <h4>Modules</h4>
-        <hr/>
-        @for (var j = 0; j < Model.Levels.Count; j++)
-        {
-            <span class=" text-primary h4 form-text">
-                @Html.DisplayFor(m => m.Levels[j].Title)
-            </span>
-            <ul class="list-group">
-                @for (var i = 0; i < Model.Modules.Count; i++)
+<hr />
+<form asp-action="Publish" asp-route-id="@Model.Id">
+    <div>
+        <h4>Year Form</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Year1)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.AcademicYear)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+        </dl>
+        <div class="row">
+            <div class="col-md-12">
+                <hr />
+                <h4>Modules</h4>
+                <hr />
+                @for (var j = 0; j < Model.Levels.Count; j++)
                 {
-                    if (Model.Modules[i].LevelId == Model.Levels[j].Id)
-                    {
-                        <li class=" list-group-item col-md-12">
+                    <label class=" text-primary h4 form-text">
+                        @Html.DisplayFor(m => m.Levels[j].Title)
+                    </label>
+                    <ul class="list-group">
+                        @for (var i = 0; i < Model.Modules.Count; i++)
+                        {
+                            if (Model.Modules[i].LevelId == Model.Levels[j].Id)
+                            {
+                                <li class=" list-group-item col-md-12">
 
-                            @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title)
-                        </li>
-                    }
+                                    @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title)
+                                </li>
+                            }
+                        }
+                    </ul>
                 }
-            </ul>
-        }
-    </div>
-    <hr/>
-    <form asp-action="Publish" asp-route-id="@Model.Id">
-        <div class="form-group col-sm-12">
-            <br/>
-            <input type="submit" value="Publish" class="btn btn-primary"/>
-            <a asp-action="Index" class="float-sm-right">Back to List</a>
+            </div>
         </div>
-    </form>
-</div>
+        <br/>
+        <div class="form-group">
+            <input type="submit" value="Publish" class="btn btn-primary" />
+            <a asp-action="Index" class="float-xs-right">Back to List</a>
+        </div>
+    </div>
+</form>

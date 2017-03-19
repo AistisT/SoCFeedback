@@ -111,7 +111,7 @@ namespace SoCFeedback.Controllers
             if (year == null)
                 return NotFound();
             if (year.Status == YearStatus.Published)
-                RedirectToAction("Index");
+                return RedirectToAction("Index");
 
             year.Modules =
                 _context.Module.AsNoTracking()
@@ -140,7 +140,7 @@ namespace SoCFeedback.Controllers
             if (id != year.Id)
                 return NotFound();
             if (year.Status == YearStatus.Published)
-                RedirectToAction("Index");
+                return RedirectToAction("Index");
             var obj = _context.Year.AsNoTracking().Any(e => e.Year1 == year.Year1 && e.Id != year.Id);
 
             if (obj)

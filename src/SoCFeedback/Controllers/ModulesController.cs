@@ -390,7 +390,7 @@ namespace SoCFeedback.Controllers
                 .Select(group => group.First())
                 .OrderBy(e => e.Order)
                 .ToList();
-
+            
             viewModel.SetAverage();
             viewModel.SetLabelsList();
             viewModel.SetRatingsList();

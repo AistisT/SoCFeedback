@@ -146,11 +146,11 @@ a.label:focus {
 }
 
 .link {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.75);
 }
 
     .link:hover {
-        color: rgba(255, 255, 255, 0.75);
+        color: rgba(255, 255, 255, 1);
         text-decoration: none;
     }
 
@@ -163,4 +163,8 @@ textarea {
     height: 38px;
     min-height: 31px;
     overflow-x: hidden; /* for Firefox (issue #5) */
+}
+
+.remove-left-padding {
+    padding-left: 0;
 }

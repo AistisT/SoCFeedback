@@ -7,7 +7,7 @@
     var Collapse = "Collapse";
 }
 <div>
-    <div class="col-md-12">
+    <div>
         <h2>Module Feedback</h2>
         <h4>Module</h4>
         <hr />
@@ -38,7 +38,7 @@
             </dd>
         </dl>
     </div>
-    <div class="col-md-12">
+    <div>
         <hr />
         <h4>Overall Average</h4>
         <input data-min="0" data-max="5" data-step="0.1" data-size="md" data-display-only="true" asp-for="@Model.Average" class="rating rating-loading" />
@@ -111,7 +111,7 @@
                             @if (Model.Questions[i].Type == QuestionType.Standard)
                         {
                                 <br /><label class="form-control-label font-weight-bold">Answers:</label>
-                                <ul>
+                                <ul class="remove-left-padding">
                                     @foreach (var answer in Model.Questions[i].StandardAnswers)
                                     {
                                         <li class=" list-group-item ">
@@ -125,10 +125,10 @@
                         {
                                 <div>
                                     <div class="form-group row">
-                                        <label class="col-md-4 font-weight-bold topMargin">Number of Votes: @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count)</label>
-                                        <div class="col-md-8 row">
-                                            <label class="font-weight-bold col-md-3 topMargin">Average:</label>
-                                            <input data-min="0" data-max="5" data-step="0.1" data-size="xs" data-display-only="true" asp-for="@Model.Questions[i].Average" class="rating rating-loading col-md-9" />
+                                        <label class="col-lg-4 font-weight-bold topMargin">Number of Votes: @Html.DisplayFor(m => m.Questions[i].RateAnswers.Count)</label>
+                                        <div class="col-lg-8 row">
+                                            <label class="font-weight-bold col-sm-3 topMargin">Average:</label>
+                                            <input data-min="0" data-max="5" data-step="0.1" data-size="xs" data-display-only="true" asp-for="@Model.Questions[i].Average" class="rating rating-loading col-sm-9" />
                                         </div>
                                     </div>
                                     <a href="#@Collapse@j@i" data-toggle="collapse" aria-expanded="True" class="font-weight-bold"> Toggle vote distribution chart </a>
@@ -190,10 +190,10 @@
         }
     </div>
     <input type="hidden" asp-for="YearId" />
-    <div class="col-md-12">
-        <br />
-        <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-xs-right">Back to Year form</a>
-        <br />
-        <hr />
+    <div class="row">
+        <div class="col-xs-12">
+            <br />
+            <a asp-action="Details" asp-controller="Years" asp-route-id="@Model.YearId" class="float-xs-right">Back to Year form</a>
+        </div>
     </div>
 </div>

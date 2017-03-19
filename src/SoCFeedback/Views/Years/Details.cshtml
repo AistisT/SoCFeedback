@@ -11,7 +11,7 @@
 
 <div>
     <h4>Year Form</h4>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Year1)
@@ -28,7 +28,7 @@
     </dl>
     <div class="row">
         <div class="col-md-12">
-            <hr/>
+            <hr />
             <h3>Modules</h3>
             @for (var j = 0; j < Model.Levels.Count; j++)
             {
@@ -41,7 +41,7 @@
                         if (Model.Modules[i].LevelId == Model.Levels[j].Id)
                         {
                             <li class=" list-group-item clearfix">
-                                <a asp-action="Details" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
+                                <a asp-action="Details" asp-controller="Modules" target="_blank" asp-route-id="@Model.Modules[i].Id"> @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title) </a>
                                 @if (Model.Status == YearStatus.Pending && !await AuthorizationService.AuthorizeAsync(User, "TeachingStaff"))
                                 {
                                     <a class="btn btn-sm btn-success float-xs-right" asp-action="Questions" asp-controller="Modules" asp-route-id="@Model.Modules[i].Id" asp-route-yid="@Model.Id" title="Module Questions"> Module Questions</a>
@@ -55,16 +55,14 @@
                     }
                 </ul>
             }
+            <br />
+            <div class="form-group ">
+                @if (Model.Status != YearStatus.Published && await AuthorizationService.AuthorizeAsync(User, "Admin"))
+                {
+                    <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                }
+                <a class="float-xs-right" asp-action="Index">Back to List</a>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="col-md-12">
-    <br/>
-    @if (Model.Status != YearStatus.Published && await AuthorizationService.AuthorizeAsync(User, "Admin"))
-    {
-        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    }
-    <a class="float-sm-right" asp-action="Index">Back to List</a>
-  
 </div>

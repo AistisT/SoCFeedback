@@ -14,26 +14,29 @@
         <h6 class="text-muted">Please only create new year form at the start of new academic year.</h6>
         <hr/>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label">Academic year starting:</label>
-            <div class="col-md-2">
-                <input asp-for="Year1" class="form-control" id="yearInput"/>
-                <span asp-validation-for="Year1" class="text-danger"></span>
+            <label class="col-md-4 col-form-label">Academic year starting:</label>
+            <div class="col-md-8 row">
+                <div class="col-xs-6">
+                    <input asp-for="Year1" class="form-control" id="yearInput" />
+                    <span asp-validation-for="Year1" class="text-danger"></span>
+                </div>
+                <div class="col-xs-6 col-form-label ">
+                    Ending: <label class="font-weight-bold" id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label>
+                </div>
             </div>
-            <div class="col-md-7 col-form-label "> Ending: <label class="font-weight-bold"id="endingYear"> @Html.DisplayFor(m => m.EndingYear)</label>
-            </div>
-            <script type="text/javascript">
-                $('#yearInput').on('input',
-                    function() {
-                        $("#endingYear").text(
-                            parseInt($('#yearInput').val()) + 1);
-                    });
-            </script>
+                <script type="text/javascript">
+                    $('#yearInput').on('input',
+                        function () {
+                            $("#endingYear").text(
+                                parseInt($('#yearInput').val()) + 1);
+                        });
+                </script>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <hr/>
-                <h4>Modules running this year. Can be edited later, until published.</h4>
-                <h6>Archived modules will not show up in this list. If required module can be set inactive for this academic year.</h6>
+                <h4>Please select modules running this year, the module list can be edited later until published.</h4>
+                <h6>Archived modules will not show up in this list.</h6>
                 <hr/>
                 @for (var j = 0; j < Model.Levels.Count; j++)
                 {
@@ -47,10 +50,10 @@
                         {
                             if (Model.Modules[i].LevelId == Model.Levels[j].Id)
                             {
-                                <li class=" list-group-item col-md-12">
+                                <li class=" list-group-item col-md-12 clearfix">
                                     @Html.HiddenFor(m => m.Modules[i].Id) @Html.HiddenFor(m => m.Modules[i].Code) @Html.HiddenFor(m => m.Modules[i].Title) @Html.HiddenFor(m => m.Modules[i].LevelId)
                                     @Html.DisplayFor(m => m.Modules[i].Code) @Html.DisplayFor(m => m.Modules[i].Title)
-                                    <select asp-for="@Model.Modules[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-sm-right"></select>
+                                    <select asp-for="@Model.Modules[i].RunningStatus" asp-items="Html.GetEnumSelectList<RunningStatus>()" class="float-xs-right"></select>
                                 </li>
                             }
                         }
@@ -58,10 +61,10 @@
                 }
             </div>
         </div>
-        <div class="form-group col-sm-12">
-            <hr/>
+        <div class="form-group">
+            <br/>
             <input type="submit" id="submitButton" value="Create" class="btn btn-primary"/>
-            <a asp-action="Index" class="float-sm-right">Back to List</a>
+            <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </div>
 </form>
