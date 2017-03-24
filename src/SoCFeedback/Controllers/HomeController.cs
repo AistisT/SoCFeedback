@@ -44,6 +44,10 @@ namespace SoCFeedback.Controllers
                     .SingleOrDefaultAsync(y => y.Id == yid && y.Status == YearStatus.Published);
             if (year == null)
                 return NotFound();
+            var yearModule = _context.YearModules.SingleOrDefault(y => y.ModuleId == id && y.YearId == yid);
+            if (yearModule == null)
+                return NotFound();
+
             var module = await _context.Module.AsNoTracking()
                 .Include(s => s.Supervisor)
                 .Include(q => q.ModuleQuestions)
@@ -52,7 +56,7 @@ namespace SoCFeedback.Controllers
                 return NotFound();
             module.Questions = _context.Question.Include(c => c.Category)
                 .AsNoTracking()
-                .OrderBy(q => q.QuestionNumber)
+                .OrderBy(q => q.QuestionNumber).Where(q=>q.Status!=Status.Archived && q.Category.Status!=Status.Archived)
                 .ToList();
 
             for (var i = module.Questions.Count - 1; i >= 0; i--)
@@ -129,7 +133,7 @@ namespace SoCFeedback.Controllers
         [Route("About")]
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "About";
 
             return View();
         }
@@ -144,18 +148,18 @@ namespace SoCFeedback.Controllers
                 case 404:
                     ViewData["Title"] = error;
                     ViewData["Error"] = error;
-                    ViewData["Message"] = "Sorry, but this page doesn't exsts.";
+                    ViewData["Message"] = "Sorry, but this page doesn't exists.";
                     break;
                 case 500:
                     ViewData["Title"] = error;
                     ViewData["Error"] = error;
-                    ViewData["Message"] = "Sorry, server has encountered an error";
+                    ViewData["Message"] = "Sorry, server has encountered an error.";
                     break;
                 case 1:
                     ViewData["Message"] = "This link is no longer valid, if you have forgotten your password please use password recovery.";
                     break;
                 default:
-                    ViewData["Message"] = "An error occurred while processing your request";
+                    ViewData["Message"] = "An error occurred while processing your request.";
                     break;
             }
             return View();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using SoCFeedback.Enums;
 
 namespace SoCFeedback.Models
@@ -16,7 +17,6 @@ namespace SoCFeedback.Models
 
         [MaxLength(Constants.LevelTitleLength)]
         [Required]
-        // [Remote(action: "CheckLevelExists", controller: "Levels")]
         public string Title { get; set; }
 
         public Status Status { get; set; }

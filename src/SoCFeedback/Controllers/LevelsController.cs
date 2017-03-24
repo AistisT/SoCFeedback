@@ -43,12 +43,9 @@ namespace SoCFeedback.Controllers
         // GET: Levels/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new Level());
         }
 
-        // POST: Levels/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Status,Description,OrderingNumber")] Level level)
@@ -80,8 +77,6 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Levels/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Status,Description,OrderingNumber")] Level level)
@@ -114,6 +109,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Levels/Archive/5
+        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
@@ -128,18 +124,22 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Levels/Archive/5
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
             var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
+            if (level == null)
+                return NotFound();
             level.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         // GET: Categories/Restore/5
+        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
@@ -154,12 +154,15 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Restore/5
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
             var level = await _context.Level.SingleOrDefaultAsync(m => m.Id == id);
+            if (level == null)
+                return NotFound();
             level.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

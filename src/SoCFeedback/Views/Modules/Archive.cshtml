@@ -7,7 +7,7 @@
 <h2>Archive</h2>
 <hr/>
 <h3>Are you sure you want to archive this module?</h3>
-<h5 class="text-danger">The archived module will not be available for the new academic year forms and will be removed from the pending academic year forms. Published or Archived academic year forms will not be affected.</h5>
+<h5 class="text-danger">An archived module will not be available when creating new academic year forms and will be removed from currently pending academic year forms. Published or archived academic year forms will not be affected.</h5>
 <div>
     <hr/>
     <h4>Module</h4>
@@ -47,7 +47,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            <textarea readonly="readonly" class="form-control autosize" asp-for="Description"></textarea>
+            <textarea readonly="readonly" id="descInput" class="form-control autosize" asp-for="Description"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Url)
@@ -64,3 +64,10 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    window.addEventListener('resize', go);
+    function go() {
+        $('#descInput').trigger('input');
+    }
+</script>

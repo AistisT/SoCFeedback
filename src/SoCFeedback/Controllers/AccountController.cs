@@ -149,9 +149,9 @@ namespace SoCFeedback.Controllers
             var code = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
             var passCode = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
-            await _emailSender.SendEmailAsync(user.Email, "SoC Feedback Account",
+            await _emailSender.SendEmailAsync(user.Email, "Computing Feedback - Account Created",
                 $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for {user.Email}.<br/>" +
-                $"You must first set new a password before you can use your account by clicking <a href='{callbackUrl}'>here</a>.<br/>" +
+                $"You must first set a new password before you can start using your account by clicking <a href='{callbackUrl}'>here</a>.<br/><br/>" +
                 $"This is an automated email, please do not reply.<br/>");
         }
 
@@ -405,8 +405,9 @@ namespace SoCFeedback.Controllers
                     HttpContext.Request.Scheme);
                 // Send an email with this link
                 #pragma warning disable 4014
-                _emailSender.SendEmailAsync(model.Email, "SoC Feedback Password Reset", $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>.<br/>" +
-                                                                                $"This is an automated email, please do not reply.<br/> ");
+                _emailSender.SendEmailAsync(model.Email, "Computing Feedback - Password Reset",
+                    $"Please reset your password by clicking <a href='{callbackUrl}'>here</a>.<br/><br/>" +
+                    $"This is an automated email, please do not reply.<br/> ");
                 #pragma warning restore 4014
                 return View("ForgotPasswordConfirmation");
             }

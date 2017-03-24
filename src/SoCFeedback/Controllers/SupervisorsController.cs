@@ -43,7 +43,7 @@ namespace SoCFeedback.Controllers
         // GET: Supervisors/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new Supervisor());
         }
 
         // POST: Supervisors/Create

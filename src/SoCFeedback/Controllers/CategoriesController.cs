@@ -23,6 +23,7 @@ namespace SoCFeedback.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
+            ViewBag.YearPublished = YearsController.YearPublished(_context);
             return View(await _context.Category.ToListAsync());
         }
 
@@ -43,7 +44,7 @@ namespace SoCFeedback.Controllers
         // GET: Categories/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new Category());
         }
 
         // POST: Categories/Create
@@ -110,6 +111,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Categories/Archive/5
+        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
@@ -124,22 +126,40 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Archive/5
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
+
             var category = await _context.Category.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (category == null)
+                return NotFound();
+
             category.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         // GET: Categories/Restore/5
+        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
                 return NotFound();
+
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
 
             var category = await _context.Category
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -150,12 +170,21 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Restore/5
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
+
             var category = await _context.Category.SingleOrDefaultAsync(m => m.Id == id);
+            if (category == null)
+                return NotFound();
             category.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

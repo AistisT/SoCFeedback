@@ -7,36 +7,44 @@
 <h2>@ViewData["Title"]</h2>
 <br/>
 <form asp-controller="Account" asp-action="Register" method="post">
-    <h4 class="text-primary">Account creation notification will be sent to supplied email address.</h4>
+    <h4 class="text-primary">Account creation notification will be sent to the supplied email address.</h4>
     <hr/>
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group row">
-        <label asp-for="Forename" class="col-md-2 form-control-label"></label>
-        <div class="col-md-10">
+        <label asp-for="Forename" class="col-md-3 form-control-label"></label>
+        <div class="col-md-9">
             <input asp-for="Forename" class="form-control"/>
             <span asp-validation-for="Forename" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
-        <label asp-for="Surname" class="col-md-2 form-control-label"></label>
-        <div class="col-md-10">
+        <label asp-for="Surname" class="col-md-3 form-control-label"></label>
+        <div class="col-md-9">
             <input asp-for="Surname" class="form-control"/>
             <span asp-validation-for="Surname" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
-        <label asp-for="Email" class="col-md-2 form-control-label"></label>
-        <div class="col-md-10">
+        <label asp-for="Email" class="col-md-3 form-control-label"></label>
+        <div class="col-md-9">
             <input asp-for="Email" class="form-control"/>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
-        <label asp-for="Role"class="form-control-label col-md-2"></label>
-        <div class="col-md-10">
+        <label asp-for="Role"class="form-control-label col-md-3"></label>
+        <div class="col-md-9">
             <select asp-for="Role" asp-items="Html.GetEnumSelectList<Roles>()" class="form-control"></select>
             <span asp-validation-for="Role" class="text-danger"></span>
         </div>
+    </div>
+    <div class="offset-md-3 col-md-9">
+        <ul class="remove-left-padding">
+            <li><span class="text-danger">Administrator</span> – full privileges, including account creation, academic year form creation and publishing.</li>
+            <li><span class="text-danger">Head Lecturer</span> – cannot manage staff accounts and create, publish or archive academic year forms. </li>
+            <li><span class="text-danger">Lecturer</span> – can only work with optional questions: unable to create, edit, or add mandatory questions. Cannot archive or restore entities.</li>
+            <li><span class="text-danger">Teaching Staff</span> – can only view gathered feedback, does not have access to any other functionality.</li>
+        </ul>
     </div>
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary"/>

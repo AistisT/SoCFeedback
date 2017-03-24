@@ -8,7 +8,7 @@
         Dr = 0,
 
         /// <summary>
-        ///     Profesor
+        ///     Professor
         /// </summary>
         Prof = 1,
 

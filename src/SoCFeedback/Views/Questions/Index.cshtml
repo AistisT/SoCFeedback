@@ -6,7 +6,7 @@
     ViewData["Title"] = "Questions Index";
 }
 
-<h2>Questions Index</h2>
+<h2>Questions</h2>
 <p>
     <a asp-action="Create">Create a New Question</a>
 </p>
@@ -62,19 +62,25 @@
                     </td>
                     <td>
                         @if (!(await AuthorizationService.AuthorizeAsync(User, "LecturerLimited") && !item.Optional))
-                {
+                        {
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             @:|
-                }
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        @if (item.Status == Status.Archived)
-                {
-                            <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
                         }
-                        else if (item.Status == Status.Active)
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                        @if (!await AuthorizationService.AuthorizeAsync(User, "LecturerLimited") && !ViewBag.YearPublished)
                         {
-                            <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
+                            switch (item.Status)
+                            {
+                                case Status.Archived:
+                                    @:|
+                                    <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
+                                    break;
+                                case Status.Active:
+                                    <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
+                                    break;
+                            }
                         }
+
                     </td>
                 </tr>
             }

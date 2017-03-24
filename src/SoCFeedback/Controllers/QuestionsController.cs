@@ -14,10 +14,12 @@ namespace SoCFeedback.Controllers
     [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
     public class QuestionsController : Controller
     {
+        private readonly IAuthorizationService _authorizationService;
         private readonly FeedbackDbContext _context;
 
-        public QuestionsController(FeedbackDbContext context)
+        public QuestionsController(FeedbackDbContext context, IAuthorizationService authorizationService)
         {
+            _authorizationService = authorizationService;
             _context = context;
         }
 
@@ -25,6 +27,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Index()
         {
             var feedbackDbContext = _context.Question.Include(q => q.Category);
+            ViewBag.YearPublished = YearsController.YearPublished(_context);
             return View(await feedbackDbContext.ToListAsync());
         }
 
@@ -47,14 +50,18 @@ namespace SoCFeedback.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title");
-            return View(new Question());
+
+            return View(new Question
+            {
+                YearPublished = YearsController.YearPublished(_context)
+            });
         }
 
         // POST: Questions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Question1,Type,CategoryId,Optional,QuestionNumber")] Question question)
+            [Bind("Question1,Type,CategoryId,Optional,QuestionNumber,YearPublished")] Question question)
         {
             var obj =
                 await _context.Question.AnyAsync(
@@ -66,6 +73,20 @@ namespace SoCFeedback.Controllers
             {
                 question.Id = Guid.NewGuid();
                 _context.Add(question);
+
+                if (!question.Optional)
+                {
+                    var modules = _context.Module.AsNoTracking();
+                    foreach (var module in modules)
+                    {
+                        var moduleQuestion = new ModuleQuestions
+                        {
+                            ModuleId = module.Id,
+                            QuestionId = question.Id
+                        };
+                        _context.ModuleQuestions.Add(moduleQuestion);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -82,9 +103,17 @@ namespace SoCFeedback.Controllers
             var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
             if (question == null)
                 return NotFound();
+
+            //lecturer is not allowed to edit mandatory questions
+            if (!question.Optional && await _authorizationService.AuthorizeAsync(User, "LecturerLimited"))
+            {
+                return new ChallengeResult();
+            }
+
             ViewData["CategoryId"] = new SelectList(_context.Category
                 .AsNoTracking().Where(c => c.Status == Status.Active || c.Id == question.CategoryId).OrderBy(c => c.CategoryOrder)
                 , "Id", "Title", question.CategoryId);
+            question.YearPublished = YearsController.YearPublished(_context);
             return View(question);
         }
 
@@ -92,7 +121,7 @@ namespace SoCFeedback.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
-            [Bind("Id,Question1,Type,CategoryId,Optional,Status,QuestionNumber")] Question question)
+            [Bind("Id,Question1,Type,CategoryId,Optional,Status,QuestionNumber,YearPublished")] Question question)
         {
             if (id != question.Id)
                 return NotFound();
@@ -109,6 +138,35 @@ namespace SoCFeedback.Controllers
             {
                 try
                 {
+                    var dbQuestion = _context.Question.AsNoTracking().SingleOrDefault(i => i.Id == question.Id);
+                    //add mandatory question to all module questionnaires
+                    if (!question.Optional && dbQuestion.Optional)
+                    {
+                        var modules = _context.Module.AsNoTracking().ToList();
+                        foreach (var module in modules)
+                        {
+                            var existing = _context.ModuleQuestions.AsNoTracking().SingleOrDefault(i => i.ModuleId == module.Id && i.QuestionId == question.Id);
+                            if (existing == null)
+                            {
+                                var moduleQuestion = new ModuleQuestions
+                                {
+                                    ModuleId = module.Id,
+                                    QuestionId = question.Id
+                                };
+                                _context.ModuleQuestions.Add(moduleQuestion);
+                            }
+                        }
+                    }
+                    // remove mandatory question turned into optional question from all questionnaires
+                    else if (question.Optional && !dbQuestion.Optional)
+                    {
+                        var modules = _context.Module.AsNoTracking().ToList();
+                        foreach (var module in modules)
+                        {
+                            var moduleQuestion =_context.ModuleQuestions.Where(i => i.ModuleId == module.Id && i.QuestionId == question.Id).ToList();
+                            _context.ModuleQuestions.RemoveRange(moduleQuestion);
+                        }
+                    }
                     _context.Update(question);
                     await _context.SaveChangesAsync();
                 }
@@ -126,12 +184,19 @@ namespace SoCFeedback.Controllers
             return View(question);
         }
 
+        [Authorize(Roles = "Admin,Lecturer")]
         // GET: Questions/Archive/5
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
                 return NotFound();
 
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
+
             var question = await _context.Question
                 .Include(q => q.Category)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -141,23 +206,39 @@ namespace SoCFeedback.Controllers
             return View(question);
         }
 
+        [Authorize(Roles = "Admin,Lecturer")]
         // POST: Questions/Archive/5
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(Guid id)
         {
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
+
             var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
+            if (question == null)
+                return NotFound();
             question.Status = Status.Archived;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin,Lecturer")]
         // GET: Questions/Restore/5
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
                 return NotFound();
+
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
 
             var question = await _context.Question
                 .Include(q => q.Category)
@@ -168,13 +249,22 @@ namespace SoCFeedback.Controllers
             return View(question);
         }
 
+        [Authorize(Roles = "Admin,Lecturer")]
         // POST: Questions/Restore/5
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(Guid id)
         {
+            //Access denied while year is published
+            if (YearsController.YearPublished(_context))
+            {
+                return new ChallengeResult();
+            }
+
             var question = await _context.Question.SingleOrDefaultAsync(m => m.Id == id);
+            if (question == null)
+                return NotFound();
             question.Status = Status.Active;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

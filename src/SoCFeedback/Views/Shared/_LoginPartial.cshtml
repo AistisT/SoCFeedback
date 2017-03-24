@@ -1,15 +1,12 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-
 @if (SignInManager.IsSignedIn(User))
 {
-
     <form asp-area="" class="float-md-right" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
-        <a asp-area="" asp-controller="Manage" class="link btn-group-vertical" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User) </a>
+        <a asp-area="" asp-controller="Manage" class="link btn-group-vertical" asp-action="Index" title="Manage">&nbsp; @UserManager.GetUserName(User) </a>
         <button class="btn btn-outline-secondary" type="submit">Log off</button>
     </form>
-
 }
 else
 {

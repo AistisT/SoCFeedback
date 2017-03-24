@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SoCFeedback.Enums;
 
 namespace SoCFeedback.Models.AccountViewModels
 {
@@ -9,8 +10,8 @@ namespace SoCFeedback.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
-            MinimumLength = 8)]
+        [StringLength(Constants.PasswordMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            MinimumLength = Constants.PasswordMinLength)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

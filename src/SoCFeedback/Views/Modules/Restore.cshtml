@@ -47,7 +47,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            <textarea readonly="readonly" class="form-control autosize" asp-for="Description"></textarea>
+            <textarea readonly="readonly" id="descInput" class="form-control autosize" asp-for="Description"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Url)
@@ -64,3 +64,10 @@
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    window.addEventListener('resize', go);
+    function go() {
+        $('#descInput').trigger('input');
+    }
+</script>

@@ -50,7 +50,7 @@ namespace SoCFeedback.Controllers
         {
             ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "Title");
             ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking().Where(s => s.Status == Status.Active), "Id", "FullName");
-            return View();
+            return View(new Module());
         }
 
         // POST: Modules/Create
@@ -156,7 +156,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Archive/5
-        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
@@ -180,7 +180,7 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Modules/Restore/5
-        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
+        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
@@ -197,7 +197,7 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Modules/Restore/5
-        [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
+        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]
@@ -224,9 +224,15 @@ namespace SoCFeedback.Controllers
             var year = await _context.Year.AsNoTracking().SingleOrDefaultAsync(y => y.Id == yid);
             if (module == null || year == null)
                 return NotFound();
+
+            if (year.Status != YearStatus.Pending)
+            {
+                return NotFound();
+            }
+
             module.Questions = _context.Question.Include(c => c.Category)
                 .AsNoTracking()
-                .Where(q => q.Status == Status.Active)
+                .Where(q => q.Status == Status.Active && q.Category.Status ==Status.Active)
                 .OrderBy(q => q.QuestionNumber)
                 .ToList();
 
@@ -304,12 +310,15 @@ namespace SoCFeedback.Controllers
             var module = await _context.Module.AsNoTracking()
                 .Include(l => l.Level)
                 .Include(s => s.Supervisor)
-                .Include(q => q.ModuleQuestions)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             var year = await _context.Year.AsNoTracking().SingleOrDefaultAsync(y => y.Id == yid);
             if (module == null || year == null)
                 return NotFound();
+            if (year.Status == YearStatus.Pending)
+            {
+                return NotFound();
+            }
             var viewModel = new FeedbackViewModel
             {
                 Code = module.Code,

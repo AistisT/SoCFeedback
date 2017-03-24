@@ -13,9 +13,13 @@
         public const int CategoryDescriptionLength = 200;
 
         public const int NameLength = 50;
+        public const int NameMinLength = 2;
         public const int EmailLength = 254;
 
         public const int LevelTitleLength = 50;
         public const int QuestionLength = 500;
+
+        public const int PasswordMinLength = 8;
+        public const int PasswordMaxLength = 100;
     }
 }

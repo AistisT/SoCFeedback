@@ -41,7 +41,6 @@ namespace SoCFeedback.Controllers
 
             year.Modules = GetYearModules(year, _context);
             year.Levels = GetYearLevels(year);
-
             return View(year);
         }
 
@@ -52,7 +51,7 @@ namespace SoCFeedback.Controllers
             var year = new Year
             {
                 Modules =
-                    _context.Module.Where(m => m.Status == Status.Active && m.Level.Status==Status.Active).OrderBy(o => o.Code).AsNoTracking().ToList(),
+                    _context.Module.Where(m => m.Status == Status.Active && m.Level.Status == Status.Active).OrderBy(o => o.Code).AsNoTracking().ToList(),
                 Levels =
                     _context.Level.Where(m => m.Status == Status.Active && m.Module.Count != 0)
                         .OrderBy(o => o.OrderingNumber)
@@ -74,7 +73,7 @@ namespace SoCFeedback.Controllers
             if (ModelState.IsValid)
             {
                 ArchiveNotArchivedYears();
-                var newYear = new Year {Year1 = year.Year1};
+                var newYear = new Year { Year1 = year.Year1 };
                 _context.Add(newYear);
 
                 foreach (var module in year.Modules.Where(m => m.RunningStatus == RunningStatus.Active))
@@ -91,12 +90,12 @@ namespace SoCFeedback.Controllers
 
         private void ArchiveNotArchivedYears()
         {
-            var years = _context.Year.Where(y=>y.Status==YearStatus.Published|| y.Status==YearStatus.Pending);
+            var years = _context.Year.Where(y => y.Status == YearStatus.Published || y.Status == YearStatus.Pending);
             foreach (var year in years)
             {
-                year.Status=YearStatus.Archived;
+                year.Status = YearStatus.Archived;
             }
-             _context.SaveChanges();
+            _context.SaveChanges();
         }
 
         // GET: Years/Edit/5
@@ -269,7 +268,8 @@ namespace SoCFeedback.Controllers
             var tempModuleList = new List<Module>();
 
             foreach (var yearModule in year.YearModules)
-                tempModuleList.Add(
+
+                    tempModuleList.Add(
                     context.Module.Include(l => l.Level)
                         .AsNoTracking()
                         .SingleOrDefault(m => m.Id == yearModule.ModuleId));
@@ -277,14 +277,20 @@ namespace SoCFeedback.Controllers
             return tempModuleList.OrderBy(o => o.Code).ToList();
         }
 
-        public static List<Level> GetYearLevels(Year year)
+        public static List<Level> GetYearLevels(Year year, bool archived = true)
         {
-            var tempLevelsList = year.Modules.Select(module => module.Level).ToList();
+            var tempLevelsList = !archived ? year.Modules.Select(module => module.Level).Where(l => l.Status != Status.Archived).ToList() : year.Modules.Select(module => module.Level).ToList();
             return
                 tempLevelsList.GroupBy(e => e.Title)
                     .Select(group => group.First())
                     .OrderBy(e => e.OrderingNumber)
                     .ToList();
+        }
+
+        public static bool YearPublished(FeedbackDbContext context)
+        {
+            bool r= context.Year.Any(e => e.Status == YearStatus.Published);
+            return r;
         }
     }
 }

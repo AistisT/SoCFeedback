@@ -7,25 +7,25 @@ namespace SoCFeedback.Enums
         /// <summary>
         ///     Lecturer Role
         /// </summary>
-        [Display(Name = "Head Lecturer (Can create standard questions)")]
+        [Display(Name = "Head Lecturer")]
         Lecturer = 1,
 
         /// <summary>
         ///     Admin Role
         /// </summary>
-        [Display(Name = "Admin (Full Privileges)")]
+        [Display(Name = "Administrator")]
         Admin = 2,
 
         /// <summary>
         ///     Limited lecturer Role
         /// </summary>
-        [Display(Name = "Lecturer (Can create optional questions only)")]
+        [Display(Name = "Lecturer")]
         LecturerLimited = 0,
 
         /// <summary>
         ///     Teaching staff Role
         /// </summary>
-        [Display(Name = "Teaching Staff (Feedback view only)")]
+        [Display(Name = "Teaching Staff")]
         TeachingStaff = 3
     }
 }

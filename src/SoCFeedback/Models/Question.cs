@@ -47,6 +47,9 @@ namespace SoCFeedback.Models
         [NotMapped]
         public RateAnswer RateAnswerToSave { get; set; }
 
+        [NotMapped]
+        public bool YearPublished { get; set; }
+
         public virtual ICollection<ModuleQuestions> ModuleQuestions { get; set; }
         public virtual ICollection<Answer> Answer { get; set; }
         public virtual ICollection<RateAnswer> RateAnswer { get; set; }

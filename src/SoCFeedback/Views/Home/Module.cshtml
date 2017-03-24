@@ -23,7 +23,7 @@
             <a href="mailto:@Model.Supervisor.Email?Subject=@Model.Code"> @Html.DisplayFor(model => model.Supervisor.FullName)</a>
         </dd>
         <dt>
-            <a href="#descCollapse" data-toggle="collapse" aria-expanded="false"> Toggle Module @Html.DisplayNameFor(model => model.Description) </a>
+            <a href="#descCollapse" data-toggle="collapse" onclick="setTimeout(go(), 1);"  aria-expanded="false"> Toggle Module @Html.DisplayNameFor(model => model.Description) </a>
         </dt>
 
         <dd>
@@ -96,6 +96,7 @@
 <script type="text/javascript">
     window.addEventListener('resize', go);
     function go() {
+        $('#descInput').trigger('input');
         $('#descInput').trigger('input');
     }
 </script>
