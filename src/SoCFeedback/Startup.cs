@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO.Compression;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using SoCFeedback.Data;
 using SoCFeedback.Enums;
 using SoCFeedback.Models;
@@ -35,6 +38,15 @@ namespace SoCFeedback
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // add gzip compression
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/pdf", "image/x-icon","application/font-woff2", "image/gif" });
+
+            });
+            services.Configure<GzipCompressionProviderOptions>(opts => opts.Level = CompressionLevel.Optimal);
+            services.AddResponseCaching();
             // Add framework services.
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -42,10 +54,10 @@ namespace SoCFeedback
             services.AddDbContext<FeedbackDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>( config =>
-            {
-                config.SignIn.RequireConfirmedEmail = true;
-            })
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+           {
+               config.SignIn.RequireConfirmedEmail = true;
+           })
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders()
                 .AddTokenProvider<DefaultDataProtectorTokenProvider<ApplicationUser>>(DefaultTokenProviderName);
@@ -89,16 +101,13 @@ namespace SoCFeedback
             // token lifespan
             services.Configure<DefaultDataProtectorTokenProviderOptions>(options =>
             {
-                options.TokenLifespan=TimeSpan.FromDays(365);
+                options.TokenLifespan = TimeSpan.FromDays(365);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -111,7 +120,19 @@ namespace SoCFeedback
                 //app.UseExceptionHandler("/error?error={0}");
             }
 
-            app.UseStaticFiles();
+            app.UseResponseCaching();
+            //cashing static files for a week
+            app.UseResponseCompression()
+                .UseStaticFiles(new StaticFileOptions
+                {
+                    OnPrepareResponse = ctx =>
+                    {
+                        const int durationInSeconds = 60 * 60 * 24 * 7;
+                        ctx.Context.Response.Headers[HeaderNames.CacheControl] =
+                            "public,max-age=" + durationInSeconds;
+                    }
+                });
+
             app.UseIdentity();
 
             app.UseMvc(routes =>

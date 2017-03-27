@@ -1,43 +1,52 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @inject SignInManager<ApplicationUser> SignInManager
-
+@{
+    string pagename = ((Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor)ViewContext.ActionDescriptor).ActionName;
+    string controllerName = ((Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor)ViewContext.ActionDescriptor).ControllerName;
+}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Computing Feedback</title>
-
     <environment names="Development">
-        @*<link rel="stylesheet" href="~/lib/tether/dist/css/tether.css" />*@
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/star-rating.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/theme-krajee-fa.css" />
-        <link rel="stylesheet" href="~/lib/chartist/dist/chartist.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/chartist/dist/chartist.js"></script>
-        <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+        <script src="~/lib/chartist/dist/chartist.js" asp-append-version="true"></script>
+        <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js" asp-append-version="true"></script>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/star-rating.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/theme-krajee-fa.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/chartist/dist/chartist.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
     <environment names="Staging,Production">
-        @*<link rel="stylesheet" href="~/lib/tether/dist/css/tether.min.css" />*@
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.min.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/star-rating.min.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/theme-krajee-fa.min.css" />
-        <link rel="stylesheet" href="~/lib/chartist/dist/chartist.min.css" />
-        <link rel="stylesheet" href="~/css/site.min.css"/>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/chartist/dist/chartist.min.js"></script>
-        <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.min.js"></script>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+        @if (pagename.Equals("Index") && !controllerName.Equals("Home"))
+        {
+            <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap4.min.css" asp-append-version="true" />
+        }
+        @if (pagename.Equals("Module") || pagename.Equals("Feedback"))
+        {
+            <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" asp-append-version="true" />
+            <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/star-rating.min.css" asp-append-version="true" />
+            <link rel="stylesheet" href="~/lib/bootstrap-star-rating/css/theme-krajee-fa.min.css" asp-append-version="true" />
+            if (pagename.Equals("Feedback"))
+            {
+                <link rel="stylesheet" href="~/lib/chartist/dist/chartist.min.css" asp-append-version="true" />
+                <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+                <script src="~/lib/chartist/dist/chartist.min.js" asp-append-version="true"></script>
+                <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.min.js" asp-append-version="true"></script>
+            }
+        }
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
-    <nav class="navbar bg-inverse navbar-dark navbar-toggleable-sm ">
+    <nav class="navbar bg-inverse navbar-dark navbar-toggleable-sm">
         <div class="container-fluid">
             <button class="navbar-toggler hidden-md-up float-xs-right " type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"></button>
             <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
@@ -98,35 +107,49 @@
         @RenderBody()
         <hr />
         <footer class="text-xs-center">
-            <p>Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.
+            <p>
+                Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.
             </p>
         </footer>
     </div>
-
     <environment names="Development">
-        @*<script src="~/lib/tether/dist/js/tether.js"></script>*@
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/lib/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="~/lib/datatables/media/js/datatables.bootstrap4.js"></script>
-        <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.js"></script>
-        <script src="~/lib/bootstrap-star-rating/js/star-rating.js"></script>
-        <script src="~/lib/bootstrap-star-rating/themes/krajee-fa/theme.js"></script>
-        <script src="~/js/site.js"></script>
+        <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
+        <script src="~/lib/datatables/media/js/jquery.dataTables.js" asp-append-version="true"></script>
+        <script src="~/lib/datatables/media/js/datatables.bootstrap4.js" asp-append-version="true"></script>
+        <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-star-rating/themes/krajee-fa/theme.js" asp-append-version="true"></script>
     </environment>
-    <environment names="Staging,Production">
-        @*<script src="~/lib/tether/dist/js/tether.min.js"></script>*@
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="~/lib/datatables/media/js/jquery.dataTables.min.js"></script>
-        <script src="~/lib/datatables/media/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.min.js"></script>
-        <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js"></script>
-        <script src="~/lib/bootstrap-star-rating/themes/krajee-fa/theme.min.js"></script>
-        <script src="~/js/site.min.js"></script>
-    </environment>
+<environment names="Staging,Production">
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    @if (!(pagename.Equals("Index") && controllerName.Equals("Home")) && !pagename.Equals("About"))
+    {
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+        <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.min.js" asp-append-version="true"></script>
+        <script type="text/javascript">$(document).ready(function() { $(".autosize").textareaAutoSize(); });</script>
+    }
+    @if (pagename.Equals("Index") && !controllerName.Equals("Home"))
+    {
+        <script src="~/lib/datatables/media/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+        <script src="~/lib/datatables/media/js/dataTables.bootstrap4.min.js" asp-append-version="true"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#YearTable').DataTable({ "order": [[0, "desc"]] });
+                $(".table").DataTable();
+            });
+        </script>
+    }
+    @if (pagename.Equals("Module") || pagename.Equals("Feedback"))
+    {
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-star-rating/themes/krajee-fa/theme.min.js" asp-append-version="true"></script>
+    }
+</environment>
     @RenderSection("scripts", false)
 </body>
 </html>

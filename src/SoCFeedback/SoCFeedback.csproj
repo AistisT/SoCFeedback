@@ -17,6 +17,12 @@
     <Description>School of Computing Module Feedback Website</Description>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="wwwroot\images\**" />
+    <Content Remove="wwwroot\images\**" />
+    <EmbeddedResource Remove="wwwroot\images\**" />
+    <None Remove="wwwroot\images\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="wwwroot\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +32,8 @@
     <!--<PackageReference Include="Microsoft.NETCore.App" Version="1.1.0" />-->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.1" />

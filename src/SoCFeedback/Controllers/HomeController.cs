@@ -18,6 +18,8 @@ namespace SoCFeedback.Controllers
             _context = context;
         }
 
+        //Cached for one hour
+        [ResponseCache(Duration = 60*60*1)]
         public async Task<IActionResult> Index()
         {
             var year =
@@ -130,6 +132,8 @@ namespace SoCFeedback.Controllers
             return View();
         }
 
+        //Cached for one hour
+        [ResponseCache(Duration = 60 * 60 * 1)]
         [Route("About")]
         public IActionResult About()
         {
