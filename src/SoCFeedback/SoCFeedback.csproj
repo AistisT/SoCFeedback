@@ -16,6 +16,9 @@
     <Company />
     <Description>School of Computing Module Feedback Website</Description>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="wwwroot\images\**" />
     <Content Remove="wwwroot\images\**" />

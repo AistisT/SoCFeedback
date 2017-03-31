@@ -150,7 +150,7 @@ namespace SoCFeedback.Controllers
             var passCode = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
             var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
             await _emailSender.SendEmailAsync(user.Email, "Computing Feedback - Account Created",
-                $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for {user.Email}.<br/>" +
+                $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for <strong>{user.Email}</strong>.<br/>" +
                 $"You must first set a new password before you can start using your account by clicking <a href='{callbackUrl}'>here</a>.<br/><br/>" +
                 $"This is an automated email, please do not reply.<br/>");
         }
@@ -340,7 +340,7 @@ namespace SoCFeedback.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user.EmailConfirmed)
                 return RedirectToAction(nameof(HomeController.Error), "Home", new { error = 1 });
-
+            ViewData["userEmail"] = user.Email;
             return View();
         }
 
@@ -366,6 +366,7 @@ namespace SoCFeedback.Controllers
             await _userManager.UpdateAsync(user);
             AddErrors(result);
             AddErrors(passResult);
+            ViewData["userEmail"] = user.Email;
             return View();
         }
 

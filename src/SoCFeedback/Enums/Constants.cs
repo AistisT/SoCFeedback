@@ -19,7 +19,7 @@
         public const int LevelTitleLength = 50;
         public const int QuestionLength = 500;
 
-        public const int PasswordMinLength = 8;
+        public const int PasswordMinLength = 14;
         public const int PasswordMaxLength = 100;
     }
 }

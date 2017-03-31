@@ -23,6 +23,9 @@ namespace SoCFeedback.Models
 
         public Status Status { get; set; }
 
+        [Required]
+        public CategoryType Type { get; set; }
+
         [Display(Name = "Category Order", Description = "Order in which category will be displayed in feedback form.")]
         [RegularExpression("([0-9]+)", ErrorMessage = "Please enter valid Number")]
         public int CategoryOrder { get; set; } = 99;

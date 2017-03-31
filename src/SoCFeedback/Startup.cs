@@ -46,7 +46,7 @@ namespace SoCFeedback
 
             });
             services.Configure<GzipCompressionProviderOptions>(opts => opts.Level = CompressionLevel.Optimal);
-            services.AddResponseCaching();
+
             // Add framework services.
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -120,7 +120,6 @@ namespace SoCFeedback
                 //app.UseExceptionHandler("/error?error={0}");
             }
 
-            app.UseResponseCaching();
             //cashing static files for a week
             app.UseResponseCompression()
                 .UseStaticFiles(new StaticFileOptions

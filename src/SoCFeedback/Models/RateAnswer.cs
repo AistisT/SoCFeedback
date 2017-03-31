@@ -11,8 +11,8 @@ namespace SoCFeedback.Models
         [Required]
         public Guid QuestionId { get; set; }
 
-        [Required]
-        [Range(0.5, 5, ErrorMessage = "Rating is required.")]
+        //[Required]
+        //[Range(0.5, 5, ErrorMessage = "Rating is required.")]
         public float Rating { get; set; }
 
         [Required]

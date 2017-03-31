@@ -1,5 +1,5 @@
 ﻿https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/powershell when running from PMC
-https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet when running from CLI (Not currectly working due outdated packets)
+https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet when running from CLI (Not currently working due outdated packets)
 
 add-migration -N FeedDbV1 -O "Data/Migrations" -C FeedbackDbContext		:: Add migration for Feedback tables
 update-database -C FeedbackDbContext									:: Update Feedback tables  with all pending migrations

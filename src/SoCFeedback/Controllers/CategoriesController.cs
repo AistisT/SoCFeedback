@@ -10,7 +10,7 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -44,13 +44,13 @@ namespace SoCFeedback.Controllers
         // GET: Categories/Create
         public IActionResult Create()
         {
-            return View(new Category());
+            return View(new Category{CategoryOrder = _context.Category.Max(c=>c.CategoryOrder)+1});
         }
 
         // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Status,CategoryOrder")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Status,CategoryOrder,Type")] Category category)
         {
             var obj = _context.Category.Any(e => e.Title.Equals(category.Title, StringComparison.OrdinalIgnoreCase));
             if (obj)
@@ -81,7 +81,7 @@ namespace SoCFeedback.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid? id,
-            [Bind("Id,Title,Description,Status,CategoryOrder")] Category category)
+            [Bind("Id,Title,Description,Status,CategoryOrder,Type")] Category category)
         {
             if (id == null)
                 return NotFound();
@@ -111,7 +111,6 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Categories/Archive/5
-        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
@@ -126,7 +125,6 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Archive/5
-        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
@@ -149,7 +147,6 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Categories/Restore/5
-        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
@@ -170,7 +167,6 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Restore/5
-        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]

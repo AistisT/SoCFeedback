@@ -47,9 +47,14 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Questions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title");
+            if (await _authorizationService.AuthorizeAsync(User, "LecturerLimited"))
+            {
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active && (c.Type == CategoryType.Open || c.Type == CategoryType.Optional)).OrderBy(c => c.CategoryOrder), "Id", "Title");
+            }
+            else
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title");
 
             return View(new Question
             {
@@ -69,8 +74,11 @@ namespace SoCFeedback.Controllers
             if (obj)
                 ModelState.AddModelError("Question1", string.Format("Question {0} already exists.", question.Question1));
 
+            CheckIfQuestionAllowed(question);
+
             if (ModelState.IsValid)
             {
+
                 question.Id = Guid.NewGuid();
                 _context.Add(question);
 
@@ -90,8 +98,31 @@ namespace SoCFeedback.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title", question.CategoryId);
+            if (await _authorizationService.AuthorizeAsync(User, "LecturerLimited"))
+            {
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active && (c.Type == CategoryType.Open || c.Type == CategoryType.Optional)).OrderBy(c => c.CategoryOrder), "Id", "Title", question.CategoryId);
+            }
+            else
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active).OrderBy(c => c.CategoryOrder), "Id", "Title", question.CategoryId);
             return View(question);
+        }
+
+        private void CheckIfQuestionAllowed(Question question)
+        {
+            if (question.Optional && _context.Category.AsNoTracking().FirstOrDefault(q => q.Id == question.CategoryId).Type == CategoryType.Mandatory)
+            {
+                ModelState.AddModelError("CategoryId", "This category can only contain mandatory questions.");
+            }
+            if (!question.Optional && _context.Category.AsNoTracking().FirstOrDefault(q => q.Id == question.CategoryId).Type == CategoryType.Optional)
+            {
+                ModelState.AddModelError("CategoryId", "This category can only contain optional questions.");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult GetQuestionOrder(Guid categoryId)
+        {
+            return Json(_context.Question.Where(q => q.CategoryId == categoryId).Max(q => q.QuestionNumber) + 1);
         }
 
         // GET: Questions/Edit/5
@@ -110,9 +141,7 @@ namespace SoCFeedback.Controllers
                 return new ChallengeResult();
             }
 
-            ViewData["CategoryId"] = new SelectList(_context.Category
-                .AsNoTracking().Where(c => c.Status == Status.Active || c.Id == question.CategoryId).OrderBy(c => c.CategoryOrder)
-                , "Id", "Title", question.CategoryId);
+            await SetCategoryList(question.CategoryId);
             question.YearPublished = YearsController.YearPublished(_context);
             return View(question);
         }
@@ -133,6 +162,8 @@ namespace SoCFeedback.Controllers
                         e.Id != question.Id);
             if (obj != null)
                 ModelState.AddModelError("Question1", string.Format("Question {0} already exists.", question.Question1));
+
+            CheckIfQuestionAllowed(question);
 
             if (ModelState.IsValid)
             {
@@ -163,7 +194,7 @@ namespace SoCFeedback.Controllers
                         var modules = _context.Module.AsNoTracking().ToList();
                         foreach (var module in modules)
                         {
-                            var moduleQuestion =_context.ModuleQuestions.Where(i => i.ModuleId == module.Id && i.QuestionId == question.Id).ToList();
+                            var moduleQuestion = _context.ModuleQuestions.Where(i => i.ModuleId == module.Id && i.QuestionId == question.Id).ToList();
                             _context.ModuleQuestions.RemoveRange(moduleQuestion);
                         }
                     }
@@ -178,10 +209,18 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category
-                .AsNoTracking().Where(c => c.Status == Status.Active || c.Id == question.CategoryId).OrderBy(c => c.CategoryOrder)
-                , "Id", "Title", question.CategoryId);
+            await SetCategoryList(question.CategoryId);
             return View(question);
+        }
+
+        private async Task SetCategoryList(Guid categoryId)
+        {
+            if (await _authorizationService.AuthorizeAsync(User, "LecturerLimited"))
+            {
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => (c.Status == Status.Active || c.Id == categoryId) && (c.Type == CategoryType.Open || c.Type == CategoryType.Optional)).OrderBy(c => c.CategoryOrder), "Id", "Title", categoryId);
+            }
+            else
+                ViewData["CategoryId"] = new SelectList(_context.Category.AsNoTracking().Where(c => c.Status == Status.Active || c.Id == categoryId).OrderBy(c => c.CategoryOrder), "Id", "Title", categoryId);
         }
 
         [Authorize(Roles = "Admin,Lecturer")]

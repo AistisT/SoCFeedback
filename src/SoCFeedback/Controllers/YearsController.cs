@@ -211,13 +211,41 @@ namespace SoCFeedback.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PublishConfirmed(Guid id)
         {
-            // can be remove for final version
             var years = _context.Year.Where(y => y.Status == YearStatus.Published);
             foreach (var dbYear in years)
                 dbYear.Status = YearStatus.Archived;
 
             var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
             year.Status = YearStatus.Published;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        
+        // GET: Years/Retract/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Retract(Guid? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var year =
+                await _context.Year.Include(y => y.YearModules).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            if (year == null)
+                return NotFound();
+            year.Modules = GetYearModules(year, _context);
+            year.Levels = GetYearLevels(year);
+            return View(year);
+        }
+
+        // POST: Years/Retract/5
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ActionName("Retract")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RetractConfirmed(Guid id)
+        {
+            var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
+            year.Status = YearStatus.Pending;
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

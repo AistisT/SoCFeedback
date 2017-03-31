@@ -241,11 +241,10 @@ namespace SoCFeedback.Controllers
                     question.RunningStatus = RunningStatus.Inactive;
 
             module.YearId = yid;
-            module.Categories = _context.Category
-                    .AsNoTracking()
-                    .Where(c => c.Status == Status.Active)
-                    .OrderBy(c => c.CategoryOrder)
-                    .ToList();
+            var tempCategory = module.Questions.Select(m => m.Category).ToList();
+            module.Categories =
+                tempCategory.GroupBy(e => e.Title).Select(group => group.First()).OrderBy(e => e.CategoryOrder).ToList();
+
 
             return View(module);
         }

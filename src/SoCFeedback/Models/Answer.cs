@@ -12,7 +12,7 @@ namespace SoCFeedback.Models
         [Required]
         public Guid QuestionId { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Answer")]
         [StringLength(Constants.AnswerLength)]
         public string Answer1 { get; set; }

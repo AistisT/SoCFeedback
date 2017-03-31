@@ -10,7 +10,7 @@ using SoCFeedback.Models;
 
 namespace SoCFeedback.Controllers
 {
-    [Authorize(Roles = "Admin,Lecturer,LecturerLimited")]
+    [Authorize(Roles = "Admin")]
     public class LevelsController : Controller
     {
         private readonly FeedbackDbContext _context;
@@ -43,7 +43,7 @@ namespace SoCFeedback.Controllers
         // GET: Levels/Create
         public IActionResult Create()
         {
-            return View(new Level());
+            return View(new Level{OrderingNumber = _context.Level.Max(c => c.OrderingNumber) + 1 });
         }
 
         [HttpPost]
@@ -109,7 +109,6 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Levels/Archive/5
-        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Archive(Guid? id)
         {
             if (id == null)
@@ -124,7 +123,6 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Levels/Archive/5
-        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Archive")]
         [ValidateAntiForgeryToken]
@@ -139,7 +137,6 @@ namespace SoCFeedback.Controllers
         }
 
         // GET: Categories/Restore/5
-        [Authorize(Roles = "Admin,Lecturer")]
         public async Task<IActionResult> Restore(Guid? id)
         {
             if (id == null)
@@ -154,7 +151,6 @@ namespace SoCFeedback.Controllers
         }
 
         // POST: Categories/Restore/5
-        [Authorize(Roles = "Admin,Lecturer")]
         [HttpPost]
         [ActionName("Restore")]
         [ValidateAntiForgeryToken]

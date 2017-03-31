@@ -9,11 +9,11 @@
 <h2>Edit a Question</h2>
 
 <form asp-action="Edit">
-    <input asp-for="YearPublished" type="hidden"/>
+    <input asp-for="YearPublished" type="hidden" />
     <div>
-        <hr/>
+        <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id"/>
+        <input type="hidden" asp-for="Id" />
         <div class="form-group row">
             <label asp-for="Question1" class="col-md-3 form-control-label"></label>
             <div class="col-md-9">
@@ -31,45 +31,76 @@
         <div class="form-group row">
             <label asp-for="CategoryId" class="form-control-label col-md-3"></label>
             <div class="col-md-9">
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId" onchange="QuestionOrder();"></select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
             <label asp-for="QuestionNumber" class="col-md-3 form-control-label"></label>
             <div class="col-md-9">
-                <input asp-for="QuestionNumber" class="form-control"/>
+                <input asp-for="QuestionNumber" class="form-control" />
                 <span asp-validation-for="QuestionNumber" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
-            <div class="offset-md-3 col-md-9">
+            <label asp-for="Optional" class="col-md-3 form-control-label"></label>
+            <div class="col-md-9">
                 <label class="form-check-label remove-left-padding ">
                     @if (await AuthorizationService.AuthorizeAsync(User, "LecturerLimited"))
                     {
-                        <input asp-for="Optional" disabled="disabled" />
-                            <input asp-for="Optional" type="hidden" />
-                            @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br />
-                            @: <span class="text-danger">Only an administrator or a head lecturer can change the question optionality.</span>
-                        }
+                        <input asp-for="Optional" disabled="disabled"/>
+                        <input asp-for="Optional" type="hidden"/>
+                        @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br/>
+                        @: <span class="text-danger">Only an administrator or a head lecturer can change the question optionality.</span>
+                    }
                     else if (Model.YearPublished)
                     {
-                        <input asp-for="Optional" disabled="disabled" />
-                            <input asp-for="Optional" type="hidden" />
-                            @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br />
-                            <span class="text-danger"> A question can only change its optionality status while there are no questionnaires published.</span>
+                        <input asp-for="Optional" disabled="disabled"/>
+                        <input asp-for="Optional" type="hidden"/>
+                        @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br/>
+                        <span class="text-danger"> A question can only change its optionality status while there are no published questionnaires.</span>
                     }
                     else
                     {
-                        <input asp-for="Optional" />
-                            @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br />
-                        }
+                        <input asp-for="Optional"/>
+                        @: An optional question will not be automatically added to all module questionnaires, but can be manually added to any module questionnaire.<br/>
+                    }
                 </label>
             </div>
         </div>
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary"/>
+            <input type="submit" value="Save" class="btn btn-primary" />
             <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </div>
 </form>
+
+<script type="text/javascript">
+    var originalId;
+    var originalNumber;
+    $(document).ready(function () {
+         originalId = $('#CategoryId').val();
+         originalNumber = $('#QuestionNumber').val();
+    });
+    function QuestionOrder() {
+        var value = $('#CategoryId').val();
+        if (value === window.originalId) {
+            $("#QuestionNumber").val(originalNumber);
+        }
+        else {
+            $.ajax({
+                url: "/Questions/GetQuestionOrder",
+                type: "POST",
+                data: {
+                    categoryId: value
+                },
+                success: function (data) {
+                    $("#QuestionNumber").val(data);
+                },
+                error: function () {
+                    $("#QuestionNumber").val(99);
+                }
+            });
+        }
+    }
+</script>

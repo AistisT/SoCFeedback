@@ -1,14 +1,14 @@
 @model Year
 
 @{
-    ViewData["Title"] = "Publish Year Form";
+    ViewData["Title"] = "Retract Year Form";
 }
 
-<h2>Publish</h2>
-<h3 class="text-danger">Once published this year form will visible to students and closed to any further modifications.</h3>
-<h3>Publishing should be performed close to the end of semester.</h3>
+<h2>Retract</h2>
+<h3 class="text-danger">Once retracted this year form will invisible to students and once again open for modifications!</h3>
+<h3>Retracting should be done a middle of the second semester to allow lecturers to modify the second semester questionnaires.</h3>
 <hr />
-<form asp-action="Publish" asp-route-id="@Model.Id">
+<form asp-action="Retract" asp-route-id="@Model.Id">
     <div>
         <h4>Year Form</h4>
         <hr />
@@ -53,7 +53,7 @@
         </div>
         <br/>
         <div class="form-group">
-            <input type="submit" value="Publish" class="btn btn-primary" />
+            <input type="submit" value="Retract" class="btn btn-primary" />
             <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </div>

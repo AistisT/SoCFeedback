@@ -42,6 +42,10 @@
                 <script src="~/lib/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.min.js" asp-append-version="true"></script>
             }
         }
+        @if (pagename.Equals("Create") || pagename.Equals("Edit") && !controllerName.Equals("Years"))
+        {
+            <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+        }
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
@@ -70,14 +74,17 @@
                                     Entities
                                 </a>
                                 <ul class="dropdown-menu bg-inverse" aria-labelledby="navbarDropdownMenuLink">
-                                    <li>
-                                        <a class="dropdown-item link " asp-area="" asp-controller="Categories" asp-action="Index" title="Categories">Categories</a>
-                                    </li>
+                                    @if (await AuthorizationService.AuthorizeAsync(User, "Admin"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item link " asp-area="" asp-controller="Categories" asp-action="Index" title="Categories">Categories</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels">Levels</a>
+                                        </li>
+                                    }
                                     <li>
                                         <a class="dropdown-item link" asp-area="" asp-controller="Questions" asp-action="Index" title="Questions">Questions</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item link" asp-area="" asp-controller="Levels" asp-action="Index" title="Levels">Levels</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item link" asp-area="" asp-controller="Supervisors" asp-action="Index" title="Supervisors">Supervisors</a>
@@ -108,7 +115,7 @@
         <hr />
         <footer class="text-xs-center">
             <p>
-                Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you have encountered problems or have feedback.
+                Please email <a href="mailto:a.taraskevicius@dundee.ac.uk"> Aistis Taraskevicius</a> if you've encountered problems or have feedback.
             </p>
         </footer>
     </div>
@@ -132,6 +139,7 @@
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
         <script src="~/lib/textarea-autosize/dist/jquery.textarea_autosize.min.js" asp-append-version="true"></script>
         <script type="text/javascript">$(document).ready(function() { $(".autosize").textareaAutoSize(); });</script>
+        <script type="text/javascript">window.addEventListener('resize', go); function go() { $('.autosize').trigger('input');}</script>
     }
     @if (pagename.Equals("Index") && !controllerName.Equals("Home"))
     {

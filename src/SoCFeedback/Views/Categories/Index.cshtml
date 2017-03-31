@@ -23,6 +23,9 @@
                     @Html.DisplayNameFor(model => model.CategoryOrder)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Type)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Status)
                 </th>
                 <th>
@@ -44,12 +47,15 @@
                         @Html.DisplayFor(modelItem => item.CategoryOrder)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        @if (!await AuthorizationService.AuthorizeAsync(User, "LecturerLimited") && !ViewBag.YearPublished)
+                        @if (!ViewBag.YearPublished)
                         {
                             switch (item.Status)
                             {

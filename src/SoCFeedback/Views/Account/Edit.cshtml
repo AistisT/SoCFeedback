@@ -44,6 +44,14 @@
             <span asp-validation-for="Role" class="text-danger"></span>
         </div>
     </div>
+    <div class="offset-md-3 col-md-9">
+        <ul class="remove-left-padding">
+            <li><span class="text-danger">Administrator</span> – full privileges, including account creation, academic year form creation and publishing.</li>
+            <li><span class="text-danger">Head Lecturer</span> – has no access to categories, levels, account management and cannot create, publish or archive academic year forms. </li>
+            <li><span class="text-danger">Lecturer</span> – can only work with optional questions: unable to create, edit or add mandatory questions. Cannot archive or restore entities.</li>
+            <li><span class="text-danger">Teaching Staff</span> – can only view gathered feedback, does not have access to any other functionality.</li>
+        </ul>
+    </div>
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="float-xs-right">Back to List</a>

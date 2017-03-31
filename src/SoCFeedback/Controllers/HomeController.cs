@@ -18,8 +18,6 @@ namespace SoCFeedback.Controllers
             _context = context;
         }
 
-        //Cached for one hour
-        [ResponseCache(Duration = 60*60*1)]
         public async Task<IActionResult> Index()
         {
             var year =
@@ -91,12 +89,11 @@ namespace SoCFeedback.Controllers
             if (dbModule == null || dbYear == null)
                 return NotFound();
 
-            if (ModelState.IsValid)
-            {
                 foreach (var question in module.Questions)
                     switch (question.Type)
                     {
                         case QuestionType.Standard:
+                        if (!String.IsNullOrEmpty(question.AnswerToSave.Answer1)) { 
                             _context.Answer.Add(new Answer
                             {
                                 Answer1 = question.AnswerToSave.Answer1,
@@ -104,15 +101,19 @@ namespace SoCFeedback.Controllers
                                 QuestionId = question.Id,
                                 Year = dbYear.Year1
                             });
-                            break;
+                        }
+                        break;
                         case QuestionType.Rate:
-                            _context.RateAnswer.Add(new RateAnswer
+                            if (question.RateAnswerToSave.Rating > 0)
                             {
-                                Rating = question.RateAnswerToSave.Rating,
-                                ModuleId = module.Id,
-                                QuestionId = question.Id,
-                                Year = dbYear.Year1
-                            });
+                                _context.RateAnswer.Add(new RateAnswer
+                                {
+                                    Rating = question.RateAnswerToSave.Rating,
+                                    ModuleId = module.Id,
+                                    QuestionId = question.Id,
+                                    Year = dbYear.Year1
+                                });
+                            }
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -120,8 +121,6 @@ namespace SoCFeedback.Controllers
                 await _context.SaveChangesAsync();
               
                 return RedirectToAction(nameof(FeedbackConfirmation), new { moduleName = module.ModuleName });
-            }
-            return View(module);
         }
 
         // GET: /FeedbackConfirmation
@@ -132,8 +131,6 @@ namespace SoCFeedback.Controllers
             return View();
         }
 
-        //Cached for one hour
-        [ResponseCache(Duration = 60 * 60 * 1)]
         [Route("About")]
         public IActionResult About()
         {
