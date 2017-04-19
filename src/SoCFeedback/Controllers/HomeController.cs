@@ -44,6 +44,7 @@ namespace SoCFeedback.Controllers
                     .SingleOrDefaultAsync(y => y.Id == yid && y.Status == YearStatus.Published);
             if (year == null)
                 return NotFound();
+            // get module
             var yearModule = _context.YearModules.SingleOrDefault(y => y.ModuleId == id && y.YearId == yid);
             if (yearModule == null)
                 return NotFound();
@@ -54,11 +55,13 @@ namespace SoCFeedback.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (module == null)
                 return NotFound();
+            // get all questions
             module.Questions = _context.Question.Include(c => c.Category)
                 .AsNoTracking()
                 .OrderBy(q => q.QuestionNumber).Where(q=>q.Status!=Status.Archived && q.Category.Status!=Status.Archived)
                 .ToList();
 
+            //remove questions not belonging to the module
             for (var i = module.Questions.Count - 1; i >= 0; i--)
             {
                 var question = module.Questions[i];
@@ -66,6 +69,7 @@ namespace SoCFeedback.Controllers
                     module.Questions.Remove(question);
             }
 
+            // get categories for the questions
             var tempCategory = module.Questions.Select(m => m.Category).ToList();
             module.YearId = yid;
             module.Categories =
@@ -89,9 +93,11 @@ namespace SoCFeedback.Controllers
             if (dbModule == null || dbYear == null)
                 return NotFound();
 
+            // save answers to each question
                 foreach (var question in module.Questions)
                     switch (question.Type)
                     {
+                    //standard questions
                         case QuestionType.Standard:
                         if (!String.IsNullOrEmpty(question.AnswerToSave.Answer1)) { 
                             _context.Answer.Add(new Answer
@@ -103,6 +109,7 @@ namespace SoCFeedback.Controllers
                             });
                         }
                         break;
+                        // rate questions
                         case QuestionType.Rate:
                             if (question.RateAnswerToSave.Rating > 0)
                             {

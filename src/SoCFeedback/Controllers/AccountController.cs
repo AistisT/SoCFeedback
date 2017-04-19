@@ -40,6 +40,10 @@ namespace SoCFeedback.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -57,23 +61,18 @@ namespace SoCFeedback.Controllers
                 //Require the user to have a confirmed email before they can log on.
                 var user = await _userManager.FindByNameAsync(model.Email);
                 if (user != null)
-                {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
                         return View(model);
                     }
-                }
 
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,
+                    true);
                 if (result.Succeeded)
-                {
                     return RedirectToLocal(returnUrl);
-                }
                 if (result.IsLockedOut)
-                {
                     return View("Lockout");
-                }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
@@ -111,7 +110,9 @@ namespace SoCFeedback.Controllers
                     Forename = model.Forename
                 };
 
+                // create user
                 var result = await _userManager.CreateAsync(user);
+                //add user to a role
                 if (result.Succeeded)
                 {
                     if (!_roleManager.RoleExistsAsync(model.Role.ToString()).Result)
@@ -133,7 +134,7 @@ namespace SoCFeedback.Controllers
                     SendConfirmation(user);
                     #pragma warning restore 4014
 
-                    return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AccountCreated });
+                    return RedirectToAction(nameof(Index), new {Message = AccountMessageId.AccountCreated});
                 }
                 AddErrors(result);
             }
@@ -148,10 +149,11 @@ namespace SoCFeedback.Controllers
             // Send an email with this link
             var code = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
             var passCode = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code, passCode }, HttpContext.Request.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new {userId = user.Id, code, passCode},
+                HttpContext.Request.Scheme);
             await _emailSender.SendEmailAsync(user.Email, "Computing Feedback - Account Created",
                 $"An account on <a href='http://feedback.computing.dundee.ac.uk'>http://feedback.computing.dundee.ac.uk</a> has been created for <strong>{user.Email}</strong>.<br/>" +
-                $"You must first set a new password before you can start using your account by clicking <a href='{callbackUrl}'>here</a>.<br/><br/>" +
+                $"You must set a new password before you can use your account by clicking <a href='{callbackUrl}'>here</a>.<br/><br/>" +
                 $"This is an automated email, please do not reply.<br/>");
         }
 
@@ -159,16 +161,14 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> ResendConfirmationEmail(string email)
         {
             if (email == null)
-            {
-                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.Error });
-            }
+                return RedirectToAction(nameof(Index), new {Message = AccountMessageId.Error});
             var dbUser = await _userManager.FindByNameAsync(email);
             if (dbUser == null)
-                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.Error });
+                return RedirectToAction(nameof(Index), new {Message = AccountMessageId.Error});
             #pragma warning disable 4014
             SendConfirmation(dbUser);
             #pragma warning restore 4014
-            return RedirectToAction(nameof(Index), new { Message = AccountMessageId.EmailResent });
+            return RedirectToAction(nameof(Index), new {Message = AccountMessageId.EmailResent});
         }
 
 
@@ -176,19 +176,21 @@ namespace SoCFeedback.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(AccountMessageId? message = null)
         {
+            // possible statuses
             ViewData["StatusMessage"] =
                 message == AccountMessageId.AcountUpdated
                     ? "Account has been updated."
-                        : message == AccountMessageId.AccountCreated
-                            ? "Account has been created and email sent."
-                                : message == AccountMessageId.Error
-                                    ? "An error has occurred."
-                                        : message == AccountMessageId.EmailResent
-                                             ? "Email confirmation has been resent."
-                                                 : message == AccountMessageId.AccountDeleted
-                                                      ? "Account has been deleted."
-                                                             : "";
+                    : message == AccountMessageId.AccountCreated
+                        ? "Account has been created and email sent."
+                        : message == AccountMessageId.Error
+                            ? "An error has occurred."
+                            : message == AccountMessageId.EmailResent
+                                ? "Email confirmation has been resent."
+                                : message == AccountMessageId.AccountDeleted
+                                    ? "Account has been deleted."
+                                    : "";
 
+            // get all users
             var users = _userManager.Users.Select(user => new AccountViewModel
             {
                 Forename = user.Forename,
@@ -198,11 +200,12 @@ namespace SoCFeedback.Controllers
             });
 
             var list = await users.ToListAsync();
+            // get user role
             foreach (var user in list)
             {
                 var dbUser = await _userManager.FindByNameAsync(user.Email);
                 var role = await _userManager.GetRolesAsync(dbUser);
-                user.Role = (Roles)Enum.Parse(typeof(Roles), role.FirstOrDefault());
+                user.Role = (Roles) Enum.Parse(typeof(Roles), role.FirstOrDefault());
             }
 
             return View(list);
@@ -213,9 +216,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Edit(string email)
         {
             if (email == null)
-            {
                 return NotFound();
-            }
             var dbUser = await _userManager.FindByNameAsync(email);
             if (dbUser == null)
                 return NotFound();
@@ -232,7 +233,7 @@ namespace SoCFeedback.Controllers
                 Email = dbUser.Email,
                 Forename = dbUser.Forename,
                 Surname = dbUser.Surname,
-                Role = (Roles)Enum.Parse(typeof(Roles), role.FirstOrDefault())
+                Role = (Roles) Enum.Parse(typeof(Roles), role.FirstOrDefault())
             };
             return model;
         }
@@ -251,7 +252,9 @@ namespace SoCFeedback.Controllers
                     return NotFound();
 
                 var roles = await _userManager.GetRolesAsync(dbUser);
-                var role = (Roles)Enum.Parse(typeof(Roles), roles.FirstOrDefault());
+                var role = (Roles) Enum.Parse(typeof(Roles), roles.FirstOrDefault());
+
+                // update user role if it has changed
                 if (model.Role != role)
                 {
                     var roleResult = IdentityResult.Success;
@@ -275,7 +278,7 @@ namespace SoCFeedback.Controllers
                 dbUser.Surname = model.Surname;
 
                 await _userManager.UpdateAsync(dbUser);
-                return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AcountUpdated });
+                return RedirectToAction(nameof(Index), new {Message = AccountMessageId.AcountUpdated});
             }
             return View(model);
         }
@@ -286,9 +289,7 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> Delete(string email)
         {
             if (email == null)
-            {
                 return NotFound();
-            }
             var dbUser = await _userManager.FindByNameAsync(email);
             if (dbUser == null)
                 return NotFound();
@@ -304,19 +305,17 @@ namespace SoCFeedback.Controllers
         public async Task<IActionResult> DeleteConfirmed(string email)
         {
             if (email == null)
-            {
                 return NotFound();
-            }
             var cUser = await GetCurrentUserAsync();
             var dbUser = await _userManager.FindByNameAsync(email);
             if (dbUser == null)
                 return NotFound();
             if (cUser == dbUser)
-                return RedirectToAction(nameof(HomeController.Error),"Home");
+                return RedirectToAction(nameof(HomeController.Error), "Home");
 
             await _userManager.DeleteAsync(dbUser);
 
-            return RedirectToAction(nameof(Index), new { Message = AccountMessageId.AccountDeleted });
+            return RedirectToAction(nameof(Index), new {Message = AccountMessageId.AccountDeleted});
         }
 
         //
@@ -339,7 +338,7 @@ namespace SoCFeedback.Controllers
                 return RedirectToAction(nameof(HomeController.Error), "Home");
             var user = await _userManager.FindByIdAsync(userId);
             if (user.EmailConfirmed)
-                return RedirectToAction(nameof(HomeController.Error), "Home", new { error = 1 });
+                return RedirectToAction(nameof(HomeController.Error), "Home", new {error = 1});
             ViewData["userEmail"] = user.Email;
             return View();
         }
@@ -353,15 +352,18 @@ namespace SoCFeedback.Controllers
             if (user == null)
                 return RedirectToAction(nameof(HomeController.Error), "Home");
             if (user.EmailConfirmed)
-                return RedirectToAction(nameof(HomeController.Error), "Home", new { error = 1 });
+                return RedirectToAction(nameof(HomeController.Error), "Home", new {error = 1});
 
             var result = await _userManager.ConfirmEmailAsync(user, WebUtility.UrlDecode(model.Code));
-            var passResult = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.PassCode), model.Password);
+            var passResult = await _userManager.ResetPasswordAsync(user, WebUtility.UrlDecode(model.PassCode),
+                model.Password);
+            // if successfully confirmed email, login
             if (result.Succeeded && passResult.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("ConfirmEmailConfirmation");
             }
+            // if confirmation didn't succeed 
             user.EmailConfirmed = false;
             await _userManager.UpdateAsync(user);
             AddErrors(result);
@@ -402,7 +404,7 @@ namespace SoCFeedback.Controllers
                     return View("ForgotPasswordConfirmation");
 
                 var code = WebUtility.UrlEncode(await _userManager.GeneratePasswordResetTokenAsync(user));
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { code },
+                var callbackUrl = Url.Action("ResetPassword", "Account", new {code},
                     HttpContext.Request.Scheme);
                 // Send an email with this link
                 #pragma warning disable 4014
@@ -500,6 +502,7 @@ namespace SoCFeedback.Controllers
             EmailResent,
             AccountDeleted
         }
+
         #endregion
     }
 }

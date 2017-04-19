@@ -89,12 +89,8 @@ namespace SoCFeedback.Controllers
             var module = await _context.Module.SingleOrDefaultAsync(m => m.Id == id);
             if (module == null)
                 return NotFound();
-            ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking()
-                .Where(s => s.Status == Status.Active || s.Id == module.LevelId), "Id", "Title",
-                module.LevelId);
-            ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking()
-                .Where(s => s.Status == Status.Active || s.Id == module.SupervisorId), "Id", "FullName",
-                module.SupervisorId);
+
+            SetLevelAndSupervisorList(module);
             return View(module);
         }
 
@@ -129,13 +125,19 @@ namespace SoCFeedback.Controllers
                 }
                 return RedirectToAction("Index");
             }
+
+            SetLevelAndSupervisorList(module);
+            return View(module);
+        }
+
+        private void SetLevelAndSupervisorList(Module module)
+        {
             ViewData["LevelId"] = new SelectList(_context.Level.OrderBy(o => o.OrderingNumber).AsNoTracking()
-                 .Where(s => s.Status == Status.Active || s.Id == module.LevelId), "Id", "Title",
-                 module.LevelId);
+                .Where(s => s.Status == Status.Active || s.Id == module.LevelId), "Id", "Title",
+                module.LevelId);
             ViewData["SupervisorId"] = new SelectList(_context.Supervisor.OrderBy(o => o.Forename).AsNoTracking()
                 .Where(s => s.Status == Status.Active || s.Id == module.SupervisorId), "Id", "FullName",
                 module.SupervisorId);
-            return View(module);
         }
 
         // GET: Modules/Archive/5
@@ -232,10 +234,11 @@ namespace SoCFeedback.Controllers
 
             module.Questions = _context.Question.Include(c => c.Category)
                 .AsNoTracking()
-                .Where(q => q.Status == Status.Active && q.Category.Status ==Status.Active)
+                .Where(q => q.Status == Status.Active && q.Category.Status == Status.Active)
                 .OrderBy(q => q.QuestionNumber)
                 .ToList();
 
+            //remove questions not belonging to a module
             foreach (var question in module.Questions)
                 if (!module.ModuleQuestions.Exists(m => m.QuestionId == question.Id))
                     question.RunningStatus = RunningStatus.Inactive;
@@ -261,8 +264,8 @@ namespace SoCFeedback.Controllers
             if (dbYear.Status != YearStatus.Published)
                 try
                 {
-                    var dbModule =
-                        await _context.Module.Include(y => y.ModuleQuestions).SingleOrDefaultAsync(m => m.Id == id);
+                    var dbModule = await _context.Module.Include(y => y.ModuleQuestions).SingleOrDefaultAsync(m => m.Id == id);
+                  
                     foreach (var question in module.Questions)
                     {
                         var tModuleQuestion = new ModuleQuestions
@@ -273,6 +276,7 @@ namespace SoCFeedback.Controllers
 
                         if (!ModuleQuestionExists(tModuleQuestion) && question.RunningStatus == RunningStatus.Active)
                         {
+                            // save module questions
                             dbModule.ModuleQuestions.Add(tModuleQuestion);
                             _context.ModuleQuestions.Add(tModuleQuestion);
                         }
@@ -280,10 +284,10 @@ namespace SoCFeedback.Controllers
                         else if (question.RunningStatus == RunningStatus.Inactive)
                         {
                             var questionToRemove =
-                                dbModule.ModuleQuestions.SingleOrDefault(
-                                    y => y.ModuleId == module.Id && y.QuestionId == question.Id);
+                                dbModule.ModuleQuestions.SingleOrDefault(y => y.ModuleId == module.Id && y.QuestionId == question.Id);
                             if (questionToRemove != null)
                             {
+                                //remove question from the module
                                 dbModule.ModuleQuestions.Remove(questionToRemove);
                                 _context.ModuleQuestions.Remove(questionToRemove);
                             }
@@ -332,9 +336,11 @@ namespace SoCFeedback.Controllers
                 .Include(b => b.Question.Category)
                 .AsNoTracking()
                 .Where(m => m.ModuleId == id && m.Year == year.Year1).ToList();
+
             foreach (var answer in answers)
                 if (!viewModel.Questions.Exists(q => q.Id == answer.QuestionId))
                 {
+                    // create standard question view model
                     var temp = new QuestionViewModel
                     {
                         Type = answer.Question.Type,
@@ -348,11 +354,13 @@ namespace SoCFeedback.Controllers
                         Order = answer.Question.QuestionNumber,
                         Id = answer.QuestionId
                     };
+                    // add answer
                     temp.StandardAnswers.Add(answer.Answer1);
                     viewModel.Questions.Add(temp);
                 }
                 else
                 {
+                    // if view model exists, add answer
                     viewModel.Questions.Find(q => q.Id == answer.QuestionId).StandardAnswers.Add(answer.Answer1);
                 }
 
@@ -364,6 +372,7 @@ namespace SoCFeedback.Controllers
             foreach (var answer in rateAnswers)
                 if (!viewModel.Questions.Exists(q => q.Id == answer.QuestionId))
                 {
+                    // do same for rating type question
                     var temp = new QuestionViewModel
                     {
                         Type = answer.Question.Type,
@@ -377,6 +386,7 @@ namespace SoCFeedback.Controllers
                         Order = answer.Question.QuestionNumber,
                         Id = answer.QuestionId
                     };
+                    // add answer
                     temp.RateAnswers.Add(answer.Rating);
                     viewModel.Questions.Add(temp);
                 }
@@ -394,11 +404,12 @@ namespace SoCFeedback.Controllers
                 question.SetRatingsList();
             }
 
+            // remove duplicate categories and order by category order
             viewModel.Categories = viewModel.Categories.GroupBy(e => e.Title)
                 .Select(group => group.First())
                 .OrderBy(e => e.Order)
                 .ToList();
-            
+
             viewModel.SetAverage();
             viewModel.SetLabelsList();
             viewModel.SetRatingsList();

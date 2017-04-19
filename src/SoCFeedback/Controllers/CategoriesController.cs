@@ -86,9 +86,8 @@ namespace SoCFeedback.Controllers
             if (id == null)
                 return NotFound();
 
-            var obj =
-                await _context.Category.SingleOrDefaultAsync(
-                    e => e.Title.Equals(category.Title, StringComparison.OrdinalIgnoreCase) && e.Id != category.Id);
+            var obj =await _context.Category.SingleOrDefaultAsync(e => e.Title.Equals(category.Title, StringComparison.OrdinalIgnoreCase) && e.Id != category.Id);
+
             if (obj != null)
                 ModelState.AddModelError("Title", string.Format("Category {0} already exists.", category.Title));
 
