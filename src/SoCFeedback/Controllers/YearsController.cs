@@ -112,19 +112,22 @@ namespace SoCFeedback.Controllers
             if (year.Status == YearStatus.Published)
                 return RedirectToAction("Index");
 
-            year.Modules =
+            var temptList =
                 _context.Module.AsNoTracking()
                     .Include(l => l.Level)
                     .Where(m => m.Status == Status.Active)
                     .OrderBy(o => o.Code)
                     .ToList();
 
-            var temptList = GetYearModules(year, _context);
+            year.Modules = GetYearModules(year, _context);
 
-            foreach (var module in year.Modules)
-                if (!temptList.Exists(m => m.Id == module.Id))
+            foreach (var module in temptList)
+                if (!year.Modules.Exists(m => m.Id == module.Id))
+                {
                     module.RunningStatus = RunningStatus.Inactive;
-
+                    year.Modules.Add(module);
+                }
+            year.Modules = year.Modules.OrderBy(o => o.Code).ToList();
             year.Levels = GetYearLevels(year);
 
             return View(year);
@@ -220,7 +223,7 @@ namespace SoCFeedback.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        
+
         // GET: Years/Retract/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Retract(Guid? id)
@@ -297,10 +300,10 @@ namespace SoCFeedback.Controllers
 
             foreach (var yearModule in year.YearModules)
 
-                    tempModuleList.Add(
-                    context.Module.Include(l => l.Level)
-                        .AsNoTracking()
-                        .SingleOrDefault(m => m.Id == yearModule.ModuleId));
+                tempModuleList.Add(
+                context.Module.Include(l => l.Level)
+                    .AsNoTracking()
+                    .SingleOrDefault(m => m.Id == yearModule.ModuleId));
             context.Dispose();
             return tempModuleList.OrderBy(o => o.Code).ToList();
         }
@@ -317,7 +320,7 @@ namespace SoCFeedback.Controllers
 
         public static bool YearPublished(FeedbackDbContext context)
         {
-            bool r= context.Year.Any(e => e.Status == YearStatus.Published);
+            bool r = context.Year.Any(e => e.Status == YearStatus.Published);
             return r;
         }
     }
