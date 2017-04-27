@@ -16,17 +16,59 @@ namespace SoCFeedback.Models.ViewModels
             RatingsList = new List<float>();
         }
 
+        /// <summary>
+        /// Year ID
+        /// </summary>
         public Guid YearId { get; set; }
+
+        /// <summary>
+        /// Module Code
+        /// </summary>
         public string Code { get; set; }
+
+        /// <summary>
+        /// Module Title
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Module Level
+        /// </summary>
         public string Level { get; set; }
+
+        /// <summary>
+        /// Module Coordinator
+        /// </summary>
         public string Coordinator { get; set; }
+
+        /// <summary>
+        /// List of module questions
+        /// </summary>
         public List<QuestionViewModel> Questions { get; set; }
+
+        /// <summary>
+        /// List of module question categories
+        /// </summary>
         public List<CategoriesViewModel> Categories { get; set; }
+
+        /// <summary>
+        /// Average score for the module
+        /// </summary>
         public float Average { get; set; }
+
+        /// <summary>
+        /// List of labels for the charts
+        /// </summary>
         public List<String> LabelsList { get; set; }
+
+        /// <summary>
+        /// Rating lists for the charts
+        /// </summary>
         public List<float> RatingsList { get; set; }
 
+        /// <summary>
+        /// Sets average score for the module
+        /// </summary>
         public void SetAverage()
         {
             int number = 0;
@@ -40,6 +82,9 @@ namespace SoCFeedback.Models.ViewModels
              Average /= number;
         }
 
+        /// <summary>
+        /// sets label lists for the charts
+        /// </summary>
         public void SetLabelsList()
         {
             int questionNumber = 0;
@@ -56,6 +101,9 @@ namespace SoCFeedback.Models.ViewModels
             }
         }
 
+        /// <summary>
+        /// sets rating lists for the charts
+        /// </summary>
         public void SetRatingsList()
         {
             foreach (var question in Questions.Where(q=>q.Type == QuestionType.Rate))

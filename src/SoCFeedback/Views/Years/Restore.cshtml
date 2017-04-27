@@ -1,13 +1,12 @@
 @model Year
 
 @{
-    ViewData["Title"] = "Archive Year Form";
+    ViewData["Title"] = "Restore Year Form";
 }
 
-<h2>Restore</h2>
+<h2>Archive</h2>
 
-<h3 class="text-danger">Once archived this year form will no longer be displayed on the main page and will no longer accept feedback, this action cannot be undone.</h3>
-<h3>Archiving should be performed at the start of new semester, but it's not mandatory as creating a new year form will automatically archive existing ones.</h3>
+<h3 class="text-danger">This will restore archived year form back to a pending state, this action will automatically archive any currently published or pending year forms.</h3>
 <hr/>
 <div>
     <h4>Year Form</h4>
@@ -51,10 +50,10 @@
             }
         </div>
     </div>
-    <form asp-action="Archive"asp-route-id="@Model.Id">
+    <form asp-action="Restore"asp-route-id="@Model.Id">
         <div class="form-group">
             <br/>
-            <input type="submit" value="Archive" class="btn btn-primary"/>
+            <input type="submit" value="Restore" class="btn btn-primary"/>
             <a asp-action="Index" class="float-xs-right">Back to List</a>
         </div>
     </form>

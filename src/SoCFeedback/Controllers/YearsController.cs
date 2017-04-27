@@ -120,7 +120,7 @@ namespace SoCFeedback.Controllers
                     .ToList();
 
             year.Modules = GetYearModules(year, _context);
-
+            // add new modules that currently don't belong to a year, but are active
             foreach (var module in temptList)
                 if (!year.Modules.Exists(m => m.Id == module.Id))
                 {
@@ -282,6 +282,36 @@ namespace SoCFeedback.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Years/Restore/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Restore(Guid? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var year =
+                await _context.Year.Include(y => y.YearModules).AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
+            if (year == null)
+                return NotFound();
+            year.Modules = GetYearModules(year, _context);
+            year.Levels = GetYearLevels(year);
+            return View(year);
+        }
+
+        // POST: Years/Restore/5
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ActionName("Restore")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreConfirmed(Guid id)
+        {
+            var year = await _context.Year.SingleOrDefaultAsync(m => m.Id == id);
+            ArchiveNotArchivedYears();
+            year.Status = YearStatus.Pending;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         private bool YearExists(Guid id)
         {
             return _context.Year.Any(e => e.Id == id);
@@ -323,5 +353,6 @@ namespace SoCFeedback.Controllers
             bool r = context.Year.Any(e => e.Status == YearStatus.Published);
             return r;
         }
+
     }
 }
